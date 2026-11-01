@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>Hunter Builds</title>
+<style>
+:root{--bg:#141a2e;--panel:#1d2440;--ink:#ece7dc;--mute:#9aa0bb;--exotic:#d9b93a}
+html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font:15px/1.55 "Segoe UI",system-ui,sans-serif}
+body{display:grid;place-items:center;background:radial-gradient(800px 400px at 80% -10%,rgba(124,196,242,.16),transparent 70%),var(--bg)}
+.card{width:min(540px,90vw);background:var(--panel);border-radius:10px;padding:32px 34px;box-shadow:0 20px 50px rgba(0,0,0,.4);animation:in .6s cubic-bezier(.22,1,.36,1) both}
+@keyframes in{from{opacity:0;transform:translateY(14px) scale(.98)}to{opacity:1;transform:none}}
+img{width:72px;height:72px}
+h1{font:600 30px/1.1 "Segoe UI Semibold","Segoe UI",sans-serif;margin:16px 0 8px}
+p{color:var(--mute);margin:0 0 14px}
+ol{padding-left:20px;color:var(--ink)}li{margin-bottom:6px}
+.row{display:flex;gap:10px;margin-top:18px}
+button{font:inherit;color:inherit;cursor:pointer;border-radius:5px;padding:9px 16px;border:1px solid #56608f;background:#252d4d;transition:transform .16s,background-color .3s}
+button.primary{background:#2d3b78;border-color:#5c6fc4}
+button:hover{transform:translateY(-1px)}button:active{transform:scale(.97)}
+#st{margin-top:16px;min-height:22px;color:var(--exotic)}
+</style></head>
+<body><div class="card">
+<img src="icon.png" alt="">
+<h1>Welcome to Hunter Builds</h1>
+<p>The app reads your inventory from DIM and builds the best Hunter loadouts from what you own.</p>
+<ol><li>Press <b>Sign in to DIM</b>. A DIM window opens.</li><li>Sign in with Bungie.net there (only the first time — the app remembers it).</li><li>Come back here. Your builds appear by themselves in about a minute.</li></ol>
+<div class="row"><button class="primary" id="dim">Sign in to DIM</button><button id="ref">Refresh now</button></div>
+<div id="st" aria-live="polite"></div>
+</div>
+<script>
+document.getElementById('dim').onclick = () => window.hunterApp.openDim();
+document.getElementById('ref').onclick = () => window.hunterApp.refresh();
+window.hunterApp.onStatus(m => document.getElementById('st').textContent = m);
+</script></body></html>
