@@ -5,6 +5,8 @@ contextBridge.exposeInMainWorld('hunterApp', {
   openDim: () => ipcRenderer.send('open-dim'),
   equip: p => ipcRenderer.invoke('equip', p),
   bulk: p => ipcRenderer.invoke('bulk', p),
+  undo: () => ipcRenderer.invoke('undo'),
+  diagnostics: () => ipcRenderer.invoke('diagnostics'),
   notify: (t, b) => ipcRenderer.send('notify', t, b),
   getSettings: () => ipcRenderer.invoke('settings'),
   setStartup: on => ipcRenderer.send('set-startup', on),

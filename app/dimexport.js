@@ -56,7 +56,10 @@ async function dimExport(MODE, SUBCLASS_NAMES) {
     for (const r of rolls) { const need = [...r.recommendedPerks].map(pname).filter(Boolean); if (!need.length || !need.every(n => have.has(n))) continue;
       const g = r.isUndesirable ? -1 : /God/i.test(r.notes || '') ? 2 : 1; const equipped = need.every(n => on.has(n));
       if (!best || g > best[0] || (g === best[0] && equipped && !best[2])) best = [g, (r.notes || '').replace(/\s+/g, ' ').slice(0, 220), equipped ? 1 : 0, /PvP/.test(r.notes || '') && !/PvE/.test(r.notes || '') ? 'pvp' : 'pve']; }
-    return best || [0, '', 0, ''];
+    if (best && best[0] === 2) return best;
+    const god = rolls.find(r => !r.isUndesirable && /God/i.test(r.notes || '') && !/PvP/.test(r.notes || '')) || rolls.find(r => !r.isUndesirable && /God/i.test(r.notes || ''));
+    const target = god ? [...god.recommendedPerks].map(pname).filter(Boolean) : [];
+    return [...(best || [0, '', 0, '']), target];
   }
   const items = [];
   for (const [it, loc] of raw) {
@@ -90,7 +93,7 @@ async function dimExport(MODE, SUBCLASS_NAMES) {
       mw: it.masterwork ? 1 : 0, mwi: it.masterworkInfo?.stats?.[0] ? [it.masterworkInfo.stats[0].name, it.masterworkInfo.stats[0].value, it.masterworkInfo.tier] : null,
       src: it.displaySource || (col[it.collectibleHash]?.sourceString) || '', fl: def.flavorText || '',
       ic: iconIdx(itemIcons, it.icon), ov: iconIdx(icons, it.iconOverlay),
-      st: stats, en: it.energy ? [it.energy.energyUsed, it.energy.energyCapacity] : null, set, sk: cats, wl: isW ? grade(it) : null, bt: it.breakerType?.displayProperties?.name || ''
+      st: stats, en: it.energy ? [it.energy.energyUsed, it.energy.energyCapacity] : null, set, sk: cats, wl: isW ? grade(it) : null, tun: isW ? null : (it.sockets?.allSockets || []).find(sk => (sk.plugSet?.plugs || []).some(p => p.plugDef.displayProperties.name === 'Balanced Tuning'))?.socketIndex ?? null, bt: it.breakerType?.displayProperties?.name || ''
     });
   }
   // account-level info for build scoring
@@ -106,10 +109,24 @@ async function dimExport(MODE, SUBCLASS_NAMES) {
     if (d && /Aspect/.test(d.itemTypeDisplayName || '') && (d.plug?.plugCategoryIdentifier || '').includes('hunter')) aspects.add(d.displayProperties.name); }
   for (const i of hunter.items) if (i.bucket?.sort === 'General' || i.bucket?.name === 'Subclass') { if (i.bucket.name === 'Subclass') subclasses.push(i.name); }
 
+  // subclass sockets and the plugs you have unlocked, for full loadouts (super, abilities, aspects, fragments)
+  const subs = hunter.items.filter(i => i.bucket?.name === 'Subclass').map(sc => {
+    const cats = {}, opts = {}, cur = {};
+    for (const cat of (sc.sockets?.categories || [])) { const nm = cat.category?.displayProperties?.name || ''; cats[nm] = cat.socketIndexes.slice();
+      for (const ix of cat.socketIndexes) { const sk = sc.sockets.allSockets.find(z => z.socketIndex === ix); if (!sk) continue;
+        opts[ix] = (sk.plugSet?.plugs || sk.plugOptions || []).map(p => [p.plugDef.displayProperties.name, p.plugDef.hash, p.plugDef.plug?.energyCapacity?.capacityValue || 0]);
+        if (sk.plugged) cur[ix] = sk.plugged.plugDef.hash; } }
+    return { n: sc.name, id: sc.id, h: sc.hash, eq: sc.equipped ? 1 : 0, cats, opts, cur }; });
+  const pmItems = hunter.items.filter(i => i.bucket?.sort === 'Postmaster');
+  const postmaster = { n: pmItems.length, cap: pmItems[0]?.bucket?.capacity || 21, items: pmItems.map(i => [i.name, i.amount]) };
+  const MATS = ['Exotic Engram', 'Exotic Cipher', 'Ascendant Shard', 'Ascendant Alloy', 'Enhancement Core', 'Enhancement Prism', 'Upgrade Module', 'Strange Coin', 'Deepsight Harmonizer', 'Exotic Requisition Order', 'Legendary Mark'];
+  const mats = {}; for (const i of [...hunter.items, ...vault.items]) if (MATS.includes(i.name)) mats[i.name] = (mats[i.name] || 0) + (i.amount || 1);
+  for (const c of (state.inventory.currencies || [])) { const n = c.displayProperties?.name; if (n) mats[n] = c.quantity; }
+  const wsrc = {}; for (const cdef of Object.values(col)) { const d = ii[cdef.itemHash]; if (!d || d.itemType !== 3 || !d.displayProperties?.name || !cdef.sourceString) continue; if (!wsrc[d.displayProperties.name]) wsrc[d.displayProperties.name] = cdef.sourceString.replace(/^Source:\s*/, ''); }
   const classes = stores.filter(s => !s.isVault).map(s => ({ cls: s.classType, name: s.className, power: s.powerLevel }));
   const bk = await get('d2-manifest-InventoryBucket');
   const vaultInfo = { n: vault.items.length, cap: (bk && bk[138197802] && bk[138197802].itemCount) || 0 };
-  const base = { v: 2, vault: vaultInfo, updated: new Date().toISOString(), power: hunter.powerLevel || 0, classes, subclasses, aspects: [...aspects].sort(), exotics: [...exotics].sort(), items };
+  const base = { v: 2, vault: vaultInfo, subs, postmaster, mats, wsrc, updated: new Date().toISOString(), power: hunter.powerLevel || 0, classes, subclasses, aspects: [...aspects].sort(), exotics: [...exotics].sort(), items };
   if (MODE === 'daily') {
     // compact: items already in the published data only send what changes day to day
     const knownItems = new Set(JSON.parse(localStorage.getItem('hunterExportKnownItems') || '[]'));

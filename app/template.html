@@ -147,6 +147,10 @@ body.noscroll{overflow:hidden}
 .pbody{padding:14px 16px 18px}
 .ptags{display:flex;flex-wrap:wrap;gap:6px}
 .chip.mwc{border-color:#a36a1e;color:#f6c27a}
+.actchips{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 6px}.chip.act{cursor:pointer;color:var(--txt,inherit);font:inherit;font-size:12.5px}.chip.act.on{background:var(--tint,#7cc4f2);color:#0b0f1c;border-color:transparent}
+.matgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:10px}.mat{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;display:flex;flex-direction:column}.mat b{font-size:18px}.mat span{font-size:12px;opacity:.8}
+.card.warn{border-color:#a36a1e;box-shadow:0 0 0 1px #a36a1e inset}.farmtop{margin-bottom:14px}
+.langbtn{margin-left:6px}
 .flav{font-style:italic;color:var(--mute);margin:12px 0 4px;max-width:60ch}
 .pstats{margin:12px 0 4px;display:grid;gap:4px}
 .sr{display:grid;grid-template-columns:96px 34px 1fr;gap:10px;align-items:center;font-size:13.5px}
@@ -710,8 +714,41 @@ const BUILDS = [
   sets:{'Seventh Seraph':[14,8]},
   weap:{names:{'Trespasser':6,'Punching Out':5,'The Keening':4,'Brass Attacks':4,'Lotus-Eater':3,'Gjallarhorn':4},
         perks:{'Explosive Payload':2,'Subsistence':2,'Feeding Frenzy':2},el:{Solar:3}},
-  src:'Mechaneer\'s Tricksleeves perk text (your DIM data)'}
+  src:'Mechaneer\'s Tricksleeves perk text (your DIM data)'},
+{ id:'coyote-pvp', name:'Double dodge with The Sixth Coyote', el:'Void', sub:'Nightstalker', meta:78, content:'PvP, Crucible, Trials', act:['PvP'],
+  exotic:'The Sixth Coyote', aspects:['Vanishing Step','Stylish Executioner'],
+  kit:{Super:'Spectral Blades',Grenade:'Vortex Grenade',Melee:'Snare Bomb',Class:"Marksman's Dodge",Fragments:'Persistence, Obscurity, Remnants, Starvation'},
+  desc:'Two dodges per fight: each dodge reloads your weapon and makes you invisible with Vanishing Step, so you can peek, shoot, vanish and re-peek. Class stat matters most, then Weapons and Health for flinch and recovery.',
+  w:[2.4,2.4,3,.6,.4,.8], t:[100,100,150,50,40,60],
+  sets:{},
+  weap:{names:{'Ace of Spades':8,'The Last Word':6,'Igneous Hammer':6,'Fatebringer':5,'Matador 64':5,'Rose':6,'Austringer':5,'Hawkmoon':6},
+        perks:{'Opening Shot':4,'Rangefinder':4,'Kill Clip':4,'Eye of the Storm':4,'Zen Moment':3,'Snapshot Sights':3,'Moving Target':3,'Headseeker':3,'Firmly Planted':2},el:{}},
+  src:'Crucible meta guides (Sixth Coyote double dodge)'},
+{ id:'graviton-pvp', name:'Invisible flank with Graviton Forfeit', el:'Void', sub:'Nightstalker', meta:70, content:'PvP, 3v3, Trials', act:['PvP'],
+  exotic:'Graviton Forfeit', aspects:['Vanishing Step','Stylish Executioner'],
+  kit:{Super:'Spectral Blades',Grenade:'Vortex Grenade',Melee:'Snare Bomb',Class:"Gambler's Dodge",Fragments:'Persistence, Obscurity, Remnants, Starvation'},
+  desc:'Invisibility lasts longer, and each time you go invisible your melee, grenade and dodge regenerate much faster, with a Void overshield at 3 stacks. Dodge to vanish, reposition, and open with the first shot. Good in Trials for reviving teammates unseen.',
+  w:[2.4,2.6,2.6,.6,.4,1.2], t:[100,100,120,50,40,70],
+  sets:{},
+  weap:{names:{'Ace of Spades':8,'The Last Word':6,'Igneous Hammer':6,'Fatebringer':5,'Matador 64':5,'Rose':6,'Austringer':5},
+        perks:{'Opening Shot':4,'Rangefinder':4,'Kill Clip':4,'Eye of the Storm':4,'Zen Moment':3,'Snapshot Sights':3,'Moving Target':3,'Headseeker':3},el:{}},
+  src:'Crucible meta guides (Graviton Forfeit)'},
+{ id:'yas-pvp', name:'Tripmine with Young Ahamkara\'s Spine', el:'Solar', sub:'Gunslinger', meta:66, content:'PvP, Crucible, zone control', act:['PvP'],
+  exotic:"Young Ahamkara's Spine", aspects:["Knock 'Em Down",'On Your Mark'],
+  kit:{Super:'Golden Gun – Marksman',Grenade:'Tripmine Grenade',Melee:'Knife Trick',Class:"Marksman's Dodge",Fragments:'Ashes, Torches, Searing, Empyrean'},
+  desc:'Tripmines one-shot careless players and refund energy through YAS, so you can lock down doorways and lanes. Pair with a 120 hand cannon or a pulse rifle for the duel.',
+  w:[2.2,2.4,1.4,3,.4,.6], t:[100,100,80,150,40,50],
+  sets:{},
+  weap:{names:{'Ace of Spades':6,'The Last Word':6,'Igneous Hammer':6,'Fatebringer':5,'Matador 64':5,'Rose':6},
+        perks:{'Opening Shot':4,'Rangefinder':4,'Kill Clip':4,'Eye of the Storm':4,'Zen Moment':3,'Snapshot Sights':3,'Moving Target':3},el:{}},
+  src:'Crucible meta guides (Solar Tripmine)'}
 ];
+/* activity filter: GM / Raid / Solo / PvP */
+const ACTS = ['All','GM','Raid','Solo','PvP'];
+function actsOf(b){ if(b.act) return b.act; const c = b.content || ''; const a = [];
+  if(/GM|Grandmaster|Endgame|Nightfall/i.test(c)) a.push('GM'); if(/raid/i.test(c)) a.push('Raid'); if(/solo|Lost Sector|patrol|low-level/i.test(c)) a.push('Solo'); if(/PvP|Crucible|Trials/i.test(c)) a.push('PvP');
+  return a.length ? a : ['GM','Solo']; }
+let ACT = 'All';
 /* auto-generated builds for exotic armor that no build above covers yet (e.g. a new drop) */
 const AUTO_EL = [[/Withering|Stasis|Duskfield|[Ff]rozen|[Ss]hatter|[Ss]low/,'frost'],[/\bArc\b|[Jj]olt|[Aa]mplif|Tempest|Ascension|Arc Staff/,'tempest'],[/Strand|Grapple|[Tt]hreadling|[Ss]ever|[Ss]uspend|[Uu]nravel|Silkstrike/,'cyrta'],[/Void|[Ii]nvisib|[Vv]olatile|[Ww]eaken|Spectral/,'gyrfalcon'],[/Solar|Golden Gun|[Rr]adiant|[Ss]corch|[Ii]gnit|Tripmine|Knife|Blade Barrage/,'assassin']];
 function autoBuilds(){
@@ -734,7 +771,8 @@ const MISSING = [
  {name:'Crackshot Gunslinger',el:'Solar',why:'The new Monument of Triumph aspect: dodging fires three scorching shots and heals you.',need:['Crackshot aspect (Monument of Triumph)','Speedloader Slacks']},
  {name:'Stasis Renewal Grasps',el:'Stasis',why:'Duskfield grenades weaken enemy damage. Excellent for GMs.',need:['Renewal Grasps']},
  {name:'Star-Eater Scales',el:'Arc',why:'The strongest single super hit.',need:['Star-Eater Scales']},
- {name:'Omnioculus',el:'Void',why:'Invisibility for the whole team. The best support in GMs.',need:['Omnioculus']}
+ {name:'Omnioculus',el:'Void',why:'Invisibility for the whole team. The best support in GMs.',need:['Omnioculus']},
+ {name:'Wormhusk Crown (PvP)',el:'Solar',why:'The top PvP exotic: dodging heals you instantly, which wins most duels.',need:['Wormhusk Crown']}
 ];
 
 /* ---------- data ---------- */
@@ -807,7 +845,22 @@ function weapons(){
 function slotOf(w){ return /Power/.test(w.item.s) ? 'power' : /Energy/.test(w.item.s) ? 'energy' : 'kinetic'; }
 
 /* ---------- armor optimizer ---------- */
-function scoreStats(st, b){ let s=0; for(let i=0;i<6;i++){ s += b.w[i]*Math.min(st[i], b.t[i]) + .04*st[i]; } return s; }
+// values past 100 still help (enhanced stat benefits), at a quarter of the weight, up to 200
+function scoreStats(st, b){ let s=0; for(let i=0;i<6;i++){ const v = st[i], t = b.t[i]; s += b.w[i]*Math.min(v, t) + b.w[i]*.25*Math.max(0, Math.min(v,200) - Math.max(t,100)) + .04*v; } return s; }
+const TUNING = {'Grenade|Melee':309000506,'Melee|Super':311164277,'Class|Weapons':323635379,'Health|Melee':388618952,'Grenade|Health':455024236,'Melee|Grenade':534630542,'Super|Melee':673231129,'Weapons|Melee':691392383,'Weapons|Super':891771298,'Class|Super':957763733,'Class|Melee':1510949672,'Grenade|Super':1672416975,'Class|Grenade':1879022254,'Weapons|Class':1918710127,'Grenade|Class':1922571986,'Health|Weapons':2125798995,'Super|Weapons':2244422610,'Weapons|Health':3121760799,'Weapons|Grenade':3284443097,'Health|Class':3310526732,'Super|Class':3554800389,'Health|Grenade':3681082702,'Super|Grenade':3946669007,'Melee|Weapons':4020349587,'Super|Health':4026414261,'Class|Health':4030660414,'Health|Super':4088823605,'Grenade|Weapons':4116389173,'Melee|Health':4164883102,'Melee|Class':4210715468};
+const MOD_HASH = [4183296050, 1180408010, 4204488676, 1435557120, 2724608735, 4287799666]; // SBG order
+// Tier 5 armor has a tuning slot: +5 to one stat, -5 to another. Greedy pick per piece.
+function applyTuning(c, b){
+  let base = c.base.slice(); const tun = [];
+  for(const p of c.set){ if(p.item.tun == null || (p.tier||0) < 5) continue;
+    let best = null, bv = scoreStats(addMods(base,b).st, b);
+    for(let i=0;i<6;i++) for(let j=0;j<6;j++){ if(i===j || base[j] < 5) continue; const h = TUNING[SBG[i]+'|'+SBG[j]]; if(!h) continue;
+      const t = base.slice(); t[i]+=5; t[j]-=5; const v = scoreStats(addMods(t,b).st, b); if(v > bv + .01){ bv = v; best = [i,j,h]; } }
+    if(best){ base[best[0]]+=5; base[best[1]]-=5; tun.push({p, plus:best[0], minus:best[1], hash:best[2]}); } }
+  if(!tun.length) return c;
+  const m = addMods(base, b); const extra = c.score - scoreStats(c.st, b);
+  return Object.assign({}, c, { base, st:m.st, mods:m.mods, score: scoreStats(m.st,b) + extra, tun, preTune: c.base });
+}
 function addMods(st, b){ const out = st.slice(), mods=[]; for(let k=0;k<5;k++){ let best=-1,bv=0;
     for(let i=0;i<6;i++){ if(out[i] < b.t[i] && b.w[i] > bv){ bv=b.w[i]; best=i; } }
     if(best<0) break; out[best]+=10; mods.push(best); } return {st:out, mods}; }
@@ -829,7 +882,7 @@ function optimize(b, P){
     }
   }
   res.sort((x,y) => y.score - x.score);
-  return res.slice(0,3);
+  return res.slice(0,12).map(c => applyTuning(c, b)).sort((x,y) => y.score - x.score).slice(0,3);
 }
 
 /* ---------- weapon picker ---------- */
@@ -881,16 +934,20 @@ function statBlock(st, b, base){
 }
 const exoItem = name => DATA.items.find(i => i.n === name);
 function renderList(){
-  const ready = RES.filter(r=>r.ready), not = RES.filter(r=>!r.ready);
+  const vis = RES.filter(r => ACT === 'All' || actsOf(r.b).includes(ACT));
+  const ready = vis.filter(r=>r.ready), not = vis.filter(r=>!r.ready);
   const item = r => `<div class="bitem ${r.ready?'':'locked'}" aria-current="${current===r.b.id}">
      <span class="bar" style="background:${EL[r.b.el]}"></span>
      ${ico(exoItem(r.b.exotic),'sm')}
-     <button type="button" class="bsel" data-id="${r.b.id}"><span class="n">${esc(r.b.name)}${['fealty','graviton','coyote','foetracer','raiden','gwisin','tricksleeves'].includes(r.b.id)||/^auto-/.test(r.b.id)?' <span class="newbadge inline">NEW</span>':''}</span><span class="s">${r.b.sub} · ${esc(r.b.exotic)}</span></button>
+     <button type="button" class="bsel" data-id="${r.b.id}"><span class="n">${esc(r.b.name)}${['coyote-pvp','graviton-pvp','yas-pvp'].includes(r.b.id)||/^auto-/.test(r.b.id)?' <span class="newbadge inline">NEW</span>':''}</span><span class="s">${r.b.sub} · ${esc(r.b.exotic)}</span></button>
      <span class="score">${r.ready?r.total:'–'}</span></div>`;
   document.getElementById('blist').innerHTML =
+    `<div class="actchips" role="group" aria-label="Activity">${ACTS.map(a => `<button type="button" class="chip act ${ACT===a?'on':''}" data-act="${a}" aria-pressed="${ACT===a}">${a}</button>`).join('')}</div>` +
     `<div class="grp">Ready to build now</div>` + ready.map(item).join('') +
     (not.length ? `<div class="grp">Something is missing</div>` + not.map(item).join('') : '');
   document.querySelectorAll('#blist > *').forEach((el,i) => el.style.setProperty('--i', i));
+  document.querySelectorAll('[data-act]').forEach(x => x.onclick = () => { ACT = x.dataset.act; STORE.set('hunterAct', ACT);
+    const vis2 = RES.filter(r => ACT === 'All' || actsOf(r.b).includes(ACT)); if(vis2.length && !vis2.some(r => r.b.id === current)){ current = vis2[0].b.id; renderList(); swapDetail(); } else renderList(); });
   document.querySelectorAll('.bsel').forEach(x => x.onclick = () => {
     if(current === x.dataset.id) return;
     current = x.dataset.id;
@@ -924,7 +981,7 @@ function renderDetail(){
       <div class="pieces">${c.set.map(p=>`<div class="pc ${p.ex?'ex':''}">${ico(p.item,'lg')}<div><div class="slot">${SLOTS[p.slot]} · ${LOC[p.loc]}</div>
         <div class="nm">${esc(p.name)}</div><div class="tag">${p.set?esc(p.set)+' · ':''}Tier ${p.tier} · …${p.id.slice(-4)}</div></div></div>`).join('')}</div>
       ${c.active.length ? c.active.map(([nm,n])=>`<div class="setline"><b>${nm} ${n}-piece:</b> ${esc(SETS[nm]?SETS[nm].slice(0,n>=4?2:1).join(' / '):'')}</div>`).join('') : (Object.keys(b.sets||{}).length?`<div class="setline">Recommended set: ${Object.keys(b.sets).join(', ')} (not enough pieces in the right slots)</div>`:'')}
-      <p class="note">Stat mods: ${c.mods.length? Object.entries(c.mods.reduce((o,i)=>(o[SBG[i]]=(o[SBG[i]]||0)+1,o),{})).map(([k,n])=>`${n}× +10 ${k}`).join(', ') : 'none needed'}. Stats include masterwork, without mods. Click an item icon for full details.</p>
+      <p class="note">Stat mods: ${modsNote(c.mods)}.${c.tun ? ' Tuning: ' + c.tun.map(t => `${esc(t.p.name)} +${SBG[t.plus]} / −${SBG[t.minus]}`).join(', ') + '.' : ''} Stats include masterwork, tuning and mods. Past 100 a stat gives enhanced benefits, so extra points still count a little. Click an item icon for full details.</p>
       ${r.combos.length>1?`<p class="note">Alternative: ${r.combos[1].set.filter(p=>!c.set.includes(p)).map(p=>esc(p.name)+' ('+SLOTS[p.slot]+', …'+p.id.slice(-4)+')').join(', ')}.</p>`:''}
     </section>`;
   } else {
@@ -941,7 +998,8 @@ function renderDetail(){
   h += `<p class="note">Build source: ${esc(b.src)}. Meta: Monument of Triumph (9.7.0).</p></section>`;
   if(r.combos && r.combos.length){ const armorItems = r.combos[0].set.map(p => p.item), weapItems = L.filter(Boolean).map(x => x.w.item);
     h += championsHtml(r);
-    h += `<section class="blk"><h3>Equip it</h3>${dimButtons(b.name, [...armorItems, ...weapItems], b.sub + ' · ' + b.aspects.join(' + ') + '. Stat mods: ' + modsNote(r.combos[0].mods))}</section>`; }
+    const ex = loadoutExtras(b, r.combos[0]);
+    h += `<section class="blk"><h3>Equip it</h3>${ex.summary ? `<p class="note" style="margin-top:0">${ex.summary}</p>` : ''}${dimButtons(b.name, [...armorItems, ...weapItems], b.sub + ' · ' + b.aspects.join(' + ') + '. Stat mods: ' + modsNote(r.combos[0].mods), ex)}</section>`; }
   const det = document.getElementById('detail');
   det.innerHTML = h;
   det.querySelectorAll('.pc').forEach((el,i) => el.style.setProperty('--i', i));
@@ -1154,6 +1212,7 @@ document.querySelectorAll('nav.tabs > button[role=tab]').forEach(btn => btn.oncl
 /* =====================  FEATURES  ===================== */
 const STORE = { get(k, d){ try{ const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); }catch(e){ return d; } },
                 set(k, v){ try{ localStorage.setItem(k, JSON.stringify(v)); }catch(e){} } };
+ACT = STORE.get('hunterAct','All'); if(!ACTS.includes(ACT)) ACT = 'All';
 const WL = {2:['God roll','wl2','★'], 1:['Good roll','wl1','▲'], 0:['Not on wish list','wl0',''], '-1':['Trash roll','wlx','✕']};
 const wlOf = it => it && it.w && it.wl ? it.wl : null;
 
@@ -1166,15 +1225,44 @@ function markAllSeen(){ SEEN = DATA.items.map(i => i.id); SEEN_SET = new Set(SEE
 
 /* ---------- DIM loadout links ---------- */
 const DIM_ACCOUNT = ''; // filled in for the web page; the app learns it after you sign in
-function dimLoadoutUrl(name, items, notes){
+// subclass (super, abilities, aspects, fragments), stat mods and armor tuning for a build
+const matchPlug = (opts, n) => { n = (n || '').trim().replace(/\s+[–-]\s+/, ': '); if(!n) return null; const lo = n.toLowerCase(); const O = (opts || []).filter(o => !/^Empty /.test(o[0]));
+  return O.find(o => o[0].toLowerCase() === lo) || O.find(o => o[0].toLowerCase().endsWith(' of ' + lo) || o[0].toLowerCase().endsWith(': ' + lo)) || O.find(o => o[0].toLowerCase().startsWith(lo)) || null; };
+function loadoutExtras(b, c){
+  const ex = { so: {}, mods: (c && c.mods || []).map(i => MOD_HASH[i]), sub: null, summary: '' }; const parts = [];
+  (c && c.tun || []).forEach(t => { ex.so[t.p.id] = { [t.p.item.tun]: t.hash }; });
+  const sc = (DATA.subs || []).find(x => x.n === b.sub);
+  if(sc && b.kit && Object.keys(b.kit).length){
+    const so = {}; const cat = re => Object.entries(sc.cats).find(([k]) => re.test(k)) || [null, []];
+    const [, superIx] = cat(/super/i), [, abIx] = cat(/abilit/i), [, aspIx] = cat(/aspect/i), [, fragIx] = cat(/fragment/i);
+    const sup = (b.kit.Super || '').split('/')[0]; for(const ix of superIx){ const m = matchPlug(sc.opts[ix], sup); if(m){ so[ix] = m[1]; parts.push(m[0]); } }
+    for(const key of ['Grenade','Melee','Class']){ const n = (b.kit[key] || '').split('/')[0]; for(const ix of abIx){ const m = matchPlug(sc.opts[ix], n); if(m){ so[ix] = m[1]; break; } } }
+    let cap = 0; b.aspects.forEach((a, k) => { const ix = aspIx[k]; if(ix == null) return; const m = matchPlug(sc.opts[ix], a); if(m){ so[ix] = m[1]; cap += m[2] || 0; } });
+    if(!cap) cap = fragIx.length;
+    const frags = (b.kit.Fragments || '').split(',').map(x => x.trim()).filter(Boolean); let nf = 0;
+    frags.forEach(f => { if(nf >= Math.min(cap, fragIx.length)) return; const m = matchPlug(sc.opts[fragIx[nf]], f); if(m){ so[fragIx[nf]] = m[1]; nf++; } });
+    if(Object.keys(so).length){ ex.sub = { id: sc.id, hash: sc.h, so }; parts.unshift(`${esc(b.sub)} (${aspIx.filter(ix => so[ix]).length} aspects, ${nf} fragments)`); }
+  }
+  if(ex.mods.length) parts.push(`${ex.mods.length} stat mod${ex.mods.length>1?'s':''}`);
+  if(c && c.tun && c.tun.length) parts.push(`tuning on ${c.tun.length} piece${c.tun.length>1?'s':''}`);
+  if(parts.length) ex.summary = 'The loadout also sets: ' + parts.join(', ') + '.';
+  return ex;
+}
+function loItems(items, ex){
+  const out = items.filter(Boolean).map(i => { const o = { id: i.id, hash: i.h }; if(ex && ex.so[i.id]) o.socketOverrides = ex.so[i.id]; return o; });
+  if(ex && ex.sub) out.unshift({ id: ex.sub.id, hash: ex.sub.hash, socketOverrides: ex.sub.so });
+  return out;
+}
+function dimLoadoutUrl(name, items, notes, ex){
   const id = (crypto.randomUUID ? crypto.randomUUID() : 'h' + Date.now().toString(36) + Math.random().toString(36).slice(2));
   const lo = { id, name, classType: 1, clearSpace: false, notes: notes || '',
-    equipped: items.filter(Boolean).map(i => ({ id: i.id, hash: i.h })), unequipped: [] };
+    equipped: loItems(items, ex), unequipped: [] };
+  if(ex && ex.mods && ex.mods.length) lo.parameters = { mods: ex.mods };
   // account-scoped route: DIM keeps the ?loadout= parameter and opens the loadout editor
   return 'https://app.destinyitemmanager.com/' + (DATA.account || DIM_ACCOUNT) + '/d2/loadouts?loadout=' + encodeURIComponent(JSON.stringify(lo));
 }
-function dimButtons(name, items, notes){
-  const url = dimLoadoutUrl(name, items, notes);
+function dimButtons(name, items, notes, ex){
+  const url = dimLoadoutUrl(name, items, notes, ex);
   return `<div class="dimrow"><a class="btn primary" href="${esc(url)}" target="_blank" rel="noopener">Open loadout in DIM</a>
     <button type="button" class="btn" data-copy="${esc(url)}">Copy DIM link</button>
     <span class="perk">DIM opens its loadout editor with these ${items.filter(Boolean).length} items. Press Save there, then equip it.</span></div>`;
@@ -1257,7 +1345,7 @@ function renderCustom(){
     <p class="note">Stat mods: ${modsNote(c.mods)}.</p>
     <h3 style="margin-top:16px">Weapons${CB.el?` (${CB.el})`:''}</h3>
     <div class="alts">${weapItems.length ? weapItems.map(i => `<span class="alt">${ico(i)}<span class="${i.ex?'exn':''}">${esc(i.n)}</span></span>`).join('') : '<span class="perk">Pick a weapon element to get suggestions.</span>'}</div>
-    ${dimButtons('Custom build' + (r.exotic ? ' – ' + r.exotic : ''), [...armorItems, ...weapItems], 'Made on the Hunter builds page. Stat mods: ' + modsNote(c.mods))}
+    ${dimButtons('Custom build' + (r.exotic ? ' – ' + r.exotic : ''), [...armorItems, ...weapItems], 'Made on the Hunter builds page. Stat mods: ' + modsNote(c.mods), loadoutExtras(r.b, c))}
   </div></div>`;
   document.getElementById('tab-custom').innerHTML = h; bindCustom();
 }
@@ -1384,11 +1472,35 @@ function renderCleanup(){
 
 /* ---------- meta & farming ---------- */
 const missIco = (m, cls) => `<span class="ico ex ${cls||''}" data-miss="${esc(m.n)}" tabindex="0" style="${sprite('items', m.ic, cls==='sm'?32:40)}"></span>`;
+function farmCards(){
+  let h = '<div class="two farmtop">';
+  const pm = DATA.postmaster;
+  if(pm) h += `<div class="card ${pm.n >= pm.cap - 3 ? 'warn' : ''}"><h3>Postmaster ${pm.n}/${pm.cap}</h3>
+    <p class="lead">${pm.n ? (pm.n >= pm.cap - 3 ? 'Almost full: new drops will be lost. Pull them in DIM or at the Postmaster in the Tower.' : 'Items waiting for you at the Postmaster.') : 'Empty. Nothing will be lost.'}</p>
+    ${pm.items.length ? `<ul class="needl">${pm.items.map(([n,a]) => `<li><span class="ico none sm"></span><div>${esc(n)}${a > 1 ? ` ×${a}` : ''}</div></li>`).join('')}</ul>` : ''}</div>`;
+  const mats = DATA.mats;
+  if(mats && Object.keys(mats).length){ const ord = ['Glimmer','Bright Dust','Exotic Engram','Exotic Cipher','Ascendant Shard','Ascendant Alloy','Enhancement Prism','Enhancement Core','Upgrade Module','Strange Coin','Exotic Requisition Order','Deepsight Harmonizer','Legendary Mark'];
+    const keys = Object.keys(mats).sort((a,b) => ((ord.indexOf(a)+1)||99) - ((ord.indexOf(b)+1)||99));
+    h += `<div class="card"><h3>Materials and engrams</h3><div class="matgrid">${keys.map(k => `<div class="mat"><b>${Number(mats[k]).toLocaleString('en-US')}</b><span>${esc(k)}</span></div>`).join('')}</div>
+      <p class="note">${(mats['Exotic Cipher']||0) >= 1 && (mats['Exotic Engram']||0) + (pm ? pm.items.filter(([n]) => /Exotic Engram/.test(n)).length : 0) ? 'You have an exotic engram and a cipher: you can focus a specific exotic at Rahool.' : 'Exotic focusing at Rahool needs an exotic engram, an Exotic Cipher and glimmer.'}</p></div>`; }
+  h += '</div>';
+  // weapons the builds recommend: ones you don't own (with source) and owned ones that aren't god rolls yet
+  const ownW = new Map(); DATA.items.filter(i => i.w).forEach(i => { const cur = ownW.get(i.n); if(!cur || ((i.wl||[0])[0] > (cur.wl||[0])[0])) ownW.set(i.n, i); });
+  const want = new Map(); RES.filter(r => r.ready).forEach(r => Object.entries(r.b.weap.names).forEach(([n, v]) => { if(v >= 4){ const w = want.get(n) || {n, v:0, builds:[]}; w.v += v; w.builds.push(r.b.name); want.set(n, w); } }));
+  const list = [...want.values()].sort((a,b) => b.v - a.v);
+  const missing = list.filter(w => !ownW.has(w.n)).slice(0, 10), upgrade = list.filter(w => ownW.has(w.n) && (ownW.get(w.n).wl||[0])[0] !== 2).slice(0, 10);
+  const src = n => (DATA.wsrc || {})[n] || '';
+  if(missing.length || upgrade.length) h += `<div class="card"><h3>Weapons to chase</h3><p class="lead">Recommended by the builds you can play now.</p><div class="two">
+    <div><div class="pcl">Not in your vault</div><ul class="needl">${missing.map(w => `<li><span class="ico none sm"></span><div>${esc(w.n)}<div class="perk">${esc(src(w.n) || 'Source unknown')} · ${esc(w.builds.slice(0,2).join(', '))}</div></div></li>`).join('') || '<li><div class="perk">You own all of them.</div></li>'}</ul></div>
+    <div><div class="pcl">Own it, but not the god roll</div><ul class="needl">${upgrade.map(w => { const it = ownW.get(w.n); const tgt = (it.wl && it.wl[4]) || [];
+      return `<li>${ico(it,'sm')}<div>${esc(w.n)}<div class="perk">${tgt.length ? 'Chase: ' + tgt.map(esc).join(', ') : 'Look for the wish-list roll in DIM'}${src(w.n) ? ' · ' + esc(src(w.n)) : ''}</div></div></li>`; }).join('') || '<li><div class="perk">All your recommended weapons are god rolls.</div></li>'}</ul></div></div></div>`;
+  return h;
+}
 function renderFarm(){
   const miss = BASE.missing || []; const byName = n => miss.find(m => m.n === n);
-  let h = `<p class="note" style="margin:0 0 14px">The strongest Hunter builds right now, what you still need for each, and where to get it.</p><div class="miss">` +
+  let h = farmCards() + `<p class="note" style="margin:14px 0 14px">The strongest Hunter builds right now, what you still need for each, and where to get it.</p><div class="miss">` +
     MISSING.map(m => `<div class="card" style="--el:${EL[m.el]}"><h3>${esc(m.name)}</h3><p class="lead">${esc(m.why)}</p><b>You're missing:</b>
-      <ul class="needl">${m.need.map(n => { const mm = byName(n); const owned = DATA.exotics.includes(n);
+      <ul class="needl">${m.need.map(n => { const mm = byName(n); const owned = DATA.exotics.includes(n) || DATA.items.some(i => i.n === n);
         return `<li>${mm ? missIco(mm,'sm') : '<span class="ico none sm"></span>'}<div><span class="${owned?'ok':''}">${esc(n)}${owned?' ✓':''}</span>${mm && mm.src ? `<div class="perk">${esc(mm.src.replace(/^Source:\s*/,''))}</div>` : ''}</div></li>`; }).join('')}</ul></div>`).join('') + '</div>';
   const groups = {}; miss.forEach(m => { const k = /Focusing/.test(m.src) ? 'Exotic Armor Focusing at Rahool' : /engram/i.test(m.src) ? 'Random exotic engrams' : (m.src.replace(/^Source:\s*/,'') || 'Other'); (groups[k] = groups[k] || []).push(m); });
   const wanted = new Set(MISSING.flatMap(m => m.need));
@@ -1535,15 +1647,15 @@ function appToast(msg, kind){
   let t = document.getElementById('toast'); if(!t){ t = document.createElement('div'); t.id = 'toast'; t.setAttribute('role','status'); document.body.appendChild(t); }
   t.textContent = msg; t.className = 'on ' + (kind || ''); clearTimeout(t._h); t._h = setTimeout(() => t.className = '', kind === 'busy' ? 60000 : 5000);
 }
-function equipButton(name, items, notes){
+function equipButton(name, items, notes, ex){
   if(!IS_APP) return '';
-  const payload = esc(JSON.stringify({ name, notes, items: items.filter(Boolean).map(i => ({ id: i.id, hash: i.h })) }));
-  return `<button type="button" class="btn primary" data-equip="${payload}">Equip now</button>`;
+  const payload = esc(JSON.stringify({ name, notes, items: loItems(items, ex), mods: ex && ex.mods || [] }));
+  return `<button type="button" class="btn primary" data-equip="${payload}">Equip now</button><button type="button" class="btn" data-undo="1" title="Put back what you wore before the last Equip now">Undo last equip</button>`;
 }
 const _dimButtons = dimButtons;
-dimButtons = function(name, items, notes){
-  const h = _dimButtons(name, items, notes);
-  return IS_APP ? h.replace('<div class="dimrow">', '<div class="dimrow">' + equipButton(name, items, notes)).replace(/DIM opens its loadout editor[^<]*/, 'Equip now puts the whole build on your Hunter (be in orbit or a social space). The DIM buttons only open it in DIM.') : h;
+dimButtons = function(name, items, notes, ex){
+  const h = _dimButtons(name, items, notes, ex);
+  return IS_APP ? h.replace('<div class="dimrow">', '<div class="dimrow">' + equipButton(name, items, notes, ex)).replace(/DIM opens its loadout editor[^<]*/, 'Equip now puts the whole build on your Hunter (be in orbit or a social space). The DIM buttons only open it in DIM.') : h;
 };
 function bulkButtons(){
   if(!IS_APP) return '';
@@ -1560,6 +1672,9 @@ document.addEventListener('click', async e => {
   const eq = e.target.closest('[data-equip]');
   if(eq && IS_APP){ const p = JSON.parse(eq.dataset.equip); eq.disabled = true; appToast(`Equipping ${p.name}…`, 'busy');
     const r = await window.hunterApp.equip(p); eq.disabled = false; appToast(r.ok ? `Equipped ${p.name}.` : `Could not equip: ${r.msg}`, r.ok ? 'ok' : 'err'); return; }
+  const un = e.target.closest('[data-undo]');
+  if(un && IS_APP && window.hunterApp.undo){ un.disabled = true; appToast('Putting your previous gear back…', 'busy');
+    const r = await window.hunterApp.undo(); un.disabled = false; appToast(r.ok ? 'Previous gear equipped.' : `Could not undo: ${r.msg}`, r.ok ? 'ok' : 'err'); return; }
   const bk = e.target.closest('[data-bulk]');
   if(bk && IS_APP){
     if(!bk.dataset.armed){ bk.dataset.armed = '1'; bk._t = bk.textContent; bk.textContent = 'Click again to confirm'; bk.classList.add('on'); setTimeout(() => { if(bk.dataset.armed){ delete bk.dataset.armed; bk.textContent = bk._t; bk.classList.remove('on'); } }, 4000); return; }
@@ -1596,10 +1711,11 @@ if(window.hunterApp){
     <div class="selrow"><label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="app-startup"> Start with Windows (in the tray, refreshing in the background)</label></div>
     <p class="note">Closing the window keeps the app running in the tray next to the clock, so it can keep refreshing and send notifications. Quit from the tray icon's menu.</p>
     <div class="msg" id="app-status"></div></div>
-    <div class="card"><h3>About</h3><p class="perk" id="app-version"></p><p class="lead">Your DIM sign-in is stored only on this computer. Item data, icons and descriptions come from DIM and Bungie. Loadout buttons open the build in the app's DIM window, where you press Save and then equip it.</p></div></div>`;
+    <div class="card"><h3>About</h3><p class="perk" id="app-version"></p><p style="margin:8px 0"><button class="btn sm" id="app-diag">Copy diagnostics</button> <span class="perk" id="diag-msg"></span></p><p class="lead">Your DIM sign-in is stored only on this computer. Item data, icons and descriptions come from DIM and Bungie. Loadout buttons open the build in the app's DIM window, where you press Save and then equip it.</p></div></div>`;
   const st = document.getElementById('app-status');
   document.getElementById('app-refresh').onclick = () => { st.textContent = 'Refreshing…'; window.hunterApp.refresh(); };
   document.getElementById('app-dim').onclick = () => window.hunterApp.openDim();
+  document.getElementById('app-diag').onclick = async () => { const m = document.getElementById('diag-msg'); if(!window.hunterApp.diagnostics){ m.textContent = 'Not available.'; return; } await window.hunterApp.diagnostics(); m.textContent = 'Copied. Paste it in a message if something goes wrong.'; };
   const su = document.getElementById('app-startup'); window.hunterApp.getSettings().then(s => { su.checked = !!s.startup; const v = document.getElementById('app-version'); if(v) v.textContent = 'Version ' + s.version + (s.update ? ` · ${s.update} ready to install` : ' · updates install automatically from GitHub'); });
   if(window.hunterApp.onUpdate) window.hunterApp.onUpdate(ver => {
     let bar = document.getElementById('updbar'); if(!bar){ bar = document.createElement('div'); bar.id = 'updbar'; bar.className = 'newbar'; document.querySelector('nav.tabs').insertAdjacentElement('afterend', bar); }
@@ -1622,6 +1738,63 @@ document.getElementById('reset').onclick = () => { try{ localStorage.removeItem(
 }
 renderAll();
 { const t = STORE.get('hunterTab','builds'); if(t !== 'builds') openTab(t); }
+
+
+/* ---------- Bulgarian UI (EN/BG toggle) ---------- */
+const BG = {
+ 'Builds':'Билдове','Custom build':'Собствен билд','Compare':'Сравни','What to keep':'Какво да пазя','Vault cleanup':'Чистене на трезора','Meta & farming':'Мета и фарм','This week':'Тази седмица','History':'История','Update':'Обновяване',
+ 'Power':'Сила','Armor':'Броня','Weapons':'Оръжия','Updated':'Обновено','Class':'Клас','Vault':'Трезор','Health':'Здраве','Grenade':'Граната','Super':'Супер','Melee':'Меле',
+ 'Ready to build now':'Готови за игра сега','Something is missing':'Липсва нещо','All':'Всички','Solo':'Соло','Raid':'Рейд',
+ 'Subclass':'Подклас','Best armor from your vault':'Най-добра броня от трезора','Equip it':'Екипирай','Equip now':'Екипирай сега','Undo last equip':'Върни предишното','Open loadout in DIM':'Отвори в DIM','Copy DIM link':'Копирай DIM линк',
+ 'Slot':'Слот','Best from your vault':'Най-доброто от трезора','Why':'Защо','Kinetic slot':'Кинетичен слот','Energy slot':'Енергиен слот','Power slot':'Тежък слот','Other good options:':'Други добри варианти:',
+ 'Nothing suitable. Use your favorite weapon.':'Нищо подходящо. Ползвай любимото си оръжие.','Recommended for this build.':'Препоръчано за билда.','Matches the element.':'Съвпада с елемента.',
+ 'Refresh from DIM':'Обнови от DIM','Refresh now':'Обнови сега','Open DIM window':'Отвори DIM прозореца','About':'Информация','Copy diagnostics':'Копирай диагностика',
+ 'Exotic armor':'Екзотична броня','Stat priorities':'Приоритет на статовете','Best for my stats':'Най-добра за статовете ми','No exotic':'Без екзотика','No result':'Няма резултат',
+ 'Weapons to chase':'Оръжия за гонене','Not in your vault':'Нямаш го в трезора','Own it, but not the god roll':'Имаш го, но не е god roll','Materials and engrams':'Материали и енграми',
+ 'Recommended by the builds you can play now.':'Препоръчани от билдовете, които можеш да играеш сега.','Source unknown':'Неизвестен източник',
+ "You're missing:":'Липсва ти:','Gold outline = needed for a meta build above.':'Златна рамка = нужно за мета билд горе.',
+ 'Restart and update':'Рестартирай и обнови','Click again to confirm':'Кликни пак за потвърждение','Search items or perks…':'Търси предмети или перкове…',
+ 'The best builds from what you have in your inventory and vault':'Най-добрите билдове от това, което имаш в инвентара и трезора','Hover or focus an icon for its description.':'Задръж мишката върху икона за описание.','Aspect':'Аспект','Fragment':'Фрагмент','Champions':'Шампиони','Ready to build now':'Готови за игра сега','☀ Light':'☀ Светла','☾ Dark':'☾ Тъмна','Exotic Engram':'Екзотичен енграм','Distorted Engram':'Изкривен енграм',
+ 'Lock':'Заключи','Close':'Затвори','Perks':'Перкове','Stats':'Статове','Mods':'Модове','Intrinsic':'Вградено','Masterwork':'Мастъруърк'
+};
+const BG_RE = [
+ [/^target (\d+)$/, 'цел $1'], [/^Postmaster (\d+)\/(\d+)$/, 'Пощальон $1/$2'], [/^Version (.+)$/, 'Версия $1'],
+ [/^Updated (.+) · (\d+) items$/, 'Обновено $1 · $2 предмета'], [/^Refreshing from DIM…$/, 'Обновяване от DIM…'],
+ [/^Equipping (.+)…$/, 'Екипиране на $1…'], [/^Equipped (.+)\.$/, 'Екипирано: $1.'], [/^Previous gear equipped\.$/, 'Предишната екипировка е върната.'],
+ [/^Offline: (.+)$/, 'Няма интернет: $1'], [/^\((\d+) without mods\)$/, '($1 без модове)']
+];
+const BG_DESC = {
+ gyrfalcon:'Избягването те прави невидим, излизането от невидимост дава Volatile Rounds на оръжията, а убийство на volatile враг те прави пак невидим. Най-сигурният Hunter цикъл за трудно съдържание и всичко нужно е в трезора ти.',
+ tempest:'Combination Blow те лекува и зарежда мелето, а Gifted Conviction дава устойчивост на щети и jolt при избягване. Luminopotent сетът пасва идеално: 4 части превръщат всеки jolt в Ionic Traces, а 2 части ускоряват fusion пушките.',
+ assassin:'Меле убийствата те лекуват и те правят невидим. Knock \'Em Down те държи Radiant, а Seventh Seraph дава Weapons и Grenade при Solar убийства. Вече носиш този шлем.',
+ yas:'Гранатите и експлозивите на Gunpowder Gamble подпалват враговете и връщат енергия за граната чрез YAS. Бърз цикъл с много подпалвания за чистене на тълпи.',
+ frost:'Fr0st-EE5 ускорява регенерацията на способностите, докато спринтираш. Duskfield замразява, а Grim Harvest пуска шардове за енергия. Unending Tempest с Headstone е идеалният Stasis партньор.',
+ cyrta:'Всяко закачане с кука ти дава Woven Mail за защита. Quicksilver Storm и Nightshade с Hatchling постоянно създават threadlings.',
+ fealty:'Всеки удар и отскок на Withering Blade връща меле енергия и оставя Stasis кристали. Разбиването на кристал или замразен враг с острие изстрелва още три, така мелето се захранва само. Grim Harvest превръща разбиванията в шардове за още енергия.',
+ graviton:'Невидимостта трае 2 секунди повече и всяко влизане в невидимост дава Vanishing Shadow: до 500% по-бърза регенерация на граната и меле, 200% по-бързо избягване и Void щит при 3 стака. Vanishing Step прави всяко избягване невидимост. По-безопасно от Gyrfalcon, когато ти трябват способности повече от оръжейни щети.',
+ coyote:'Два заряда за избягване значат двойно повече Flow State презареждания и двойно повече усилени Lethal Current удари. Скоро след всяко избягване следващото убийство с оръжие пуска Orb of Power. Докато си amplified, Luminopotent ускорява fusion и linear fusion пушките.',
+ foetracer:'Удар по елит, мини бос или бос със Strand способност го маркира и дава 4 стака Strand Weapon Surge за 16 секунди. Убийство на маркираната цел със Strand оръжие пуска Tangle. Хвърли Threaded Spike по шампиона и го довърши с Quicksilver Storm или Cynosure.',
+ raiden:'Бързите удари с Arc Staff трупат Synapse Junctions: до 105% повече щети, 60% по-бавно изтичане на супера и всеки удар дава jolt. Билдвай за Super и не спирай да удряш.',
+ gwisin:'Удари и убийства със Spectral Blades преди невидимост връщат супер енергия, така суперът трае много по-дълго. Излизането от невидимост близо до врагове пуска отслабващ дим.',
+ tricksleeves:'Sidearm оръжията получават по-бързо боравене, презареждане и точност във въздуха. При критично здраве смяната към sidearm го презарежда и удвоява щетите му, а всяко убийство удължава ефекта.',
+ 'coyote-pvp':'Две избягвания на битка: всяко презарежда оръжието и те прави невидим с Vanishing Step, така можеш да надникнеш, стреляш, изчезнеш и пак да надникнеш. Class е най-важен, после Weapons и Health.',
+ 'graviton-pvp':'Невидимостта трае по-дълго, а всяка невидимост ускорява мелето, гранатата и избягването, с Void щит при 3 стака. Избегни, смени позиция и започни с първия изстрел. Добро в Trials за невидими съживявания.',
+ 'yas-pvp':'Tripmine гранатите убиват невнимателни играчи с един удар и връщат енергия чрез YAS, така можеш да заключиш врати и коридори. Комбинирай със 120 hand cannon или pulse пушка за дуелите.'
+};
+let LANG = STORE.get('hunterLang', 'en');
+function trNode(n){
+  if(LANG !== 'bg') return; const raw = n.nodeValue; const t = raw.trim(); if(!t || t.length > 700) return;
+  let out = BG[t]; if(!out) for(const [re, rp] of BG_RE){ if(re.test(t)){ out = t.replace(re, rp); break; } }
+  if(!out){ const b = BUILDS.find(x => x.desc === t); if(b && BG_DESC[b.id]) out = BG_DESC[b.id]; }
+  if(out && out !== t){ n.nodeValue = raw.replace(t, out); }
+}
+function trTree(root){ if(LANG !== 'bg') return; const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, { acceptNode: x => x.parentElement && /SCRIPT|STYLE|TEXTAREA/.test(x.parentElement.tagName) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT }); let n; while((n = w.nextNode())) trNode(n);
+  root.querySelectorAll && root.querySelectorAll('input[placeholder]').forEach(i => { if(BG[i.placeholder]) i.placeholder = BG[i.placeholder]; }); }
+const trObs = new MutationObserver(ms => { if(LANG !== 'bg') return; trObs.disconnect(); for(const m of ms){ if(m.type === 'characterData') trNode(m.target); else m.addedNodes.forEach(x => x.nodeType === 3 ? trNode(x) : x.nodeType === 1 && trTree(x)); } trObs.observe(document.body, { childList:true, subtree:true, characterData:true }); });
+function setLang(l){ LANG = l; STORE.set('hunterLang', l); document.documentElement.lang = l; const b = document.getElementById('lang-btn'); if(b) b.textContent = l === 'bg' ? 'EN' : 'BG';
+  if(l === 'bg'){ trTree(document.body); trObs.observe(document.body, { childList:true, subtree:true, characterData:true }); } else if(document.documentElement.dataset.bg){ location.reload(); } if(l === 'bg') document.documentElement.dataset.bg = '1'; }
+{ const tb = document.getElementById('theme-btn'); const lb = document.createElement('button'); lb.type = 'button'; lb.className = 'btn sm themebtn langbtn'; lb.id = 'lang-btn'; lb.setAttribute('aria-label', 'Switch language / Смени езика');
+  tb.insertAdjacentElement('afterend', lb); lb.onclick = () => setLang(LANG === 'bg' ? 'en' : 'bg'); setLang(LANG); }
 
 /* ---------- micro-interactions ---------- */
 function countUp(el){

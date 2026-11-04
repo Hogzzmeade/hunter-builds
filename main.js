@@ -1,7 +1,8 @@
 // Hunter Builds — desktop app
 // One window shows the builds page; a second (hidden) window runs DIM with your own sign-in.
 // The app reads your inventory straight from DIM, so it needs nothing else to stay up to date.
-const { app, BrowserWindow, ipcMain, shell, Notification, nativeImage, session, Tray, Menu } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, Notification, nativeImage, session, Tray, Menu, clipboard, net } = require('electron');
+const os = require('os');
 const path = require('path');
 let autoUpdater = null; try { ({ autoUpdater } = require('electron-updater')); } catch (e) { /* not bundled in dev */ }
 const fs = require('fs');
@@ -21,8 +22,26 @@ if (process.env.HB_USERDATA) app.setPath('userData', process.env.HB_USERDATA); /
 if (!app.requestSingleInstanceLock()) app.quit();
 app.on('second-instance', () => { if (mainWin) { if (mainWin.isMinimized()) mainWin.restore(); mainWin.focus(); } });
 
+/* ---------- log file (userData/hb.log) ---------- */
+function log(msg) {
+  try {
+    const f = file('hb.log'); const line = `[${new Date().toISOString()}] ${msg}\n`;
+    try { if (fs.statSync(f).size > 1024 * 1024) fs.writeFileSync(f, fs.readFileSync(f, 'utf8').slice(-256 * 1024)); } catch (e) {}
+    fs.appendFileSync(f, line);
+  } catch (e) {}
+}
+process.on('uncaughtException', e => log('uncaught: ' + (e && e.stack || e)));
+process.on('unhandledRejection', e => log('unhandled: ' + (e && e.stack || e)));
+function diagnostics() {
+  const d = readJson('data.json', null); let tail = '';
+  try { tail = fs.readFileSync(file('hb.log'), 'utf8').split('\n').slice(-80).join('\n'); } catch (e) {}
+  return [`Hunter Builds ${app.getVersion()}`, `Electron ${process.versions.electron} · ${os.type()} ${os.release()} ${process.arch}`,
+    `Online: ${net.isOnline()} · DIM page: ${dimWin ? dimWin.webContents.getURL().replace(/\?.*$/, '') : '-'}`,
+    `Data: ${d ? `${d.items.length} items, updated ${d.updated}, subclasses ${(d.subs || []).length}, postmaster ${d.postmaster ? d.postmaster.n : '-'}` : 'none yet'}`,
+    `Status: ${lastStatus}`, `Update ready: ${updateReady || 'no'}`, '', '--- last log lines ---', tail].join('\n');
+}
 function status(msg) {
-  lastStatus = msg;
+  lastStatus = msg; log('status: ' + msg);
   if (mainWin && !mainWin.isDestroyed()) mainWin.webContents.send('status', msg);
 }
 
@@ -59,6 +78,8 @@ function createDim() {
   // Bungie / platform sign-in popups stay inside the same signed-in session
   dimWin.webContents.setWindowOpenHandler(() => ({ action: 'allow', overrideBrowserWindowOptions: { autoHideMenuBar: true, webPreferences: { partition: 'persist:dim' } } }));
   dimWin.on('close', e => { if (!app.isQuitting) { e.preventDefault(); dimWin.hide(); } });
+  dimWin.webContents.on('did-fail-load', (_e, code, desc, url, isMain) => { if (!isMain || code === -3) return; log(`DIM load failed ${code} ${desc} ${url}`);
+    status(net.isOnline() ? `Could not reach DIM (${desc}). It will try again at the next refresh.` : 'Offline: no internet connection. Showing your last saved data; it refreshes when you are back online.'); });
   dimWin.loadURL(DIM_HOME);
 }
 function showDim(url) { if (url) dimWin.loadURL(url); dimWin.show(); dimWin.focus(); }
@@ -109,6 +130,8 @@ async function refresh(reason) { return queue(() => doRefresh(reason)); }
 async function doRefresh(reason) {
   if (refreshing) return; refreshing = true;
   try {
+    log('refresh: ' + reason);
+    if (!net.isOnline()) { status('Offline: no internet connection. Showing your last saved data; it refreshes when you are back online.'); return; }
     status('Refreshing from DIM…');
     const url = dimWin.webContents.getURL();
     if (!/\/d2\/inventory/.test(url)) {
@@ -153,7 +176,10 @@ async function doRefresh(reason) {
     }
     const v = res.data.vault; if (v && v.cap && v.n / v.cap >= 0.9 && (!prev || !prev.vault || prev.vault.n / prev.vault.cap < 0.9))
       notify('Vault almost full', `${v.n} of ${v.cap} slots used. Open Vault cleanup to see what you can dismantle.`);
+    const pm = res.data.postmaster; if (pm && pm.n >= pm.cap - 3 && (!prev || !prev.postmaster || prev.postmaster.n < pm.cap - 3))
+      notify('Postmaster almost full', `${pm.n} of ${pm.cap}: ${pm.items.slice(0, 3).map(i => i[0]).join(', ')}. Pull them before new drops are lost.`);
   } catch (e) {
+    log('refresh error: ' + (e && e.stack || e));
     status('Refresh failed: ' + (e && e.message ? e.message : e) + '. Press Refresh now to try again.');
   } finally { refreshing = false; }
 }
@@ -211,10 +237,26 @@ async function dimGo(pathPart) {
   if (!(await waitForDim(120 * 1000))) throw new Error('DIM did not load');
   await sleep(2500);
 }
+// what the Hunter wears right now (with subclass setup), so the last equip can be undone
+const SNAPSHOT = `(() => {
+  for (const e of document.querySelectorAll('*')) { const k = Object.keys(e).find(k => k.startsWith('__reactFiber$')); if (!k) continue;
+    let r = e[k]; while (r.return) r = r.return; const q = [r]; let c = 0;
+    while (q.length && c < 20000) { const x = q.shift(); c++; const p = x && x.memoizedProps;
+      if (p && p.store && p.store.getState) { const s = p.store.getState(); const h = (s.inventory.stores || []).find(z => z.classType === 1 && !z.isVault); if (!h) return null;
+        return h.items.filter(i => i.equipped && (['Weapons', 'Armor'].includes(i.bucket.sort) || i.bucket.name === 'Subclass')).map(i => {
+          const o = { id: i.id, hash: i.hash };
+          if (i.bucket.name === 'Subclass' && i.sockets) { o.socketOverrides = {}; i.sockets.allSockets.forEach(sk => { if (sk.plugged) o.socketOverrides[sk.socketIndex] = sk.plugged.plugDef.hash; }); }
+          return o; }); }
+      if (x.child) q.push(x.child); if (x.sibling) q.push(x.sibling); }
+    return null; }
+  return null; })()`;
 async function equip(p) {
   return queue(async () => {
     try {
+      log(`equip: ${p.name} (${p.items.length} items, ${(p.mods || []).length} mods)`);
+      if (!p.undo) { try { await dimGo('inventory'); const snap = await js(SNAPSHOT); if (snap && snap.length) fs.writeFileSync(file('undo.json'), JSON.stringify({ t: Date.now(), from: p.name, items: snap })); } catch (e) { log('snapshot failed: ' + e.message); } }
       const lo = { id: 'hb-' + p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40), name: 'HB: ' + p.name, classType: 1, clearSpace: false, notes: p.notes || '', equipped: p.items, unequipped: [] };
+      if (p.mods && p.mods.length) lo.parameters = { mods: p.mods };
       await dimGo('loadouts?loadout=' + encodeURIComponent(JSON.stringify(lo)));
       // save the loadout from DIM's editor (new: "Save", existing: "Save Changes")
       const saved = await js(`(async () => { for (let i = 0; i < 20; i++) { const f = [...document.querySelectorAll('form button[type=submit]')].find(b => b.offsetParent && !b.disabled); if (f) { f.click(); return true; } await new Promise(r => setTimeout(r, 500)); } return false; })()`);
@@ -228,9 +270,10 @@ async function equip(p) {
       const msg = await js(`(async () => { for (let i = 0; i < 120; i++) { const n = [...document.querySelectorAll('[class*=otification]')].map(x => x.innerText).join(' | ');
         if (/succeeded/i.test(n)) return 'ok'; if (/fail|error|couldn|unable/i.test(n)) return n.replace(/\\s+/g, ' ').slice(0, 220); await new Promise(r => setTimeout(r, 500)); } return 'timeout'; })()`);
       setTimeout(() => refresh('after-equip'), 3000);
+      log('equip result: ' + msg);
       if (msg === 'ok') return { ok: true };
       return { ok: false, msg: msg === 'timeout' ? 'DIM did not confirm in time. Check the DIM window.' : msg };
-    } catch (e) { return { ok: false, msg: e.message || String(e) }; }
+    } catch (e) { log('equip error: ' + (e.stack || e)); return { ok: false, msg: e.message || String(e) }; }
   });
 }
 async function bulk(p) {
@@ -275,6 +318,8 @@ function installUpdate() { if (!updateReady || !autoUpdater) return; app.isQuitt
 ipcMain.on('install-update', () => installUpdate());
 ipcMain.handle('equip', (_e, p) => equip(p));
 ipcMain.handle('bulk', (_e, p) => bulk(p));
+ipcMain.handle('undo', () => { const u = readJson('undo.json', null); if (!u || !u.items) return { ok: false, msg: 'Nothing to undo yet.' }; return equip({ name: 'Previous gear', notes: `Gear before "${u.from}"`, items: u.items, undo: true }); });
+ipcMain.handle('diagnostics', () => { const t = diagnostics(); clipboard.writeText(t); return t; });
 ipcMain.on('notify', (_e, t, b) => notify(t, b));
 ipcMain.handle('settings', () => ({ startup: !!app.getLoginItemSettings({ args: ['--hidden'] }).openAtLogin, version: app.getVersion(), update: updateReady }));
 ipcMain.on('set-startup', (_e, on) => setStartup(on));
@@ -294,5 +339,7 @@ app.whenReady().then(() => {
   const age = data ? Date.now() - new Date(data.updated).getTime() : Infinity;
   if (age > 30 * 60 * 1000) setTimeout(() => refresh('startup'), 1500);
   setInterval(() => refresh('timer'), REFRESH_EVERY);
+  let wasOnline = net.isOnline(); setInterval(() => { const on = net.isOnline(); if (on && !wasOnline) { log('back online'); refresh('online'); } wasOnline = on; }, 30 * 1000);
+  log(`start ${app.getVersion()}`);
 });
 app.on('window-all-closed', () => { if (app.isQuitting) app.quit(); });
