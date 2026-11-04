@@ -1,0 +1,60 @@
+{
+  "name": "hunter-builds",
+  "productName": "Hunter Builds",
+  "version": "1.3.0",
+  "description": "Destiny 2 Hunter builds from your own inventory, powered by DIM",
+  "main": "main.js",
+  "author": "Hogzzmeade",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win nsis --x64 --publish never"
+  },
+  "build": {
+    "appId": "local.hunterbuilds.app",
+    "productName": "Hunter Builds",
+    "files": [
+      "main.js",
+      "preload.js",
+      "app/**/*",
+      "package.json"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "build/icon.png",
+      "signAndEditExecutable": false
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "artifactName": "HunterBuilds-Setup-${version}.exe",
+      "shortcutName": "Hunter Builds",
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true
+    },
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "Hogzzmeade",
+        "repo": "hunter-builds",
+        "releaseType": "release"
+      }
+    ]
+  },
+  "devDependencies": {
+    "electron": "45.2.1",
+    "electron-builder": "26.0.12"
+  },
+  "dependencies": {
+    "electron-updater": "^6.8.11"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Hogzzmeade/hunter-builds.git"
+  }
+}
