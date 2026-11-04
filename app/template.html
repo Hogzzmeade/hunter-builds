@@ -587,6 +587,7 @@ const SETS = {
   'Eutechnology':['Gift of the Ley Lines: rapid Void kills spawn a Void breach','Techeun\'s Foresight: after a breach, your next Void kill detonates'],
   'Seventh Seraph':['Rasputin\'s Wrath: AoE and Solar kills grant Warmind Charges (+Weapons and +Grenade)','Rasputin\'s Reprisal: powerful enemies burst into a healing Solar explosion'],
   'Bushido':['Iaido: kills with a freshly drawn or reloaded weapon heal you','Unfaltering Focus: bow, shotgun or sword kills reduce incoming damage'],
+  'AION Renewal':['Force Converter: Rocket, Grenade Launcher or micro-missile final blows let you sprint into Speed Booster','Reactive Booster: sprinting at critical health, suspended or slowed grants Speed Booster at once'],
   'Yearning Echo':['Untold Greed: picking up ammo and orbs grants damage resistance and faster reloads','Overflowing Coffers: orbs give more energy']
 };
 
@@ -645,8 +646,88 @@ const BUILDS = [
   sets:{'Yearning Echo':[10,6]},
   weap:{names:{'Quicksilver Storm':7,'Nightshade':4,'Cynosure':5,'Service of Luzaku':4,'New Malpais':4,'Mint Retrograde':3},
         perks:{'Hatchling':5,'Slice':4,'Chain Reaction':2,'Headseeker':1},el:{Strand:5}},
-  src:'blueberries.gg'}
+  src:'blueberries.gg'},
+/* ---------- more builds from the exotics you own (added Nov 2026, based on the exotic perk text in your DIM data) ---------- */
+{ id:'fealty', name:'Withering Blade loop with Mask of Fealty', el:'Stasis', sub:'Revenant', meta:78, content:'Crowd control, strikes, GM',
+  exotic:'Mask of Fealty', aspects:['Grim Harvest','Shatterdive'], wishAspects:['Touch of Winter'],
+  kit:{Super:'Silence and Squall',Grenade:'Duskfield Grenade',Melee:'Withering Blade',Class:"Gambler's Dodge",Fragments:'Shards, Rime, Chains, Torment'},
+  desc:'Every Withering Blade hit and bounce refunds melee energy and leaves Stasis crystals. Shattering a crystal or a frozen enemy with a blade fires a spread of three more blades, so the melee keeps feeding itself. Grim Harvest turns the shatters into shards for even more energy.',
+  w:[1,1.4,1.6,1.2,.6,3], t:[80,90,100,80,60,150],
+  sets:{},
+  weap:{names:{'Unending Tempest':6,'Ouster Engine':4,'Riptide':4,'Ulterior Observation':4,'Aurora Dawn':3,'Prolonged Engagement':3,'Spare Rations':3},
+        perks:{'Headstone':6,'Chaos Reshaped':4,'Demolitionist':3,'Whirlwind Blade':2},el:{Stasis:5}},
+  src:'Mask of Fealty perk text (your DIM data), general Revenant guides'},
+{ id:'graviton', name:'Ability spam with Graviton Forfeit', el:'Void', sub:'Nightstalker', meta:82, content:'Endgame, GM, solo',
+  exotic:'Graviton Forfeit', aspects:['Vanishing Step','Stylish Executioner'],
+  kit:{Super:'Moebius Quiver',Grenade:'Vortex Grenade',Melee:'Snare Bomb',Class:"Gambler's Dodge",Fragments:'Starvation, Persistence, Remnants, Obscurity'},
+  desc:'Invisibility lasts 2 seconds longer, and each time you go invisible you gain Vanishing Shadow: up to 500% faster grenade and melee regeneration and 200% faster dodge, plus a Void overshield at 3 stacks. Vanishing Step makes every dodge an invisibility, so grenades and Snare Bombs come back very quickly. Safer than Gyrfalcon when you need abilities more than weapon damage.',
+  w:[1.4,1.2,2.6,2,.6,2], t:[90,70,120,100,60,100],
+  sets:{'Eutechnology':[18,10]},
+  weap:{names:{'Graviton Lance':8,'Convened Recurve':5,'Brass Attacks':4,'Hammerhead':4,'Bellowing Giant':3,'Hard Light':3,'Null Composure':3},
+        perks:{'Repulsor Brace':6,'Destabilizing Rounds':6,'Demolitionist':3,'Onslaught':2,'Cluster Bomb':2},el:{Void:5}},
+  src:'Graviton Forfeit perk text (your DIM data), general Nightstalker guides'},
+{ id:'coyote', name:'Double dodge Arc with The Sixth Coyote', el:'Arc', sub:'Arcstrider', meta:72, content:'Strikes, patrols, add clear',
+  exotic:'The Sixth Coyote', aspects:['Flow State','Lethal Current'], wishAspects:['Ascension'],
+  kit:{Super:'Gathering Storm',Grenade:'Pulse Grenade',Melee:'Combination Blow',Class:"Gambler's Dodge",Fragments:'Resistance, Shock, Amplitude, Frequency, Ions'},
+  desc:'Two dodge charges mean twice as many Flow State reloads and twice as many empowered Lethal Current melees. Shortly after each dodge, your next weapon kill drops an Orb of Power. While amplified, your Luminopotent set speeds up fusion and linear fusion rifles.',
+  w:[1.6,1.2,3,.8,.6,1.8], t:[100,70,150,60,60,100],
+  sets:{'Luminopotent':[16,14]},
+  weap:{names:{'Delicate Tomb':6,'Main Ingredient':5,'Riskrunner':5,'The Queenbreaker':4,"Salvager's Salvo":4,'Thunderlord':4,'Matador 64':3,'Out of Bounds':3},
+        perks:{'Voltshot':6,'Rolling Storm':4,'One-Two Punch':3,'Chain Reaction':2,'Moving Target':1},el:{Arc:5}},
+  src:'The Sixth Coyote perk text (your DIM data), general Arcstrider guides'},
+{ id:'foetracer', name:'Strand weapon damage with Foetracer', el:'Strand', sub:'Threadrunner', meta:68, content:'Bosses, champions, raids',
+  exotic:'Foetracer', aspects:["Widow's Silk",'Ensnaring Slam'],
+  kit:{Super:'Silkstrike',Grenade:'Grapple',Melee:'Threaded Spike',Class:"Gambler's Dodge",Fragments:'Ascent, Generation, Warding, Transmutation'},
+  desc:'Hitting an elite, miniboss or boss with a Strand ability marks it and gives you 4 stacks of Strand Weapon Surge for 16 seconds. Killing the marked target with a Strand weapon drops a Tangle. Throw a Threaded Spike at the champion, then finish it with Quicksilver Storm or Cynosure.',
+  w:[3,1.4,1,1.8,.6,1.6], t:[150,90,70,100,60,100],
+  sets:{'Yearning Echo':[10,6]},
+  weap:{names:{'Quicksilver Storm':6,'Cynosure':5,'Service of Luzaku':4,'Nightshade':4,'New Malpais':4,'Last Thursday':3,'Mint Retrograde':3},
+        perks:{'Hatchling':5,'Slice':4,'Chain Reaction':2,'Headseeker':1},el:{Strand:5}},
+  src:'Foetracer perk text (your DIM data)'},
+{ id:'raiden', name:'Arc Staff super with Raiden Flux', el:'Arc', sub:'Arcstrider', meta:62, content:'Add clear, super-heavy encounters',
+  exotic:'Raiden Flux', aspects:['Flow State','Lethal Current'],
+  kit:{Super:'Arc Staff',Grenade:'Pulse Grenade',Melee:'Combination Blow',Class:"Gambler's Dodge",Fragments:'Ions, Shock, Amplitude, Frequency'},
+  desc:'Quick Arc Staff hits stack Synapse Junctions: up to 105% more damage, 60% slower super drain, and every hit jolts. Build for Super, keep hitting, and the staff lasts much longer than usual.',
+  w:[1.2,1.2,1.8,.8,3,1.6], t:[80,70,100,60,150,100],
+  sets:{'Luminopotent':[16,14]},
+  weap:{names:{'Riskrunner':5,'Delicate Tomb':5,'Main Ingredient':4,'Thunderlord':4,"Salvager's Salvo":4},
+        perks:{'Voltshot':5,'Rolling Storm':3,'Chain Reaction':2},el:{Arc:5}},
+  src:'Raiden Flux perk text (your DIM data)'},
+{ id:'gwisin', name:'Spectral Blades with Gwisin Vest', el:'Void', sub:'Nightstalker', meta:58, content:'Patrols, strikes, fun',
+  exotic:'Gwisin Vest', aspects:['Vanishing Step','Stylish Executioner'],
+  kit:{Super:'Spectral Blades',Grenade:'Vortex Grenade',Melee:'Snare Bomb',Class:"Gambler's Dodge",Fragments:'Starvation, Persistence, Remnants, Obscurity'},
+  desc:'Hits and kills with Spectral Blades before going invisible refund super energy, so the super lasts much longer. Leaving invisibility near enemies also releases weakening smoke, which helps outside the super too.',
+  w:[1.2,1.2,1.8,1,3,1], t:[80,70,100,70,150,70],
+  sets:{'Eutechnology':[18,10]},
+  weap:{names:{'Graviton Lance':6,'Convened Recurve':4,'Hammerhead':4,'Bellowing Giant':3,'Hard Light':3},
+        perks:{'Repulsor Brace':5,'Destabilizing Rounds':5,'Demolitionist':2},el:{Void:5}},
+  src:'Gwisin Vest perk text (your DIM data)'},
+{ id:'tricksleeves', name:'Sidearms with Mechaneer\'s Tricksleeves', el:'Solar', sub:'Gunslinger', meta:50, content:'Solo, low-level content, fun',
+  exotic:"Mechaneer's Tricksleeves", aspects:["Knock 'Em Down",'On Your Mark'],
+  kit:{Super:'Blade Barrage',Grenade:'Healing Grenade',Melee:'Knife Trick',Class:"Gambler's Dodge",Fragments:'Mercy, Torches, Empyrean, Searing'},
+  desc:'Sidearms get faster handling, reload and airborne accuracy. At critical health, switching to a sidearm reloads it and doubles its damage, and every sidearm kill extends the buff. Healing Grenade and the Solar fragments give you room to play at low health.',
+  w:[2.6,2,1.6,1.2,.6,1], t:[150,100,90,80,60,70],
+  sets:{'Seventh Seraph':[14,8]},
+  weap:{names:{'Trespasser':6,'Punching Out':5,'The Keening':4,'Brass Attacks':4,'Lotus-Eater':3,'Gjallarhorn':4},
+        perks:{'Explosive Payload':2,'Subsistence':2,'Feeding Frenzy':2},el:{Solar:3}},
+  src:'Mechaneer\'s Tricksleeves perk text (your DIM data)'}
 ];
+/* auto-generated builds for exotic armor that no build above covers yet (e.g. a new drop) */
+const AUTO_EL = [[/Withering|Stasis|Duskfield|[Ff]rozen|[Ss]hatter|[Ss]low/,'frost'],[/\bArc\b|[Jj]olt|[Aa]mplif|Tempest|Ascension|Arc Staff/,'tempest'],[/Strand|Grapple|[Tt]hreadling|[Ss]ever|[Ss]uspend|[Uu]nravel|Silkstrike/,'cyrta'],[/Void|[Ii]nvisib|[Vv]olatile|[Ww]eaken|Spectral/,'gyrfalcon'],[/Solar|Golden Gun|[Rr]adiant|[Ss]corch|[Ii]gnit|Tripmine|Knife|Blade Barrage/,'assassin']];
+function autoBuilds(){
+  const have = new Set(BUILDS.map(b => b.exotic)); const out = [];
+  for(const it of DATA.items){
+    if(it.w || !it.ex || have.has(it.n) || !it.sk) continue; have.add(it.n);
+    let txt = '';
+    for(const [cat, socks] of it.sk) for(const s of socks){ const p = PLUGS[s[0]]; if(p && /Intrinsic/.test(p.t||'') && p.d) txt = txt || p.d; }
+    const hit = AUTO_EL.find(([re]) => re.test(txt)); const tpl = BUILDS.find(b => b.id === (hit ? hit[1] : 'assassin'));
+    out.push(Object.assign({}, tpl, { id:'auto-' + it.n.toLowerCase().replace(/[^a-z0-9]+/g,'-'), name: it.n + ' (auto)', exotic: it.n, meta: 45,
+      content: 'Auto-generated from an exotic in your vault', wishAspects: [],
+      desc: 'Auto-generated: this exotic is not covered by any build above yet, so it is paired with the closest ' + tpl.sub + ' setup. Exotic perk: ' + (txt || 'no description available.'),
+      src: 'auto-generated from your inventory' }));
+  }
+  return out;
+}
 const MISSING = [
  {name:'Celestial Nighthawk + Still Hunt',el:'Prismatic',why:'The highest boss damage for Hunter right now (S tier).',need:['Prismatic subclass (The Final Shape)','Celestial Nighthawk','Still Hunt']},
  {name:'Prismatic Combination Blow',el:'Prismatic',why:'A melee loop with huge survivability in GMs.',need:['Prismatic subclass',"Liar's Handshake or Relativism"]},
@@ -776,7 +857,7 @@ function pickWeapons(b, W){
 /* ---------- evaluate all builds ---------- */
 function evaluate(){
   const P = pieces(), W = weapons();
-  return BUILDS.map(b => {
+  return [...BUILDS, ...autoBuilds()].map(b => {
     const hasEx = P.some(p => p.ex && p.name === b.exotic);
     const hasSub = DATA.subclasses.includes(b.sub);
     const asp = b.aspects.map(a => [a, DATA.aspects.includes(a)]);
@@ -804,7 +885,7 @@ function renderList(){
   const item = r => `<div class="bitem ${r.ready?'':'locked'}" aria-current="${current===r.b.id}">
      <span class="bar" style="background:${EL[r.b.el]}"></span>
      ${ico(exoItem(r.b.exotic),'sm')}
-     <button type="button" class="bsel" data-id="${r.b.id}"><span class="n">${esc(r.b.name)}</span><span class="s">${r.b.sub} · ${esc(r.b.exotic)}</span></button>
+     <button type="button" class="bsel" data-id="${r.b.id}"><span class="n">${esc(r.b.name)}${['fealty','graviton','coyote','foetracer','raiden','gwisin','tricksleeves'].includes(r.b.id)||/^auto-/.test(r.b.id)?' <span class="newbadge inline">NEW</span>':''}</span><span class="s">${r.b.sub} · ${esc(r.b.exotic)}</span></button>
      <span class="score">${r.ready?r.total:'–'}</span></div>`;
   document.getElementById('blist').innerHTML =
     `<div class="grp">Ready to build now</div>` + ready.map(item).join('') +
