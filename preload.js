@@ -9,6 +9,7 @@ contextBridge.exposeInMainWorld('hunterApp', {
   compact: () => ipcRenderer.send('compact'),
   openMain: () => ipcRenderer.send('open-main'),
   setHotkeys: l => ipcRenderer.send('set-hotkeys', l),
+  setRecWeapons: l => ipcRenderer.send('rec-weapons', l),
   onActivity: cb => { ipcRenderer.on('activity', (_e, a) => cb(a)); ipcRenderer.invoke('activity').then(a => a && cb(a)); },
   backup: d => ipcRenderer.invoke('backup', d),
   copyImage: url => ipcRenderer.invoke('copy-image', url),

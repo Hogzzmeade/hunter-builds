@@ -21,7 +21,20 @@ const readJson = (n, d) => { try { return JSON.parse(fs.readFileSync(file(n), 'u
 
 if (process.env.HB_USERDATA) app.setPath('userData', process.env.HB_USERDATA); // used for testing
 if (!app.requestSingleInstanceLock()) app.quit();
-app.on('second-instance', () => { if (mainWin) { if (mainWin.isMinimized()) mainWin.restore(); mainWin.focus(); } });
+// Jump List tasks start a second instance with --hb=<task>
+function handleArgs(argv) {
+  const a = (argv || []).find(x => /^--hb=/.test(x)); if (!a) return false; const t = a.slice(5);
+  if (t === 'refresh') refresh('jumplist'); else if (t === 'compact') openCompact(); else if (/^equip:\d$/.test(t)) { const h = hotkeys[+t.slice(6)]; if (h) equip(h.payload).then(r => notify('Hunter Builds', r.ok ? `Equipped ${h.name}.` : `Could not equip: ${r.msg}`)); }
+  return true;
+}
+app.on('second-instance', (_e, argv) => { if (handleArgs(argv)) return; if (mainWin) { if (mainWin.isMinimized()) mainWin.restore(); mainWin.show(); mainWin.focus(); } });
+function jumpList() {
+  if (process.platform !== 'win32') return;
+  try { app.setUserTasks([
+    { program: process.execPath, arguments: '--hb=refresh', iconPath: process.execPath, iconIndex: 0, title: 'Refresh from DIM', description: 'Read your inventory from DIM now' },
+    { program: process.execPath, arguments: '--hb=compact', iconPath: process.execPath, iconIndex: 0, title: 'Compact window', description: 'Small always-on-top window' },
+    ...hotkeys.map((h, i) => ({ program: process.execPath, arguments: `--hb=equip:${i}`, iconPath: process.execPath, iconIndex: 0, title: `Equip: ${h.name}`.slice(0, 60), description: `Ctrl+Alt+${i + 1}` }))]); } catch (e) { log('jump list failed: ' + e.message); }
+}
 
 /* ---------- log file (userData/hb.log) ---------- */
 function log(msg) {
@@ -142,7 +155,7 @@ async function refresh(reason) { return queue(() => doRefresh(reason)); }
 async function doRefresh(reason) {
   if (refreshing) return; refreshing = true;
   try {
-    log('refresh: ' + reason);
+    log('refresh: ' + reason); if (mainWin) mainWin.setProgressBar(2);
     if (!net.isOnline()) { status('Offline: no internet connection. Showing your last saved data; it refreshes when you are back online.'); return; }
     status('Refreshing from DIM…');
     const url = dimWin.webContents.getURL();
@@ -184,15 +197,23 @@ async function doRefresh(reason) {
       const gods = added.filter(a => { const i = full(a.id); return i.wl && i.wl[0] === 2; });
       const exo = added.filter(a => full(a.id).ex && !(prev.exotics || []).includes(a.n));
       if (gods.length) notify('God roll dropped!', gods.map(a => a.n).join(', '));
+      const trash = added.filter(a => { const i = full(a.id); return i.w && i.wl && i.wl[0] === -1; });
+      if (trash.length) notify('Trash roll' + (trash.length > 1 ? 's' : ''), `${trash.map(a => a.n).join(', ')}. Open Hunter Builds to tag ${trash.length > 1 ? 'them' : 'it'} as Junk.`);
       if (exo.length) notify('New exotic', exo.map(a => a.n).join(', '));
       const rest = added.length - gods.length - exo.length;
       if (rest > 0) notify('Hunter Builds', `${added.length} new item${added.length > 1 ? 's' : ''}: ${added.slice(0, 4).map(a => a.n).join(', ')}`);
     }
+    // vendors selling a weapon your builds recommend (once per week per item)
+    try { const wk = weekKey(new Date()); const seen = readJson('settings.json', {}).vendorSeen || {}; const sk = seen.w === wk ? seen.items : []; const rec = readJson('recweapons.json', []);
+      const hits = ((res.data.weekly && res.data.weekly.vendors) || []).flatMap(v => v.items.filter(i => i.w && rec.includes(i.n) && !sk.includes(i.n)).map(i => `${i.n} (${v.v})`));
+      if (hits.length) { notify('Vendor has a weapon for your builds', hits.join(', ')); saveSettings({ vendorSeen: { w: wk, items: [...sk, ...hits.map(h => h.replace(/ \(.*$/, ''))] } }); } } catch (e) { log('vendor check: ' + e.message); }
     const v = res.data.vault; if (v && v.cap && v.n / v.cap >= 0.9 && (!prev || !prev.vault || prev.vault.n / prev.vault.cap < 0.9))
       notify('Vault almost full', `${v.n} of ${v.cap} slots used. Open Vault cleanup to see what you can dismantle.`);
     const pm = res.data.postmaster; if (pm && pm.n >= pm.cap - 3 && (!prev || !prev.postmaster || prev.postmaster.n < pm.cap - 3))
       notify('Postmaster almost full', `${pm.n} of ${pm.cap}: ${pm.items.slice(0, 3).map(i => i[0]).join(', ')}. Pull them before new drops are lost.`);
+    if (mainWin) { mainWin.setProgressBar(1); setTimeout(() => mainWin && mainWin.setProgressBar(-1), 1500); }
   } catch (e) {
+    if (mainWin) { mainWin.setProgressBar(1, { mode: 'error' }); setTimeout(() => mainWin && mainWin.setProgressBar(-1), 4000); }
     log('refresh error: ' + (e && e.stack || e));
     status('Refresh failed: ' + (e && e.message ? e.message : e) + '. Press Refresh now to try again.');
   } finally { refreshing = false; }
@@ -219,6 +240,7 @@ async function pollActivity() {
 function setHotkeys(list) {
   hotkeys = (list || []).slice(0, 3);
   globalShortcut.unregisterAll();
+  jumpList();
   hotkeys.forEach((h, i) => { try { globalShortcut.register(`CommandOrControl+Alt+${i + 1}`, () => { notify('Hunter Builds', `Equipping ${h.name}…`); equip(h.payload).then(r => notify('Hunter Builds', r.ok ? `Equipped ${h.name}.` : `Could not equip: ${r.msg}`)); }); } catch (e) { log('hotkey failed: ' + e.message); } });
 }
 /* ---------- backup of DIM loadouts, tags and saved builds ---------- */
@@ -378,6 +400,7 @@ ipcMain.handle('bulk', (_e, p) => bulk(p));
 ipcMain.on('compact', () => openCompact());
 ipcMain.on('open-main', () => { if (mainWin) { mainWin.show(); mainWin.focus(); } });
 ipcMain.on('set-hotkeys', (_e, list) => setHotkeys(list));
+ipcMain.on('rec-weapons', (_e, list) => { try { fs.writeFileSync(file('recweapons.json'), JSON.stringify(list || [])); } catch (e) {} });
 ipcMain.handle('activity', () => lastActivity);
 ipcMain.handle('backup', (_e, d) => backup(d));
 ipcMain.handle('copy-image', (_e, url) => { try { clipboard.writeImage(nativeImage.createFromDataURL(url)); return true; } catch (e) { return false; } });
@@ -405,6 +428,7 @@ app.whenReady().then(() => {
   setInterval(() => refresh('timer'), REFRESH_EVERY);
   let wasOnline = net.isOnline(); setInterval(() => { const on = net.isOnline(); if (on && !wasOnline) { log('back online'); refresh('online'); } wasOnline = on; }, 30 * 1000);
   setInterval(pollActivity, 3 * 60 * 1000);
+  jumpList(); handleArgs(process.argv);
   // Xûr arrives Friday 17:00 UTC: refresh soon after so the notification comes on time
   setInterval(() => { const n = new Date(); if (n.getUTCDay() === 5 && n.getUTCHours() === 17 && n.getUTCMinutes() >= 10 && n.getUTCMinutes() < 20) refresh('xur'); }, 10 * 60 * 1000);
   log(`start ${app.getVersion()}`);

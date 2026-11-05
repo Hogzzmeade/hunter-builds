@@ -91,7 +91,7 @@ async function dimExport(MODE, SUBCLASS_NAMES) {
       el: it.element?.displayProperties?.name || '', elIc: iconIdx(icons, it.element?.displayProperties?.icon),
       am: it.ammoType || 0, pw: it.power || 0, tier: it.tier || 0, loc, lk: it.locked ? 1 : 0, cr: it.crafted ? 1 : 0, ad: it.adept ? 1 : 0,
       mw: it.masterwork ? 1 : 0, mwi: it.masterworkInfo?.stats?.[0] ? [it.masterworkInfo.stats[0].name, it.masterworkInfo.stats[0].value, it.masterworkInfo.tier] : null,
-      src: it.displaySource || (col[it.collectibleHash]?.sourceString) || '', fl: def.flavorText || '',
+      src: it.displaySource || (col[it.collectibleHash]?.sourceString) || '', fl: def.flavorText || '', ss: it.screenshot || def.screenshot || '',
       ic: iconIdx(itemIcons, it.icon), ov: iconIdx(icons, it.iconOverlay),
       st: stats, en: it.energy ? [it.energy.energyUsed, it.energy.energyCapacity] : null, set, sk: cats, wl: isW ? grade(it) : null, tun: isW ? null : (it.sockets?.allSockets || []).find(sk => (sk.plugSet?.plugs || []).some(p => p.plugDef.displayProperties.name === 'Balanced Tuning'))?.socketIndex ?? null, bt: it.breakerType?.displayProperties?.name || ''
     });
@@ -132,12 +132,25 @@ async function dimExport(MODE, SUBCLASS_NAMES) {
     catal.push({ n: i.name, done: i.catalystInfo.complete ? 1 : 0, unl: i.catalystInfo.unlocked ? 1 : 0, pct }); }
   const pats = []; for (const i of [...stores.flatMap(s => s.items)]) { const r = i.patternUnlockRecord; if (!r || pats.some(x => x.n === i.name)) continue; const o = (r.objectives || [])[0] || {};
     pats.push({ n: i.name, have: o.progress || 0, need: o.completionValue || 0, done: (o.complete || (o.completionValue && o.progress >= o.completionValue)) ? 1 : 0 }); }
+  // titles (seals): progress and the closest unfinished triumphs
+  let seals = [];
+  try {
+    const pn = await get('d2-manifest-PresentationNode'), rec = await get('d2-manifest-Record');
+    const nodes = p.profilePresentationNodes?.data?.nodes || {}, recs = p.profileRecords?.data?.records || {}, crecs = p.characterRecords?.data?.[hunter.id]?.records || {};
+    const root = pn[p.profileRecords?.data?.recordSealsRootNodeHash];
+    for (const ch of (root?.children?.presentationNodes || [])) { const d = pn[ch.presentationNodeHash]; const st = nodes[ch.presentationNodeHash]; if (!d || !st || !d.displayProperties?.name) continue;
+      if (d.redacted || (st.completionValue || 0) === 0) continue;
+      const todo = (d.children?.records || []).map(r => { const rd = rec[r.recordHash]; const rs = recs[r.recordHash] || crecs[r.recordHash]; if (!rd || !rs || (rs.state & 1)) return null;
+        const ob = rs.objectives || rs.intervalObjectives || []; const pct = ob.length ? ob.reduce((t, o) => t + Math.min(1, (o.progress || 0) / (o.completionValue || 1)), 0) / ob.length : 0;
+        return { n: rd.displayProperties?.name || '', d: (rd.displayProperties?.description || '').slice(0, 140), pct: Math.round(pct * 100) }; }).filter(x => x && x.n && !(x.pct === 0 && /Obsolete|Retired/.test(x.d)));
+      seals.push({ n: d.displayProperties.name, title: rec[d.completionRecordHash]?.titleInfo?.titlesByGender?.Male || '', have: st.progressValue || 0, need: st.completionValue || 0, todo: todo.sort((a, b) => b.pct - a.pct).slice(0, 4) }); }
+  } catch (e) { seals = []; }
   const tr = p.profileTransitoryData?.data || null;
   const activity = tr && tr.currentActivity ? { players: tr.currentActivity.numberOfPlayers || (tr.partyMembers || []).length || 1, opp: tr.currentActivity.numberOfOpponents || 0, start: tr.currentActivity.startTime || null, party: (tr.partyMembers || []).length } : null;
   const classes = stores.filter(s => !s.isVault).map(s => ({ cls: s.classType, name: s.className, power: s.powerLevel }));
   const bk = await get('d2-manifest-InventoryBucket');
   const vaultInfo = { n: vault.items.length, cap: (bk && bk[138197802] && bk[138197802].itemCount) || 0 };
-  const base = { v: 2, vault: vaultInfo, subs, postmaster, mats, wsrc, art, catal, pats, activity, updated: new Date().toISOString(), power: hunter.powerLevel || 0, classes, subclasses, aspects: [...aspects].sort(), exotics: [...exotics].sort(), items };
+  const base = { v: 2, vault: vaultInfo, subs, postmaster, mats, wsrc, art, catal, pats, activity, seals, updated: new Date().toISOString(), power: hunter.powerLevel || 0, classes, subclasses, aspects: [...aspects].sort(), exotics: [...exotics].sort(), items };
   if (MODE === 'daily') {
     // compact: items already in the published data only send what changes day to day
     const knownItems = new Set(JSON.parse(localStorage.getItem('hunterExportKnownItems') || '[]'));
@@ -219,7 +232,21 @@ async function dimWeekly() {
         items.push({ n: d.displayProperties.name, t: d.itemTypeDisplayName || '', ex: d.inventory.tierType === 6 ? 1 : 0, ic: await toUrl(d.displayProperties.icon) }); } }
     xur = { items, at: new Date().toISOString() };
   }
-  return { at: new Date().toISOString(), milestones, xur };
+  // what the main vendors sell this week (weapons and Hunter armor)
+  const vendors = [];
+  if (vch && vch.sales && vch.sales.data) {
+    const WANT = /^(Banshee-44|Ada-1|Saint-14|Lord Shaxx|Commander Zavala|Eris Morn|Ikora Rey|Petra Venj|Devrim Kay|Failsafe)$/;
+    for (const [vh, s] of Object.entries(vch.sales.data)) { const vn = vd[vh]?.displayProperties?.name || ''; if (!WANT.test(vn)) continue;
+      const items = [];
+      for (const x of Object.values(s.saleItems || {})) { const d = ii[x.itemHash]; if (!d || !d.displayProperties?.name) continue;
+        if (!(d.itemType === 3 || (d.itemType === 2 && (d.classType === 1 || d.classType === 3)))) continue; if ((d.inventory?.tierType || 0) < 5) continue;
+        if (items.some(i => i.n === d.displayProperties.name)) continue;
+        items.push({ n: d.displayProperties.name, t: d.itemTypeDisplayName || '', w: d.itemType === 3 ? 1 : 0, ex: d.inventory.tierType === 6 ? 1 : 0 }); }
+      if (items.length) vendors.push({ v: vn, items }); }
+  }
+  // modifier descriptions for champion and shield detection
+  for (const m of milestones) m.modd = [...new Set((Object.values(cm).find(x => (ms[x.milestoneHash]?.displayProperties?.name || '') === m.n)?.activities || []).flatMap(a => (a.modifierHashes || []).map(h => (mod[h]?.displayProperties?.name || '') + ': ' + (mod[h]?.displayProperties?.description || ''))))].join(' | ').slice(0, 1500);
+  return { at: new Date().toISOString(), milestones, xur, vendors };
 }
 
 // light read used every few minutes: am I in an activity right now?

@@ -592,6 +592,28 @@ body.compact .dimrow{flex-wrap:wrap}
 .wtsel{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--mute)}.wtsel select{min-width:260px}
 @media (hover:hover){.wr:hover{filter:brightness(1.18);transform:translateX(3px)}}
 .wr{transition:filter var(--t-med),transform var(--t-med) var(--ease-out)}
+/* ===== 1.9 ===== */
+#fxbg{position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.9}
+.dropgrade{display:flex;flex-wrap:wrap;gap:6px;align-items:center;width:100%;margin-top:6px}
+.threats .thr{border-top:1px solid var(--line);padding:10px 0}.threats .thr:first-of-type{border-top:0}
+.thh{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}.thk{display:flex;flex-wrap:wrap;gap:12px;margin:8px 0}
+.weekx{display:grid;gap:14px;margin-top:14px}
+.vend{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:8px}.needl li.want{box-shadow:inset 3px 0 0 var(--exotic)}
+.roles{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:10px;margin-top:8px}.role{background:var(--bg);border-radius:7px;padding:8px 10px}
+.seals{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-top:8px}.seal{background:var(--bg);border-radius:7px;padding:10px}.seal.done{box-shadow:inset 0 0 0 1px var(--exotic)}.sealh{display:flex;justify-content:space-between;gap:8px;align-items:baseline;margin-bottom:6px}
+.wr{position:relative}.wcmp{position:absolute;right:8px;bottom:6px;display:flex;gap:3px;align-items:center;font-size:11px;color:var(--mute);cursor:pointer}.wcmp input{margin:0}
+.cmpw{margin-top:14px;border:1px solid var(--tint)}.cmph{display:flex;justify-content:space-between;align-items:center}.cmpg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}.cmpc{background:var(--bg);border-radius:8px;padding:10px}.cmpc.win{box-shadow:inset 0 0 0 1px var(--good)}
+.bigv{position:fixed;inset:0;z-index:200;display:grid;grid-template-columns:1fr minmax(320px,420px);background:rgba(4,6,14,.92);opacity:0;transition:opacity 280ms var(--ease-out)}.bigv.on{opacity:1}
+.bigimg{background:#000 center/cover no-repeat;transform:scale(1.04);transition:transform 1.2s var(--ease-out)}.bigv.on .bigimg{transform:none}
+.bigside{background:var(--panel);overflow:auto;padding:22px;position:relative}.bigside h2{margin:0 0 4px;font-family:Oswald,Arial,sans-serif;font-weight:500}.bigside .pclose{position:absolute;top:12px;right:12px}
+@media (max-width:900px){.bigv{grid-template-columns:1fr;grid-template-rows:45vh 1fr}}
+.accrow{display:flex;align-items:center;gap:8px;justify-content:space-between;padding:7px 8px;border-top:1px solid var(--line);font-size:13px;color:var(--ink)}.accrow input[type=color]{width:34px;height:24px;border:0;background:none;padding:0;vertical-align:middle;margin-left:6px}
+.homeg{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}.wid{position:relative;cursor:grab}.wid.drag{opacity:.4}.wid.over{box-shadow:0 0 0 2px var(--tint)}.wid .grip{position:absolute;top:10px;right:12px;color:var(--mute);letter-spacing:-2px}
+.wid .big{font-size:34px;font-family:Oswald,Arial,sans-serif;line-height:1.1;margin:4px 0}.wid .big.bad{color:#e48a8f}.matgrid.sm{grid-template-columns:repeat(2,1fr)}
+#splash{position:fixed;inset:0;z-index:400;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;background:var(--bg);transition:opacity 600ms var(--ease-out)}#splash.out{opacity:0;pointer-events:none}
+#splash .gh{fill:var(--tint,#7cc4f2);transform-origin:60px 60px;animation:ghSpin 1.3s var(--ease-out) both}#splash .eye{fill:none;stroke:var(--tint,#7cc4f2);stroke-width:2;animation:ghEye 1.3s ease-in-out infinite}#splash .eye2{fill:#fff;animation:ghEye 1.3s ease-in-out infinite}
+#splash .spt{font-family:Oswald,Arial,sans-serif;font-size:22px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);animation:fadeUp 700ms 300ms var(--ease-out) both}
+@keyframes ghSpin{from{transform:rotate(-140deg) scale(.4);opacity:0}to{transform:none;opacity:1}}@keyframes ghEye{0%,100%{opacity:.5}50%{opacity:1}}
 /* ===== extra themes ===== */
 .thwrap{position:relative;align-self:center}
 .thmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:60;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px;min-width:230px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
@@ -656,6 +678,8 @@ header.top{position:relative;z-index:50}
 </style>
 </head>
 <body>
+<div id="splash" aria-hidden="true"><svg viewBox="0 0 120 120" width="120" height="120"><g class="gh"><polygon points="60,8 74,40 60,34 46,40" /><polygon points="60,112 74,80 60,86 46,80" /><polygon points="8,60 40,46 34,60 40,74" /><polygon points="112,60 80,46 86,60 80,74" /><polygon points="22,22 46,36 40,40 36,46" /><polygon points="98,22 84,46 80,40 74,36" /><polygon points="22,98 36,74 40,80 46,84" /><polygon points="98,98 74,84 80,80 84,74" /></g><circle class="eye" cx="60" cy="60" r="11"/><circle class="eye2" cx="60" cy="60" r="4"/></svg><div class="spt">Hunter Builds</div></div>
+<script>try{ if(sessionStorage.getItem('hbSplash') || location.hash === '#compact' || matchMedia('(prefers-reduced-motion: reduce)').matches){ document.getElementById('splash').remove(); } else sessionStorage.setItem('hbSplash','1'); }catch(e){ document.getElementById('splash').remove(); }</script>
 <div class="wrap">
 <header class="top">
   <h1>My Hunter<small>The best builds from what you have in your inventory and vault</small></h1>
@@ -670,6 +694,7 @@ header.top{position:relative;z-index:50}
   </div>
 </header>
 <nav class="tabs" role="tablist">
+  <button role="tab" data-tab="home" aria-selected="false">Home</button>
   <button role="tab" data-tab="builds" aria-selected="true">Builds</button>
   <button role="tab" data-tab="custom" aria-selected="false">Custom build</button>
   <button role="tab" data-tab="compare" aria-selected="false">Compare</button>
@@ -694,6 +719,7 @@ header.top{position:relative;z-index:50}
   <div id="tab-inventory" hidden></div>
   <div id="tab-cleanup" hidden></div>
   <div id="tab-week" hidden></div>
+  <div id="tab-home" hidden></div>
   <div id="tab-weapons" hidden></div>
   <div id="tab-history" hidden></div>
   <div id="tab-missing" hidden></div>
@@ -1927,6 +1953,7 @@ const BG = {
  'Tower':'Кула','Traveler':'Пътешественика','Pyramid':'Пирамида','Vanguard terminal':'Терминал на Авангарда','Dreaming City':'Сънуващият град','The original dark blue':'Оригиналната тъмносиня','Bright and clean':'Светла и изчистена','Warm gold and ivory':'Топло злато и слонова кост','Black, violet, sharp edges':'Черно, виолетово, остри ръбове','Tactical HUD, monospace':'Тактически HUD, моноширинен шрифт','Twilight glass, pink and teal':'Здрач, стъкло, розово и тюркоазено',
  'What would make it better':'Какво би го подобрило','Boss damage':'Щети по бос','Artifact perks for this build':'Перкове от артефакта за билда','Share image':'Сподели картинка','What to focus at Rahool':'Какво да фокусираш при Rahool','Armor to farm':'Броня за фармене','Crafting patterns':'Шаблони за крафтване','Items and vault':'Предмети и трезор','New items per refresh':'Нови предмети при обновяване','Build scores over time':'Резултати на билдовете във времето','Open compact window':'Отвори малкия прозорец','Back up DIM loadouts and tags':'Резервно копие на DIM loadouts и тагове','Sounds on clicks and new drops':'Звуци при клик и нови предмети','Open the full window':'Отвори големия прозорец','Show':'Покажи','☆ Pin':'☆ Закачи','focus now':'фокусирай сега','active':'активен',
  'Weapons for your build':'Оръжия за билда ти','in the build':'в билда','recommended':'препоръчано','element':'елемент','god roll':'god roll','wish-list roll':'добър рол','trash roll':'лош рол','No weapons in this slot.':'Няма оръжия в този слот.',
+ 'Home':'Начало','Wearing now':'Носиш сега','Postmaster':'Пощальон','Pinned builds':'Закачени билдове','New items':'Нови предмети','Materials':'Материали','Titles':'Титли','Compare':'Сравни','Clear':'Изчисти','Champions and shields this week':'Шампиони и щитове тази седмица','Vendors this week':'Търговци тази седмица','Builds for raids and dungeons':'Билдове за рейдове и подземия','Add clear':'Чистене на врагове','Survive / support':'Оцеляване / подкрепа','⤢ Large view':'⤢ Голям изглед','Animated background':'Анимиран фон','Use element colors':'Цветове по елемент','ready to claim':'готово за взимане',
  'Lock':'Заключи','Close':'Затвори','Perks':'Перкове','Stats':'Статове','Mods':'Модове','Intrinsic':'Вградено','Masterwork':'Мастъруърк'
 };
 const BG_RE = [
@@ -2233,6 +2260,178 @@ function renderWeaponsTab(){
   root.querySelector('#wt-build').onchange = e => { WT_BUILD = e.target.value; STORE.set('hunterWtBuild', WT_BUILD); renderWeaponsTab(); };
 }
 const _renderExtras4 = renderExtras; renderExtras = function(){ _renderExtras4(); renderWeaponsTab(); };
+
+/* =====================  1.9 FEATURES  ===================== */
+/* ---------- new drops: grade every new weapon, tag trash as Junk ---------- */
+const _banner3 = renderNewBanner;
+renderNewBanner = function(){ _banner3(); const el = document.getElementById('newbar'); if(el.hidden) return;
+  const nw = DATA.items.filter(i => isNew(i.id) && i.w); if(!nw.length) return;
+  const g = n => nw.filter(i => i.wl && i.wl[0] === n); const gods = g(2), good = g(1), trash = g(-1);
+  el.insertAdjacentHTML('beforeend', `<div class="dropgrade"><span class="perk">New weapons:</span>${gods.length ? `<span class="chip good">★ ${gods.length} god roll${gods.length>1?'s':''}: ${gods.slice(0,3).map(i => esc(i.n)).join(', ')}</span>` : ''}${good.length ? `<span class="chip">▲ ${good.length} good</span>` : ''}${trash.length ? `<span class="chip bad">✕ ${trash.length} trash: ${trash.slice(0,3).map(i => esc(i.n)).join(', ')}</span>` : ''}${nw.length - gods.length - good.length - trash.length ? `<span class="chip">${nw.length - gods.length - good.length - trash.length} not on the wish list</span>` : ''}
+    ${trash.length && IS_APP ? `<button type="button" class="btn sm" data-bulk="junk" data-ids="${trash.filter(i => !i.lk).map(i => i.id).join(',')}">Tag ${trash.length} trash as Junk</button>` : ''}</div>`); };
+
+/* ---------- champions and shields this week: a weapon kit that covers them ---------- */
+const BT_OF = { Barrier: 'Shield Piercing', Overload: 'Disruption', Unstoppable: 'Stagger' };
+function weekThreats(m){
+  const t = (m.modd || '') + ' | ' + (m.mods || []).join(' | '); const champs = [], shields = [], surge = []; let over = '';
+  for(const part of t.split(' | ')){ const [name, ...rest] = part.split(': '); const d = rest.join(': ');
+    if(/Champion/i.test(name)) ['Barrier','Overload','Unstoppable'].forEach(c => { if(new RegExp(c, 'i').test(d) && !champs.includes(c)) champs.push(c); });
+    if(/Shield/i.test(name)) ['Arc','Solar','Void','Stasis','Strand'].forEach(e => { if(new RegExp('\\b' + e, 'i').test(d) && !shields.includes(e)) shields.push(e); });
+    const sm = name.match(/^(Arc|Solar|Void|Stasis|Strand) Surge/); if(sm && !surge.includes(sm[1])) surge.push(sm[1]);
+    const om = name.match(/^Overcharged (.+)$/); if(om) over = om[1]; }
+  if(!champs.length && /Champion Foes/.test(t)) champs.push('Barrier','Overload','Unstoppable');
+  return { champs, shields, surge, over };
+}
+function threatKit(th){
+  const W = weapons(); const r = wornBuild(); const by = { kinetic: [], energy: [], power: [] };
+  W.forEach(w => { let s = (r ? rateWeapon(w, r.b).s : 0) / 10; const ch = Object.entries(BT_OF).find(([c, bt]) => th.champs.includes(c) && w.item.bt === bt);
+    if(ch) s += 20; if(th.surge.includes(w.el)) s += 6; if(th.shields.includes(w.el)) s += 4; if(th.over && w.type && th.over.replace(/s$/, '') === w.type) s += 6;
+    if(w.item.wl && w.item.wl[0] === 2) s += 2; by[slotOf(w)].push({ w, s, ch: ch ? ch[0] : '' }); });
+  for(const k in by) by[k] = by[k].sort((a,b) => b.s - a.s).slice(0, 6);
+  let best = null; const o = k => by[k].length ? by[k] : [null];
+  for(const a of o('kinetic')) for(const e of o('energy')) for(const p of o('power')){ const L = [a,e,p].filter(Boolean); if(L.filter(x => x.w.ex).length > 1) continue;
+    const cov = new Set(L.map(x => x.ch).filter(Boolean)); const s = L.reduce((t,x) => t + x.s, 0) + cov.size * 15; if(!best || s > best.s) best = { s, L: [a,e,p], cov }; }
+  return best;
+}
+function threatsCard(){
+  const w = DATA.weekly; if(!w) return '';
+  const acts = w.milestones.map(m => ({ m, th: weekThreats(m) })).filter(x => x.th.champs.length || x.th.shields.length || x.th.surge.length);
+  if(!acts.length) return '';
+  const seen = new Set(); const rows = acts.filter(x => { const k = x.th.champs.join() + x.th.surge.join() + x.th.over; if(seen.has(k)) return false; seen.add(k); return true; }).slice(0, 4);
+  return `<div class="card threats"><h3>Champions and shields this week</h3><p class="lead">A weapon kit from your vault for each set of modifiers. It covers the champions first, then matches surges and shields.</p>${rows.map(({m, th}) => { const k = threatKit(th);
+    const names = acts.filter(x => x.th.champs.join() + x.th.surge.join() + x.th.over === th.champs.join() + th.surge.join() + th.over).map(x => x.m.n);
+    const items = k ? k.L.filter(Boolean).map(x => x.w.item) : [];
+    return `<div class="thr"><div class="thh"><b>${esc([...new Set(names)].join(', '))}</b><div class="wrk">${th.champs.map(c => `<span class="chip ${k && k.cov.has(c) ? 'good' : 'bad'}">${c}</span>`).join('')}${th.surge.map(e => `<span class="chip" style="border-color:${EL[e]};color:${EL[e]}">${e} surge</span>`).join('')}${th.shields.map(e => `<span class="chip">${e} shields</span>`).join('')}${th.over ? `<span class="chip">Overcharged ${esc(th.over)}</span>` : ''}</div></div>
+      <div class="thk">${k ? k.L.map(x => x ? `<span class="alt">${ico(x.w.item,'sm')}<span>${esc(x.w.name)}${x.ch ? `<span class="perk"> · ${x.ch}</span>` : ''}</span></span>` : '<span class="perk">—</span>').join('') : '<span class="perk">No weapons found.</span>'}</div>
+      ${items.length ? `<div class="dimrow">${equipButton('Weapons: ' + [...new Set(names)][0], items, 'Champion kit for ' + names.join(', '))}</div>` : ''}</div>`; }).join('')}</div>`;
+}
+/* ---------- vendors this week ---------- */
+function vendorsCard(){
+  const V = DATA.weekly && DATA.weekly.vendors; if(!V || !V.length) return '';
+  const rec = {}; RES.forEach(r => Object.entries(r.b.weap.names).forEach(([n, v]) => { if(v >= 3) (rec[n] = rec[n] || []).push(r.b.name); }));
+  return `<div class="card"><h3>Vendors this week</h3><p class="lead">Weapons and Hunter armor for sale. Gold = recommended by your builds. Perks and stats show in game or in DIM's Vendors page.</p><div class="vend">${V.map(v => `<div><div class="pcl">${esc(v.v)}</div><ul class="needl">${v.items.map(i => `<li class="${rec[i.n] ? 'want' : ''}"><span class="ico none sm"></span><div><span class="${i.ex ? 'exn' : ''}">${esc(i.n)}</span><div class="perk">${esc(i.t)}${rec[i.n] ? ' · for ' + esc(rec[i.n].slice(0,2).join(', ')) : ''}</div></div></li>`).join('')}</ul></div>`).join('')}</div></div>`;
+}
+/* ---------- builds by encounter role for raids and dungeons ---------- */
+const ROLE = { gyrfalcon:['add','boss'], tempest:['survive','add'], assassin:['survive','add'], yas:['add'], frost:['survive','add'], cyrta:['survive'], fealty:['add'], graviton:['add','survive'], coyote:['add'], foetracer:['boss'], raiden:['boss'], gwisin:['boss'], tricksleeves:['add'] };
+const BOSSW = {'Gjallarhorn':10,'Apex Predator':9,'Cataclysmic':8,'Whisper of the Worm':9,'Still Hunt':10,'Euphony':8,'Hammerhead':5,'The Queenbreaker':7,'Sleeper Simulant':7,'Grand Overture':7,'Thunderlord':6,'Two-Tailed Fox':6,'Dragon\'s Breath':7,'Hothead':5,'Bellowing Giant':5,'Edge Transit':6,'Bump in the Night':6,'Taipan-4fr':6,'Stormchaser':7,'Leviathan\'s Breath':6};
+function encounterCard(){
+  const w = DATA.weekly; if(!w) return ''; const raids = w.milestones.filter(m => (m.acts || []).length && /Raid|Dungeon/i.test(m.d + ' ' + (m.acts || []).join(' ')) || /Raid|Dungeon/i.test(m.d)).slice(0, 8);
+  if(!raids.length || !RES.length) return '';
+  const pick = role => RES.filter(r => r.ready && (ROLE[r.b.id] || (r.b.auto ? ['add'] : [])).includes(role))[0];
+  const add = pick('add'), boss = pick('boss'), surv = pick('survive');
+  const heavy = weapons().filter(x => slotOf(x) === 'power').map(x => ({ x, s: (BOSSW[x.name] || 0) * 10 + (x.item.wl && x.item.wl[0] === 2 ? 3 : 0) })).sort((a,b) => b.s - a.s)[0];
+  const one = (lbl, r, extra) => r ? `<div class="role"><span class="pcl">${lbl}</span><div class="alt">${ico(exoItem(r.b.exotic),'sm')}<span><b>${esc(r.b.name)}</b> <span class="perk">${r.total}</span>${extra || ''}</span></div></div>` : '';
+  return `<div class="card"><h3>Builds for raids and dungeons</h3><p class="lead">Your best build for each job in an encounter. Pick by what your fireteam needs on each boss.</p>
+    <div class="roles">${one('Add clear', add)}${one('Boss damage', boss, heavy && heavy.s > 0 ? ` + <span class="alt">${ico(heavy.x.item,'sm')}${esc(heavy.x.name)}</span>` : '')}${one('Survive / support', surv)}</div>
+    <p class="note">This week's raids and dungeons: ${raids.map(m => esc(m.n)).join(', ')}.</p></div>`;
+}
+const _renderWeek3 = renderWeek;
+renderWeek = function(){ _renderWeek3(); const root = document.getElementById('tab-week'); const extra = threatsCard() + encounterCard() + vendorsCard(); if(extra) root.insertAdjacentHTML('beforeend', `<div class="weekx">${extra}</div>`); };
+
+/* ---------- titles (seals) in History ---------- */
+const _renderHistory3 = renderHistory;
+renderHistory = function(){ _renderHistory3(); const S = DATA.seals; if(!S || !S.length) return; const root = document.getElementById('tab-history');
+  const list = S.slice().sort((a,b) => (b.have / (b.need || 1)) - (a.have / (a.need || 1)));
+  root.insertAdjacentHTML('beforeend', `<div class="card" style="margin-top:14px"><h3>Titles</h3><p class="lead">Progress toward each seal and the triumphs closest to done.</p><div class="seals">${list.map(s => { const pct = Math.round(100 * s.have / (s.need || 1));
+    return `<div class="seal ${pct >= 100 ? 'done' : ''}"><div class="sealh"><b>${esc(s.title || s.n)}</b><span class="perk">${esc(s.n)} · ${s.have}/${s.need}</span></div><div class="cbar"><i style="width:${pct}%"></i></div>
+      ${s.todo.length ? `<ul class="tips">${s.todo.map(t => `<li>${esc(t.n)} <span class="perk">${t.pct >= 100 ? 'ready to claim' : t.pct + '%'}</span></li>`).join('')}</ul>` : ''}</div>`; }).join('')}</div></div>`); };
+
+/* ---------- compare two weapons (Weapons tab) ---------- */
+let WCMP = [];
+const _renderWT = renderWeaponsTab;
+renderWeaponsTab = function(){ _renderWT(); const root = document.getElementById('tab-weapons'); if(!root) return;
+  root.querySelectorAll('.wr').forEach(li => { const ic = li.querySelector('[data-item]'); if(!ic) return; const id = ic.dataset.item;
+    li.insertAdjacentHTML('beforeend', `<label class="wcmp" title="Compare"><input type="checkbox" data-wcmp="${id}" ${WCMP.includes(id) ? 'checked' : ''}><span>vs</span></label>`); });
+  root.querySelectorAll('[data-wcmp]').forEach(x => x.onchange = () => { const id = x.dataset.wcmp; WCMP = x.checked ? [...WCMP.filter(y => y !== id), id].slice(-2) : WCMP.filter(y => y !== id); renderWeaponsTab(); });
+  if(WCMP.length === 2){ const r = WT_BUILD === 'auto' ? wornBuild() : (RES.find(x => x.b.id === WT_BUILD) || wornBuild());
+    const A = WCMP.map(id => weapons().find(w => w.i === id)).filter(Boolean); if(A.length < 2) return; const R = A.map(w => rateWeapon(w, r.b)); const win = R[0].s >= R[1].s ? 0 : 1;
+    const col = (w, x, k) => `<div class="cmpc ${k === win ? 'win' : ''}"><div class="alt">${ico(w.item)}<div><b>${esc(w.name)}</b><div class="perk">${esc(w.type)} · ${esc(w.el)} · ${w.item.pw} · ${w.loc === 'v' ? 'vault' : 'inventory'}</div></div></div>
+      <div class="perk" style="margin:6px 0">Score for ${esc(r.b.name)}: <b>${Math.round(x.s)}</b>${w.item.wl ? ' · ' + WL[w.item.wl[0]][0] : ''}</div>${statRows(w.item)}<div class="wrk">${w.perks.map(p => `<span class="chip ${x.hits.includes(p) ? 'good' : ''}">${esc(p)}</span>`).join('')}</div></div>`;
+    const diff = Math.abs(Math.round(R[0].s - R[1].s));
+    root.querySelector('.cleanhead').insertAdjacentHTML('afterend', `<div class="card cmpw"><div class="cmph"><h3>Compare</h3><button type="button" class="btn sm" id="cmp-clear">Clear</button></div><div class="cmpg">${col(A[0], R[0], 0)}${col(A[1], R[1], 1)}</div>
+      <p class="lead"><b>Keep ${esc(A[win].name)}</b>${diff ? ` — ${diff} points better for this build` : ' — they score the same; keep the one with the perks you like'}${R[win ? 0 : 1].s <= 0 ? `. ${esc(A[win ? 0 : 1].name)} can go.` : '.'}</p></div>`);
+    root.querySelector('#cmp-clear').onclick = () => { WCMP = []; renderWeaponsTab(); }; } };
+
+/* ---------- large item view with Bungie's screenshot ---------- */
+function bigView(it){
+  const ov = document.createElement('div'); ov.className = 'bigv'; ov.setAttribute('role', 'dialog'); ov.setAttribute('aria-label', it.n);
+  const sk = socketsHtml(it).html;
+  ov.innerHTML = `<div class="bigimg" style="background-image:url('https://www.bungie.net${esc(it.ss)}')"></div><div class="bigside"><button type="button" class="pclose" aria-label="Close">✕</button><h2>${esc(it.n)}</h2><div class="perk">${esc(it.t)} · ${it.pw}${it.el ? ' · ' + esc(it.el) : ''}</div>${it.fl ? `<p class="flav">${esc(it.fl)}</p>` : ''}${statRows(it)}${sk}</div>`;
+  document.body.appendChild(ov); requestAnimationFrame(() => ov.classList.add('on'));
+  const close = () => { ov.classList.remove('on'); setTimeout(() => ov.remove(), 300); document.removeEventListener('keydown', esc1, true); };
+  const esc1 = e => { if(e.key === 'Escape'){ e.stopPropagation(); close(); } };
+  ov.querySelector('.pclose').onclick = close; ov.addEventListener('click', e => { if(e.target === ov || e.target.classList.contains('bigimg')) close(); }); document.addEventListener('keydown', esc1, true);
+}
+const _openItem2 = openItem;
+openItem = function(id, opener){ _openItem2(id, opener); const it = itemById(id); if(!it || !it.ss) return; const ph = document.querySelector('.pop .ph .pht');
+  if(ph) { ph.insertAdjacentHTML('beforeend', `<button type="button" class="btn sm" id="big-btn">⤢ Large view</button>`); document.getElementById('big-btn').onclick = () => bigView(it); } };
+
+/* ---------- animated element background ---------- */
+let BG_ON = STORE.get('hunterFx', true);
+{
+  const cv = document.createElement('canvas'); cv.id = 'fxbg'; cv.setAttribute('aria-hidden', 'true'); document.body.prepend(cv); const g = cv.getContext('2d');
+  let W = 0, H = 0, P = [], el = '', raf = 0, last = 0;
+  const size = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; }; size(); addEventListener('resize', size);
+  const spawn = e => { const n = e === 'Arc' ? 28 : 46; P = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, v: .2 + Math.random() * .6, a: Math.random() * 6.28, r: 1 + Math.random() * 2.6, t: Math.random() * 100 })); };
+  const COL = { Arc:'124,196,242', Solar:'242,128,58', Void:'182,140,230', Stasis:'93,143,255', Strand:'63,220,120' };
+  function frame(ts){ raf = requestAnimationFrame(frame); if(ts - last < 33) return; last = ts; g.clearRect(0, 0, W, H); const c = COL[el] || COL.Arc;
+    for(const p of P){ p.t += 1;
+      if(el === 'Solar'){ p.y -= p.v * 1.4; p.x += Math.sin(p.t / 30) * .4; if(p.y < -10){ p.y = H + 10; p.x = Math.random() * W; } g.fillStyle = `rgba(${c},${.18 + .2 * Math.sin(p.t / 12) ** 2})`; g.beginPath(); g.arc(p.x, p.y, p.r, 0, 6.28); g.fill(); }
+      else if(el === 'Void'){ p.a += .004; p.x += Math.cos(p.a) * p.v * .5; p.y += Math.sin(p.a) * p.v * .5; if(p.x < -60) p.x = W + 60; if(p.x > W + 60) p.x = -60; if(p.y < -60) p.y = H + 60; if(p.y > H + 60) p.y = -60;
+        const gr = g.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 22); gr.addColorStop(0, `rgba(${c},.07)`); gr.addColorStop(1, `rgba(${c},0)`); g.fillStyle = gr; g.fillRect(p.x - p.r * 22, p.y - p.r * 22, p.r * 44, p.r * 44); }
+      else if(el === 'Stasis'){ p.y += p.v * .5; p.x += Math.sin(p.t / 50) * .25; if(p.y > H + 10){ p.y = -10; p.x = Math.random() * W; } g.strokeStyle = `rgba(${c},.28)`; g.lineWidth = 1; const s = p.r * 2.2;
+        g.beginPath(); for(let k = 0; k < 3; k++){ const an = k * 1.047 + p.t / 200; g.moveTo(p.x - Math.cos(an) * s, p.y - Math.sin(an) * s); g.lineTo(p.x + Math.cos(an) * s, p.y + Math.sin(an) * s); } g.stroke(); }
+      else if(el === 'Strand'){ p.x += Math.cos(p.a) * p.v; p.y += Math.sin(p.a) * p.v; p.a += Math.sin(p.t / 40) * .02; if(p.x < 0 || p.x > W || p.y < 0 || p.y > H){ p.x = Math.random() * W; p.y = Math.random() * H; }
+        for(const q of P){ if(q === p) continue; const d = Math.hypot(p.x - q.x, p.y - q.y); if(d < 110){ g.strokeStyle = `rgba(${c},${.12 * (1 - d / 110)})`; g.beginPath(); g.moveTo(p.x, p.y); g.lineTo(q.x, q.y); g.stroke(); } } }
+      else { if(Math.random() < .006){ g.strokeStyle = `rgba(${c},.35)`; g.lineWidth = 1.2; g.beginPath(); let x = p.x, y = p.y; g.moveTo(x, y); for(let k = 0; k < 6; k++){ x += (Math.random() - .5) * 46; y += 14 + Math.random() * 18; g.lineTo(x, y); } g.stroke(); }
+        p.x += (Math.random() - .5) * .8; p.y += (Math.random() - .5) * .8; g.fillStyle = `rgba(${c},.25)`; g.fillRect(p.x, p.y, 1.6, 1.6); } } }
+  window.fxSet = e => { if(e === el && raf) return; el = e; spawn(e); if(!raf && BG_ON && !REDUCED) raf = requestAnimationFrame(frame); };
+  window.fxToggle = on => { BG_ON = on; STORE.set('hunterFx', on); cv.style.display = on && !REDUCED ? '' : 'none'; if(!on && raf){ cancelAnimationFrame(raf); raf = 0; } else if(on && !raf && !REDUCED) raf = requestAnimationFrame(frame); };
+  document.addEventListener('visibilitychange', () => { if(document.hidden && raf){ cancelAnimationFrame(raf); raf = 0; } else if(!document.hidden && BG_ON && !REDUCED && !raf) raf = requestAnimationFrame(frame); });
+  cv.style.display = BG_ON && !REDUCED ? '' : 'none';
+}
+/* ---------- custom accent color ---------- */
+let ACCENT = STORE.get('hunterAccent', '');
+const _setTint2 = setTint;
+setTint = function(el){ _setTint2(el); if(ACCENT) document.body.style.setProperty('--tint', ACCENT); if(window.fxSet) window.fxSet(el || 'Arc'); };
+{ const m = document.getElementById('thmenu'); const add = () => { if(m.querySelector('.accrow')) return; m.insertAdjacentHTML('beforeend', `<div class="accrow"><label>Accent <input type="color" id="acc-in" value="${ACCENT || '#7cc4f2'}"></label><button type="button" class="btn sm" id="acc-reset">Use element colors</button></div>
+    <label class="accrow"><input type="checkbox" id="fx-in" ${BG_ON ? 'checked' : ''}> Animated background</label>`);
+    m.querySelector('#acc-in').oninput = e => { ACCENT = e.target.value; STORE.set('hunterAccent', ACCENT); document.body.style.setProperty('--tint', ACCENT); };
+    m.querySelector('#acc-reset').onclick = () => { ACCENT = ''; STORE.set('hunterAccent', ''); const r = RES.find(x => x.b.id === current); setTint(r ? r.b.el : 'Arc'); };
+    m.querySelector('#fx-in').onchange = e => window.fxToggle(e.target.checked); };
+  new MutationObserver(add).observe(m, { childList: true }); add(); m.addEventListener('click', e => { if(e.target.closest('.accrow')) e.stopPropagation(); }, true); }
+
+/* ---------- Home tab: widgets you can drag around ---------- */
+const WIDGETS = {
+  build: () => { const r = wornBuild(); if(!r) return ''; return `<h3>Wearing now</h3><div class="alt">${ico(exoItem(r.b.exotic))}<div><b>${esc(r.b.name)}</b><div class="perk">${r.b.sub} · score ${r.total}</div></div></div>${r.ready ? `<div class="dimrow">${equipButton(r.b.name, [...r.combos[0].set.map(p => p.item), ...r.weap.loadout.filter(Boolean).map(x => x.w.item)], r.b.sub, loadoutExtras(r.b, r.combos[0]))}</div>` : ''}`; },
+  power: () => `<h3>Power</h3><div class="big">${DATA.power}</div><div class="perk">${DATA.items.length} items · vault ${DATA.vault ? DATA.vault.n + '/' + DATA.vault.cap : '–'}</div>`,
+  postmaster: () => DATA.postmaster ? `<h3>Postmaster</h3><div class="big ${DATA.postmaster.n >= DATA.postmaster.cap - 3 ? 'bad' : ''}">${DATA.postmaster.n}/${DATA.postmaster.cap}</div><div class="perk">${esc(DATA.postmaster.items.slice(0,3).map(i => i[0]).join(', ') || 'Empty')}</div>` : '',
+  xur: () => { const x = DATA.weekly && DATA.weekly.xur; return `<h3>Xûr</h3>${x && x.items.length ? `<ul class="needl">${x.items.filter(i => i.ex).slice(0,4).map(i => `<li><div>${esc(i.n)}<div class="perk">${esc(i.t)}</div></div></li>`).join('')}</ul>` : '<p class="perk">Arrives on Friday.</p>'}`; },
+  week: () => { const c = checks(); const n = DATA.weekly ? DATA.weekly.milestones.length : 0; return `<h3>This week</h3><div class="big">${c.done.length}<span class="perk"> / ${n} done</span></div><div class="cbar"><i style="width:${n ? Math.round(100 * c.done.length / n) : 0}%"></i></div>`; },
+  pins: () => { const L = PINS.map(id => RES.find(r => r.b.id === id && r.ready)).filter(Boolean); return `<h3>Pinned builds</h3>${L.length ? L.map((r, i) => `<div class="alt">${ico(exoItem(r.b.exotic),'sm')}<span>${esc(r.b.name)} <span class="perk">Ctrl+Alt+${i+1}</span></span></div>`).join('') : '<p class="perk">Pin builds with ☆ Pin to see them here.</p>'}`; },
+  drops: () => { const nw = DATA.items.filter(i => isNew(i.id)); return `<h3>New items</h3>${nw.length ? `<div class="cicons">${nw.slice(0, 10).map(i => ico(i,'sm')).join('')}</div>` : '<p class="perk">Nothing new since your last visit.</p>'}`; },
+  mats: () => { const m = DATA.mats || {}; return `<h3>Materials</h3><div class="matgrid sm">${['Glimmer','Bright Dust','Enhancement Core','Ascendant Shard','Exotic Cipher'].filter(k => m[k] != null).map(k => `<div class="mat"><b>${Number(m[k]).toLocaleString('en-US')}</b><span>${k}</span></div>`).join('')}</div>`; }
+};
+let HOME = STORE.get('hunterHome', Object.keys(WIDGETS)); Object.keys(WIDGETS).forEach(k => { if(!HOME.includes(k)) HOME.push(k); });
+function renderHome(){
+  const root = document.getElementById('tab-home'); if(!root) return;
+  root.innerHTML = `<p class="note" style="margin:0 0 10px">Drag the cards to arrange them. The order is saved.</p><div class="homeg">${HOME.map(k => { const h = WIDGETS[k] ? WIDGETS[k]() : ''; return h ? `<div class="card wid" draggable="true" data-wid="${k}"><span class="grip" aria-hidden="true">⋮⋮</span>${h}</div>` : ''; }).join('')}</div>`;
+  let drag = null;
+  root.querySelectorAll('.wid').forEach(c => {
+    c.addEventListener('dragstart', e => { drag = c.dataset.wid; c.classList.add('drag'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', drag); });
+    c.addEventListener('dragend', () => c.classList.remove('drag'));
+    c.addEventListener('dragover', e => { e.preventDefault(); c.classList.add('over'); });
+    c.addEventListener('dragleave', () => c.classList.remove('over'));
+    c.addEventListener('drop', e => { e.preventDefault(); c.classList.remove('over'); const to = c.dataset.wid; if(!drag || drag === to) return;
+      HOME = HOME.filter(k => k !== drag); HOME.splice(HOME.indexOf(to), 0, drag); STORE.set('hunterHome', HOME); playSound('tick'); renderHome(); });
+  });
+}
+const _renderExtras5 = renderExtras; renderExtras = function(){ _renderExtras5(); renderHome();
+  if(IS_APP && window.hunterApp.setRecWeapons) window.hunterApp.setRecWeapons([...new Set(RES.filter(r => r.ready).flatMap(r => Object.entries(r.b.weap.names).filter(([,v]) => v >= 3).map(([n]) => n)))]); };
+
+/* ---------- splash: Ghost while the app starts ---------- */
+{ const sp = document.getElementById('splash'); if(sp){ const go = () => { sp.classList.add('out'); setTimeout(() => sp.remove(), 650); };
+  if(document.readyState === 'complete') setTimeout(go, 700); else addEventListener('load', () => setTimeout(go, 700)); } }
 
 renderAll();
 
