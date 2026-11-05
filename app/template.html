@@ -547,6 +547,37 @@ button.ico.ex::after{animation:exoShine 7s var(--ease-out) infinite;animation-de
   .bitem[aria-current=true],.bitem[aria-current=true] .score,button.ico.ex::after,#toast.on{animation:none!important}
   .rv{opacity:1}.tilt{transform:none!important}
 }
+/* ===== 1.7: tabs light up completely ===== */
+nav.tabs button{overflow:hidden;isolation:isolate}
+nav.tabs button::before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(110deg,transparent 20%,color-mix(in srgb,var(--tint) 45%,transparent) 50%,transparent 80%);transform:translateX(-110%);opacity:0;transition:opacity var(--t-med)}
+@media (hover:hover){
+  nav.tabs button:hover{background:color-mix(in srgb,var(--tint) 24%,var(--panel2));border-color:color-mix(in srgb,var(--tint) 75%,transparent);color:var(--ink);filter:brightness(1.18);
+    box-shadow:0 0 0 1px color-mix(in srgb,var(--tint) 35%,transparent),0 0 20px color-mix(in srgb,var(--tint) 38%,transparent),inset 0 0 16px color-mix(in srgb,var(--tint) 28%,transparent)}
+  nav.tabs button:hover::before{opacity:1;animation:tabSweep 900ms var(--ease-out) forwards}
+  .chip.act:hover,#theme-btn:hover,#lang-btn:hover{background:color-mix(in srgb,var(--tint) 24%,var(--panel2));border-color:color-mix(in srgb,var(--tint) 75%,transparent);box-shadow:0 0 16px color-mix(in srgb,var(--tint) 35%,transparent)}
+}
+@keyframes tabSweep{from{transform:translateX(-110%)}to{transform:translateX(110%)}}
+nav.tabs button[aria-selected=true]{background:color-mix(in srgb,var(--tint) 14%,var(--panel2));box-shadow:inset 0 0 12px color-mix(in srgb,var(--tint) 18%,transparent)}
+/* new sections */
+.tips{margin:8px 0 0;padding-left:18px}.tips li{margin:4px 0}
+.artl{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px;margin-top:8px}.artp{background:var(--bg);border-radius:6px;padding:8px 10px;border-left:3px solid var(--line)}.artp.on{border-left-color:var(--good)}
+.pinbtn{vertical-align:middle;margin-left:8px;font-family:"IBM Plex Sans",sans-serif;font-size:12.5px;letter-spacing:0;text-transform:none}
+.focl{margin:8px 0 0;padding-left:20px}.focl li{display:flex;gap:10px;align-items:flex-start;margin:6px 0}
+.catl{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px;margin-top:8px}.catr{display:flex;gap:8px;align-items:flex-start;padding:6px;border-radius:6px;background:var(--bg)}.catr.want{box-shadow:inset 0 0 0 1px var(--exotic)}.catr > div{flex:1}
+.cbar{height:5px;border-radius:3px;background:var(--line);margin-top:4px;overflow:hidden}.cbar i{display:block;height:100%;background:var(--good);border-radius:3px}
+.chk{display:inline-flex;margin-right:8px;vertical-align:middle;cursor:pointer}.chk input{position:absolute;opacity:0}.chk span{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--line);display:inline-block;transition:background-color var(--t-fast),border-color var(--t-fast),transform var(--t-fast) var(--ease-spring)}
+.chk input:checked + span{background:var(--good);border-color:var(--good);transform:scale(1.08);box-shadow:inset 0 0 0 3px var(--panel)}.chk input:focus-visible + span{outline:2px solid var(--exotic)}
+.mcard.done,.hev.done{opacity:.55}.mcard.done b,.hev.done b{text-decoration:line-through}.chkcount{margin:4px 0 0}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12px;color:var(--mute);margin-top:4px}.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.actbar{border-color:var(--tint)}
+/* compact window */
+body.compact .wrap{display:none}
+body.compact #compact{display:flex;flex-direction:column;gap:12px;padding:14px}
+#compact{display:none}
+.ctop{display:flex;align-items:center;gap:8px}.cname{flex:1;display:flex;gap:10px;align-items:center;border-left:3px solid var(--el);padding-left:10px}.cname b{display:block;font-family:Oswald,Arial,sans-serif;font-weight:500;font-size:17px;line-height:1.15}.cname span{color:var(--mute);font-size:12.5px}
+.cicons{display:flex;flex-wrap:wrap;gap:6px}
+.cstats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.cstats div{background:var(--panel);border-radius:6px;padding:6px 8px;position:relative;overflow:hidden}.cstats span{font-size:11px;color:var(--mute);display:block}.cstats b{font-size:17px}.cstats i{position:absolute;left:0;bottom:0;height:3px}
+body.compact .dimrow{flex-wrap:wrap}
 /* ===== extra themes ===== */
 .thwrap{position:relative;align-self:center}
 .thmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:60;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px;min-width:230px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
@@ -1878,6 +1909,7 @@ const BG = {
  'Restart and update':'Рестартирай и обнови','Click again to confirm':'Кликни пак за потвърждение','Search items or perks…':'Търси предмети или перкове…',
  'The best builds from what you have in your inventory and vault':'Най-добрите билдове от това, което имаш в инвентара и трезора','Hover or focus an icon for its description.':'Задръж мишката върху икона за описание.','Aspect':'Аспект','Fragment':'Фрагмент','Champions':'Шампиони','Ready to build now':'Готови за игра сега','☀ Light':'☀ Светла','☾ Dark':'☾ Тъмна','Exotic Engram':'Екзотичен енграм','Distorted Engram':'Изкривен енграм',
  'Tower':'Кула','Traveler':'Пътешественика','Pyramid':'Пирамида','Vanguard terminal':'Терминал на Авангарда','Dreaming City':'Сънуващият град','The original dark blue':'Оригиналната тъмносиня','Bright and clean':'Светла и изчистена','Warm gold and ivory':'Топло злато и слонова кост','Black, violet, sharp edges':'Черно, виолетово, остри ръбове','Tactical HUD, monospace':'Тактически HUD, моноширинен шрифт','Twilight glass, pink and teal':'Здрач, стъкло, розово и тюркоазено',
+ 'What would make it better':'Какво би го подобрило','Boss damage':'Щети по бос','Artifact perks for this build':'Перкове от артефакта за билда','Share image':'Сподели картинка','What to focus at Rahool':'Какво да фокусираш при Rahool','Armor to farm':'Броня за фармене','Crafting patterns':'Шаблони за крафтване','Items and vault':'Предмети и трезор','New items per refresh':'Нови предмети при обновяване','Build scores over time':'Резултати на билдовете във времето','Open compact window':'Отвори малкия прозорец','Back up DIM loadouts and tags':'Резервно копие на DIM loadouts и тагове','Sounds on clicks and new drops':'Звуци при клик и нови предмети','Open the full window':'Отвори големия прозорец','Show':'Покажи','☆ Pin':'☆ Закачи','focus now':'фокусирай сега','active':'активен',
  'Lock':'Заключи','Close':'Затвори','Perks':'Перкове','Stats':'Статове','Mods':'Модове','Intrinsic':'Вградено','Masterwork':'Мастъруърк'
 };
 const BG_RE = [
@@ -1919,6 +1951,244 @@ function setLang(l){ LANG = l; STORE.set('hunterLang', l); document.documentElem
 { const tb = document.getElementById('theme-btn'); const lb = document.createElement('button'); lb.type = 'button'; lb.className = 'btn sm themebtn langbtn'; lb.id = 'lang-btn'; lb.setAttribute('aria-label', 'Switch language / Смени езика');
   tb.closest('.thwrap').insertAdjacentElement('afterend', lb); lb.onclick = () => setLang(LANG === 'bg' ? 'en' : 'bg'); setLang(LANG); }
 
+
+
+/* =====================  1.7 FEATURES  ===================== */
+const DPS = {
+  gyrfalcon:'Go invisible with a dodge before damage starts, open with Moebius Quiver on the boss, then keep dodging every few seconds so Volatile Rounds stay up. Use your heavy (Graviton Lance or a rocket) while volatile.',
+  tempest:'Arc Staff is not a boss super: save Gathering Storm for the opening (it weakens) and spend the phase on your heavy. Dodge for Gifted Conviction resistance when the boss slams, and melee adds to keep amplified for the Luminopotent fusion bonus.',
+  assassin:'Throw Blade Barrage on the boss at the start of the phase, then swap to your heaviest weapon. A melee kill on an add before damage gives you invisibility and healing for a safer stand.',
+  yas:'Blade Barrage first, then Gjallarhorn or another rocket. Keep Tripmines on the boss\'s path; they refund through YAS and stay Radiant with Knock \'Em Down.',
+  frost:'Freeze adds around the boss with Duskfield, then Silence and Squall on the boss (Squall keeps damaging). Spend the rest on your heavy; sprint between volleys so Fr0st-EE5 brings abilities back.',
+  cyrta:'Grapple before the phase for Woven Mail, open with Silkstrike, then Quicksilver Storm or your heavy. The build is about not dying, so you can stand in the open during damage.',
+  fealty:'Bosses are not its strength: shatter crystals on adds before damage for energy, open with Silence and Squall, and spend the phase on your heavy.',
+  graviton:'Go invisible and throw grenades and Snare Bombs on the boss while you reload; the fast regeneration means steady ability damage on top of your heavy. Super: Moebius Quiver on the boss.',
+  coyote:'Two dodges = two Flow State reloads during the phase. Open with Gathering Storm (it weakens), then fire your heavy and dodge instead of reloading.',
+  foetracer:'Hit the boss with a Strand ability first (Threaded Spike) to mark it and get Strand Weapon Surge for 16 seconds, then empty Quicksilver Storm or a Strand heavy while the surge is up.',
+  raiden:'Arc Staff on the boss and keep hitting fast: each quick hit adds a Synapse Junction for up to 105% more damage and a much longer super. Melee straight after casting, don\'t pause.',
+  gwisin:'Cast Spectral Blades and hit the boss before going invisible; hits refund super energy so the super lasts much longer. Finish with your heavy.',
+  tricksleeves:'Not a boss build. Use your heavy for bosses and keep the sidearm for adds.'
+};
+const DPS_PVP = 'PvP build: no boss rotation. Peek, shoot, dodge, and re-peek from a different angle.';
+const ACT_KIND = { PvP:'PvP', Raid:'Raid', GM:'GM', Solo:'Solo' };
+const weekKey = d => Math.floor((d.getTime() - Date.UTC(2020, 0, 7, 17)) / (7 * 864e5));
+
+/* ---------- payload of a build for Equip now / hotkeys ---------- */
+function buildPayload(r){
+  if(!r || !r.combos || !r.combos.length) return null; const c = r.combos[0];
+  const items = [...c.set.map(p => p.item), ...r.weap.loadout.filter(Boolean).map(x => x.w.item)]; const ex = loadoutExtras(r.b, c);
+  return { name: r.b.name, notes: r.b.sub + ' · ' + r.b.aspects.join(' + ') + '. Stat mods: ' + modsNote(c.mods), items: loItems(items, ex), mods: ex.mods };
+}
+let PINS = STORE.get('hunterPins', []);
+function sendHotkeys(){ if(!IS_APP || !window.hunterApp.setHotkeys) return;
+  window.hunterApp.setHotkeys(PINS.map(id => RES.find(r => r.b.id === id && r.ready)).filter(Boolean).map(r => ({ name: r.b.name, payload: buildPayload(r) })).filter(x => x.payload)); }
+
+/* ---------- artifact perks that fit a build ---------- */
+function artifactFor(r){
+  const A = DATA.art; if(!A || !A.perks || !A.perks.length) return [];
+  const types = new Set(r.weap.loadout.filter(Boolean).map(x => x.w.type)); const el = r.b.el;
+  const kit = Object.values(r.b.kit || {}).join(' ') + ' ' + r.b.aspects.join(' ');
+  return A.perks.map(p => { const txt = p.n + ' ' + p.d; let s = 0;
+    types.forEach(t => { if(t && txt.includes(t)) s += 4; });
+    if(el && new RegExp('\\b' + el + '\\b').test(txt)) s += 3;
+    if(/Grenade/.test(kit) && /grenade/i.test(txt)) s += 1; if(/Melee|Blow|Knife|Blade/.test(kit) && /melee/i.test(txt)) s += 1;
+    if(/Jolt|Amplif/.test(txt) && el === 'Arc') s += 1; if(/Volatile|Invisib|Weaken/.test(txt) && el === 'Void') s += 1; if(/Scorch|Radiant|Restoration/.test(txt) && el === 'Solar') s += 1;
+    if(/Slow|Freeze|Frost Armor|Shatter/.test(txt) && el === 'Stasis') s += 1; if(/Sever|Suspend|Unravel|Woven|Threadling/.test(txt) && el === 'Strand') s += 1;
+    return { p, s }; }).filter(x => x.s >= 3).sort((a,b) => b.s - a.s || b.p.on - a.p.on).slice(0, 5);
+}
+/* ---------- what would improve the build ---------- */
+function improveTips(r){
+  const c = r.combos && r.combos[0]; if(!c) return []; const b = r.b; const out = [];
+  const order = [0,1,2,3,4,5].filter(i => b.w[i] >= 1.4).sort((x,y) => b.w[y] - b.w[x]);
+  for(const i of order){ const d = b.t[i] - c.st[i]; if(d <= 0) continue;
+    const pc = c.set.filter(p => !p.ex).sort((x,y) => x.st[i] - y.st[i])[0]; if(!pc) continue;
+    out.push(`<b>${SBG[i]} ${c.st[i]} / ${b.t[i]}:</b> a ${SLOTS[pc.slot].toLowerCase()} with about <b>+${d}</b> more ${SBG[i]} than your ${esc(pc.name)} (${pc.st[i]}) reaches the target${d > 10 ? `, or ${Math.ceil(d/10)} more stat mod${d > 20 ? 's' : ''} if you free a slot` : ''}.`); }
+  if(!out.length){ const top = order[0]; out.push(`All stat targets are met. Extra ${SBG[top]} past ${Math.max(100, b.t[top])} still helps a little, so a piece with more ${SBG[top]} is the next upgrade.`); }
+  if(r.weap.loadout.some(x => !x)) out.push('One weapon slot has nothing that fits this build. See Weapons to chase in Meta &amp; farming.');
+  return out.slice(0, 4);
+}
+/* ---------- extra sections in the build detail ---------- */
+const _renderDetail2 = renderDetail;
+renderDetail = function(){
+  _renderDetail2();
+  const r = RES.find(x => x.b.id === current) || RES[0]; if(!r) return; const det = document.getElementById('detail');
+  const head = det.querySelector('.dhead h2'); if(head && r.ready){ const on = PINS.includes(r.b.id);
+    head.insertAdjacentHTML('beforeend', ` <button type="button" class="btn sm pinbtn ${on ? 'on' : ''}" data-pin="${r.b.id}" title="${IS_APP ? 'Pinned builds get the hotkeys Ctrl+Alt+1, 2 and 3' : 'Pinned builds are listed first in the compact window'}">${on ? '★ Pinned' + (IS_APP ? ' · Ctrl+Alt+' + (PINS.indexOf(r.b.id) + 1) : '') : '☆ Pin'}</button>`); }
+  let h = '';
+  if(r.ready){ const tips = improveTips(r);
+    h += `<section class="blk"><h3>What would make it better</h3><ul class="tips">${tips.map(t => `<li>${t}</li>`).join('')}</ul></section>`; }
+  h += `<section class="blk"><h3>Boss damage</h3><p class="lead">${esc(actsOf(r.b).includes('PvP') && r.b.act ? DPS_PVP : (DPS[r.b.id] || 'Open with your super on the boss, then use your heaviest weapon. Keep your exotic\'s effect active before the phase starts.'))}</p></section>`;
+  const art = artifactFor(r);
+  if(art.length) h += `<section class="blk"><h3>Artifact perks for this build</h3><div class="artl">${art.map(({p}) => `<div class="artp ${p.on ? 'on' : ''}"><b>${esc(p.n)}</b>${p.on ? ' <span class="tagk">active</span>' : p.unl ? '' : ' <span class="perk">(tier not unlocked)</span>'}<div class="perk">${esc(p.d)}</div></div>`).join('')}</div><p class="note">Matched to the weapons, element and abilities of this build. Change perks in game at the Seasonal Artifact.</p></section>`;
+  const eqSec = [...det.querySelectorAll('section.blk')].find(s => /Equip it/.test(s.querySelector('h3') ? s.querySelector('h3').textContent : ''));
+  if(eqSec){ eqSec.insertAdjacentHTML('beforebegin', h); const row = eqSec.querySelector('.dimrow'); if(row) row.insertAdjacentHTML('beforeend', `<button type="button" class="btn" data-share="${r.b.id}">Share image</button>`); }
+  else det.insertAdjacentHTML('beforeend', h);
+};
+document.addEventListener('click', e => {
+  const pb = e.target.closest('[data-pin]'); if(pb){ const id = pb.dataset.pin; PINS = PINS.includes(id) ? PINS.filter(x => x !== id) : [...PINS, id].slice(-3); STORE.set('hunterPins', PINS); renderDetail(); sendHotkeys(); if(document.body.classList.contains('compact')) renderCompact(); return; }
+  const sh = e.target.closest('[data-share]'); if(sh){ shareImage(RES.find(r => r.b.id === sh.dataset.share)); return; }
+});
+
+/* ---------- share a build as an image ---------- */
+let SPR_IMG = null;
+const loadImg = src => new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; });
+async function shareImage(r){
+  if(!r || !r.combos) return; const c = r.combos[0];
+  SPR_IMG = SPR_IMG || await loadImg(SPR.items.url); const PI = await loadImg(SPR.plugs.url);
+  const cv = document.createElement('canvas'); cv.width = 1000; cv.height = 560; const g = cv.getContext('2d');
+  const css = getComputedStyle(document.documentElement); const v = n => css.getPropertyValue(n).trim() || '#888';
+  const elc = ({Arc:'#7cc4f2',Solar:'#f2803a',Void:'#b68ce6',Stasis:'#5d8fff',Strand:'#3fdc78'})[r.b.el] || '#7cc4f2';
+  const grd = g.createLinearGradient(0,0,1000,560); grd.addColorStop(0,'#10152a'); grd.addColorStop(1,'#1d2440'); g.fillStyle = grd; g.fillRect(0,0,1000,560);
+  g.fillStyle = elc; g.fillRect(0,0,1000,6);
+  const fit = (t, w) => { if(g.measureText(t).width <= w) return t; while(t.length > 1 && g.measureText(t + '…').width > w) t = t.slice(0, -1); return t + '…'; };
+  const draw = (img, s, idx, x, y, px) => { if(!img || idx == null || idx < 0) return; g.drawImage(img, (idx % s.cols) * s.size, Math.floor(idx / s.cols) * s.size, s.size, s.size, x, y, px, px); };
+  g.fillStyle = '#ece7dc'; g.font = '600 34px Oswald, Arial Narrow, sans-serif'; g.fillText(r.b.name, 36, 62);
+  g.fillStyle = '#9aa0bb'; g.font = '16px "IBM Plex Sans", Arial, sans-serif'; g.fillText(`${r.b.el} · ${r.b.sub} · ${r.b.aspects.join(' + ')} · score ${r.total}`, 36, 92);
+  g.fillStyle = '#ece7dc'; g.font = '600 15px "IBM Plex Sans", Arial'; g.fillText('ARMOR', 36, 136);
+  c.set.forEach((p, i) => { const x = 36 + i * 120; draw(SPR_IMG, SPR.items, p.item.ic, x, 148, 72); if(p.ex){ g.strokeStyle = '#d9b93a'; g.lineWidth = 3; g.strokeRect(x, 148, 72, 72); }
+    g.fillStyle = '#c9c4b8'; g.font = '12px "IBM Plex Sans", Arial'; g.fillText(fit(p.name, 112), x, 238); });
+  g.fillStyle = '#ece7dc'; g.font = '600 15px "IBM Plex Sans", Arial'; g.fillText('WEAPONS', 36, 282);
+  r.weap.loadout.forEach((x, i) => { if(!x) return; const X = 36 + i * 200; draw(SPR_IMG, SPR.items, x.w.item.ic, X, 294, 64); g.fillStyle = x.w.ex ? '#d9b93a' : '#ece7dc'; g.font = '14px "IBM Plex Sans", Arial'; g.fillText(fit(x.w.name, 120), X + 74, 322); g.fillStyle = '#9aa0bb'; g.font = '12px "IBM Plex Sans", Arial'; g.fillText(x.w.type, X + 74, 342); });
+  g.fillStyle = '#ece7dc'; g.font = '600 15px "IBM Plex Sans", Arial'; g.fillText('STATS', 660, 136);
+  c.st.forEach((s, i) => { const y = 160 + i * 34; g.fillStyle = '#9aa0bb'; g.font = '13px "IBM Plex Sans", Arial'; g.fillText(SBG[i], 660, y + 12); g.fillStyle = '#2b3354'; g.fillRect(740, y, 180, 12); g.fillStyle = elc; g.fillRect(740, y, Math.min(180, s / 200 * 180), 12); g.fillStyle = '#ece7dc'; g.fillText(String(s), 930, y + 12); });
+  const kitNames = Object.entries(r.b.kit || {}).filter(([k]) => k !== 'Fragments').map(([k, n]) => `${k}: ${n}`).join('   ');
+  g.fillStyle = '#ece7dc'; g.font = '600 15px "IBM Plex Sans", Arial'; g.fillText('SUBCLASS', 36, 404);
+  g.fillStyle = '#c9c4b8'; g.font = '13px "IBM Plex Sans", Arial'; g.fillText(kitNames.slice(0, 140), 36, 428); g.fillText('Fragments: ' + (r.b.kit.Fragments || ''), 36, 450);
+  g.fillText('Stat mods: ' + modsNote(c.mods) + (c.tun ? ' · Tuning on ' + c.tun.length + ' pieces' : ''), 36, 472);
+  g.fillStyle = '#6f7696'; g.font = '12px "IBM Plex Sans", Arial'; g.fillText('Made with Hunter Builds · data from DIM', 36, 532);
+  const url = cv.toDataURL('image/png');
+  let copied = false; if(IS_APP && window.hunterApp.copyImage) copied = await window.hunterApp.copyImage(url);
+  const a = document.createElement('a'); a.href = url; a.download = r.b.name.replace(/[^a-z0-9]+/gi, '-') + '.png';
+  appToast(copied ? 'Build image copied — paste it in Discord. Saving a copy too.' : 'Saving the build image…', 'ok'); setTimeout(() => a.click(), 200);
+  playSound('chime');
+}
+
+/* ---------- Meta & farming: focusing, armor, catalysts, patterns ---------- */
+function farmCards2(){
+  let h = '';
+  const miss = BASE.missing || []; const pm = DATA.postmaster; const mats = DATA.mats || {};
+  const engrams = (mats['Exotic Engram'] || 0) + (pm ? pm.items.filter(([n]) => /Exotic Engram/.test(n)).length : 0), ciphers = mats['Exotic Cipher'] || 0;
+  const need = {}; MISSING.forEach(m => m.need.forEach(n => (need[n] = need[n] || []).push(m.name))); BUILDS.forEach(b => { if(!DATA.items.some(i => i.n === b.exotic)) (need[b.exotic] = need[b.exotic] || []).push(b.name); });
+  const foc = miss.filter(m => /Focusing/.test(m.src) && need[m.n]).sort((a,b) => need[b.n].length - need[a.n].length);
+  const can = Math.min(engrams, ciphers);
+  h += `<div class="two farmtop"><div class="card"><h3>What to focus at Rahool</h3><p class="lead">${can ? `You can focus <b>${can}</b> exotic${can>1?'s':''} right now (${engrams} exotic engram${engrams===1?'':'s'}, ${ciphers} cipher${ciphers===1?'':'s'}).` : `Focusing needs an exotic engram and an Exotic Cipher. You have ${engrams} engram${engrams===1?'':'s'} and ${ciphers} cipher${ciphers===1?'':'s'}.`}</p>
+    ${foc.length ? `<ol class="focl">${foc.slice(0,5).map((m, i) => `<li>${missIco(m,'sm')}<div><b>${esc(m.n)}</b>${i < can ? ' <span class="tagk">focus now</span>' : ''}<div class="perk">Unlocks: ${esc(need[m.n].join(', '))}</div></div></li>`).join('')}</ol>` : '<p class="perk">Every meta exotic you can focus is already yours.</p>'}</div>`;
+  // armor to farm
+  const top = RES.filter(r => r.ready && r.combos).slice(0, 5);
+  h += `<div class="card"><h3>Armor to farm</h3><p class="lead">Where a new piece would help your top builds most.</p><ul class="needl">${top.map(r => { const c = r.combos[0]; const pri = [0,1,2,3,4,5].sort((x,y) => r.b.w[y] - r.b.w[x]).slice(0,2);
+      const weak = c.set.filter(p => !p.ex).sort((x,y) => (x.st[pri[0]] + x.st[pri[1]]) - (y.st[pri[0]] + y.st[pri[1]]))[0];
+      const set = Object.keys(r.b.sets || {})[0]; const src = set ? ((DATA.items.find(i => i.set && i.set[0] === set && i.src && !/Random Perks|cannot be reacquired/i.test(i.src)) || {}).src || '') : '';
+      return weak ? `<li>${ico(weak.item,'sm')}<div><b>${esc(r.b.name)}</b><div class="perk">Replace ${SLOTS[weak.slot].toLowerCase()} (${esc(weak.name)}): look for high ${SBG[pri[0]]} + ${SBG[pri[1]]}${set ? `, ideally ${esc(set)}` : ''}${src ? ` · ${esc(src.replace(/^Source:\s*/,''))}` : ''}.</div></div></li>` : ''; }).join('')}</ul></div></div>`;
+  // catalysts and patterns
+  const used = new Set(RES.flatMap(r => Object.keys(r.b.weap.names)));
+  const cat = (DATA.catal || []).filter(c => !c.done).sort((a,b) => used.has(b.n) - used.has(a.n) || b.pct - a.pct);
+  const pats = (DATA.pats || []).filter(p => !p.done);
+  if(cat.length || pats.length) h += `<div class="two farmtop"><div class="card"><h3>Catalysts to finish (${cat.length})</h3><p class="lead">Exotic weapons you own whose catalyst isn't done. Gold = used by your builds.</p>
+    <div class="catl">${cat.slice(0, 14).map(c => { const it = DATA.items.find(i => i.n === c.n); return `<div class="catr ${used.has(c.n) ? 'want' : ''}">${it ? ico(it,'sm') : '<span class="ico none sm"></span>'}<div><span>${esc(c.n)}</span><div class="perk">${c.unl ? `${c.pct}% done` : 'Catalyst not found yet'}</div><div class="cbar"><i style="width:${c.unl ? c.pct : 0}%"></i></div></div></div>`; }).join('')}</div></div>
+    <div class="card"><h3>Crafting patterns</h3><p class="lead">Deepsight progress toward weapon patterns.</p>${pats.length ? `<div class="catl">${pats.map(p => `<div class="catr"><span class="ico none sm"></span><div><span>${esc(p.n)}</span><div class="perk">${p.have} / ${p.need} red-border kills</div><div class="cbar"><i style="width:${p.need ? Math.round(100 * p.have / p.need) : 0}%"></i></div></div></div>`).join('')}</div>` : '<p class="perk">All the patterns you have started are complete.</p>'}</div></div>`;
+  return h;
+}
+const _renderFarm2 = renderFarm;
+renderFarm = function(){ _renderFarm2(); const root = document.getElementById('tab-missing'); const first = root.querySelector('.farmtop'); (first || root).insertAdjacentHTML(first ? 'afterend' : 'afterbegin', farmCards2()); };
+
+/* ---------- weekly checklist ---------- */
+function checks(){ const wk = weekKey(new Date()); let c = STORE.get('hunterChecks', null); if(!c || c.week !== wk) c = { week: wk, done: [] }; return c; }
+const _renderWeek2 = renderWeek;
+renderWeek = function(){ _renderWeek2(); const root = document.getElementById('tab-week'); const c = checks();
+  root.querySelectorAll('.mcard, .hev').forEach(el => { const b = el.querySelector('b'); if(!b) return; const n = b.textContent; const on = c.done.includes(n);
+    el.classList.toggle('done', on); el.insertAdjacentHTML('afterbegin', `<label class="chk" title="Mark as done this week"><input type="checkbox" data-chk="${esc(n)}" ${on ? 'checked' : ''}><span></span></label>`); });
+  const all = root.querySelectorAll('[data-chk]').length; if(all){ const head = root.querySelector('.cleanhead h3'); if(head) head.insertAdjacentHTML('afterend', `<p class="perk chkcount">${c.done.length} of ${all} done this week · resets on Tuesday</p>`); }
+  root.querySelectorAll('[data-chk]').forEach(x => x.onchange = () => { const cc = checks(); const n = x.dataset.chk; cc.done = x.checked ? [...new Set([...cc.done, n])] : cc.done.filter(y => y !== n); STORE.set('hunterChecks', cc); if(x.checked) playSound('tick'); renderWeek(); }); };
+
+/* ---------- history: more charts ---------- */
+function lineChart(series, label, fmt){
+  const W = 640, H = 190, P = 36; const pts = series.flatMap(s => s.pts); if(pts.length < 2 || series.every(s => s.pts.length < 2)) return `<p class="perk">${label}: the chart appears after a few refreshes.</p>`;
+  const t0 = Math.min(...pts.map(p => p[0])), t1 = Math.max(t0 + 36e5, ...pts.map(p => p[0])); let lo = Math.min(...pts.map(p => p[1])), hi = Math.max(...pts.map(p => p[1])); if(hi - lo < 4){ lo -= 2; hi += 2; } if(pts.every(p => p[1] >= 0)) lo = Math.max(0, lo);
+  const X = t => P + (t - t0) / (t1 - t0) * (W - P * 1.5), Y = v => H - P + 8 - (v - lo) / (hi - lo) * (H - P * 2);
+  return `<svg class="hchart" viewBox="0 0 ${W} ${H}" role="img" aria-label="${esc(label)}">${[lo, (lo+hi)/2, hi].map(v => `<line x1="${P}" x2="${W-P/2}" y1="${Y(v)}" y2="${Y(v)}" class="grid"/><text x="${P-6}" y="${Y(v)+4}" text-anchor="end">${Math.round(v)}</text>`).join('')}
+    ${series.map(s => `<polyline points="${s.pts.map(p => `${X(p[0]).toFixed(1)},${Y(p[1]).toFixed(1)}`).join(' ')}" class="pline" pathLength="1" style="stroke:${s.color}"/>`).join('')}</svg>
+    ${series.length > 1 ? `<div class="legend">${series.map(s => `<span><i style="background:${s.color}"></i>${esc(s.name)}</span>`).join('')}</div>` : ''}`;
+}
+function recordScores(){ const h = STORE.get('hunterScoreHist', []); const t = new Date(DATA.updated).getTime(); if(h.length && h[h.length-1].t === t) return h;
+  const s = {}; RES.forEach(r => { if(r.ready) s[r.b.id] = r.total; }); h.push({ t, s }); const out = h.slice(-200); STORE.set('hunterScoreHist', out); return out; }
+const _renderHistory2 = renderHistory;
+renderHistory = function(){ _renderHistory2(); const root = document.getElementById('tab-history');
+  const hist = (HISTORY || []).slice().sort((a,b) => new Date(a.t) - new Date(b.t)); const T = x => new Date(x.t).getTime();
+  const items = lineChart([{ name: 'Items', color: 'var(--arc)', pts: hist.map(x => [T(x), x.n]) }, ...(hist.some(x => x.vn != null) ? [{ name: 'Vault', color: 'var(--solar)', pts: hist.filter(x => x.vn != null).map(x => [T(x), x.vn]) }] : [])], 'Items and vault');
+  const drops = lineChart([{ name: 'New items', color: 'var(--strand)', pts: hist.slice(1).map(x => [T(x), (x.added || []).length]) }], 'New items per refresh');
+  const sh = recordScores(); const ids = RES.filter(r => r.ready).slice(0, 4).map(r => r.b); const cols = ['var(--arc)','var(--void)','var(--solar)','var(--strand)'];
+  const scores = lineChart(ids.map((b, i) => ({ name: b.name, color: cols[i], pts: sh.filter(x => x.s[b.id] != null).map(x => [x.t, x.s[b.id]]) })), 'Build scores');
+  root.insertAdjacentHTML('beforeend', `<div class="two hist" style="margin-top:14px"><div class="card"><h3>Items and vault</h3>${items}<h3 style="margin-top:14px">New items per refresh</h3>${drops}</div><div class="card"><h3>Build scores over time</h3><p class="lead">How your top builds improve as you get better gear.</p>${scores}</div></div>`); };
+
+/* ---------- sounds (Web Audio, no files) ---------- */
+let SND = STORE.get('hunterSound', true), AC = null;
+function playSound(kind){
+  if(!SND) return; try{ AC = AC || new (window.AudioContext || window.webkitAudioContext)(); if(AC.state === 'suspended') AC.resume();
+    const t = AC.currentTime, o = AC.createOscillator(), g = AC.createGain(); o.connect(g); g.connect(AC.destination);
+    const P = { tick:[880, 1320, .035, .05, 'triangle'], click:[520, 640, .03, .035, 'sine'], chime:[660, 990, .09, .35, 'sine'], drop:[440, 1760, .1, .6, 'triangle'], err:[300, 180, .08, .25, 'sawtooth'] }[kind] || [600, 600, .04, .05, 'sine'];
+    o.type = P[4]; o.frequency.setValueAtTime(P[0], t); o.frequency.exponentialRampToValueAtTime(P[1], t + P[3] * .7);
+    g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(P[2], t + .01); g.gain.exponentialRampToValueAtTime(0.0001, t + P[3]);
+    o.start(t); o.stop(t + P[3] + .02);
+    if(kind === 'drop' || kind === 'chime'){ const o2 = AC.createOscillator(), g2 = AC.createGain(); o2.connect(g2); g2.connect(AC.destination); o2.type = 'sine'; o2.frequency.setValueAtTime(P[1] * 1.5, t + .12);
+      g2.gain.setValueAtTime(0.0001, t + .12); g2.gain.exponentialRampToValueAtTime(P[2] * .7, t + .14); g2.gain.exponentialRampToValueAtTime(0.0001, t + .12 + P[3]); o2.start(t + .12); o2.stop(t + .14 + P[3]); }
+  }catch(e){}
+}
+document.addEventListener('pointerdown', e => { if(e.target.closest('nav.tabs > button, .chip.act, .thopt')) playSound('tick'); else if(e.target.closest('.btn, .bsel')) playSound('click'); });
+const _toast2 = appToast; appToast = function(msg, kind){ _toast2(msg, kind); if(kind === 'ok') playSound('chime'); else if(kind === 'err') playSound('err'); };
+const _banner2 = renderNewBanner; renderNewBanner = function(){ _banner2(); const n = DATA.items.filter(i => isNew(i.id)).length; const last = STORE.get('hunterDropSeen', 0); if(n && n !== last && document.body.classList.contains('booted')) playSound('drop'); STORE.set('hunterDropSeen', n); };
+
+/* ---------- activity banner: the build that fits what you play right now ---------- */
+let ACTIVITY = null;
+function renderActivity(){
+  let bar = document.getElementById('actbar'); const a = ACTIVITY;
+  if(!a || a.kind === 'none' || !RES.length){ if(bar) bar.remove(); return; }
+  const fit = RES.filter(r => r.ready && actsOf(r.b).includes(a.kind)); const best = fit[0]; if(!best){ if(bar) bar.remove(); return; }
+  if(!bar){ bar = document.createElement('div'); bar.id = 'actbar'; bar.className = 'newbar actbar'; const anchor = document.querySelector('nav.tabs'); if(anchor) anchor.insertAdjacentElement('afterend', bar); else document.body.prepend(bar); }
+  const label = { PvP: 'a PvP match', Raid: 'a raid or 6-player activity', GM: 'a fireteam activity (strike, Nightfall, dungeon)', Solo: 'a solo activity' }[a.kind];
+  bar.innerHTML = `<span class="nbt"><b>You're in ${label}${a.players ? ` · ${a.players} player${a.players>1?'s':''}` : ''}.</b> Best fit: ${esc(best.b.name)} (${best.total})</span>
+    <span><button type="button" class="btn sm" id="act-show">Show</button> ${equipButton(best.b.name, ...(() => { const c = best.combos[0]; const items = [...c.set.map(p => p.item), ...best.weap.loadout.filter(Boolean).map(x => x.w.item)]; return [items, best.b.sub, loadoutExtras(best.b, c)]; })()).replace(/<button type="button" class="btn" data-undo[^>]*>[^<]*<\/button>/, '').replace('btn primary', 'btn sm primary')}</span>`;
+  bar.querySelector('#act-show').onclick = () => { current = best.b.id; openTab('builds'); renderList(); swapDetail(); };
+}
+if(IS_APP && window.hunterApp.onActivity) window.hunterApp.onActivity(a => { const changed = !ACTIVITY || ACTIVITY.kind !== a.kind; ACTIVITY = a; renderActivity();
+  if(changed && a.kind !== 'none' && window.hunterApp.notify && !document.body.classList.contains('compact')){ const best = RES.find(r => r.ready && actsOf(r.b).includes(a.kind)); if(best) window.hunterApp.notify('Build for this activity', `${best.b.name} fits ${a.kind}. Open Hunter Builds to equip it.`); } });
+
+/* ---------- compact window ---------- */
+let CIDX = 0;
+function renderCompact(){
+  let root = document.getElementById('compact'); if(!root){ root = document.createElement('div'); root.id = 'compact'; document.body.prepend(root); }
+  const list = [...PINS.map(id => RES.find(r => r.b.id === id && r.ready)).filter(Boolean), ...RES.filter(r => r.ready && !PINS.includes(r.b.id))];
+  if(ACTIVITY && ACTIVITY.kind !== 'none'){ const fit = list.findIndex(r => actsOf(r.b).includes(ACTIVITY.kind)); if(fit > 0 && !renderCompact._moved){ CIDX = fit; renderCompact._moved = true; } }
+  if(!list.length){ root.innerHTML = '<p class="lead">No build is ready yet.</p>'; return; }
+  CIDX = (CIDX + list.length) % list.length; const r = list[CIDX]; const c = r.combos[0]; setTint(r.b.el);
+  const items = [...c.set.map(p => p.item), ...r.weap.loadout.filter(Boolean).map(x => x.w.item)];
+  root.innerHTML = `<div class="ctop"><button type="button" class="btn sm" id="c-prev" aria-label="Previous build">‹</button><div class="cname" style="--el:${EL[r.b.el]}">${ico(exoItem(r.b.exotic),'sm')}<div><b>${esc(r.b.name)}</b><span>${r.b.sub} · ${r.total}${PINS.includes(r.b.id) ? ' · ★ Ctrl+Alt+' + (PINS.indexOf(r.b.id) + 1) : ''}</span></div></div><button type="button" class="btn sm" id="c-next" aria-label="Next build">›</button></div>
+    ${ACTIVITY && ACTIVITY.kind !== 'none' ? `<div class="perk cact">In ${ACTIVITY.kind}${actsOf(r.b).includes(ACTIVITY.kind) ? ' · this build fits' : ''}</div>` : ''}
+    <div class="cicons">${items.map(i => ico(i,'sm')).join('')}</div>
+    <div class="cstats">${c.st.map((v,i) => `<div><span>${SBG[i].slice(0,3)}</span><b>${v}</b><i style="width:${Math.min(100, v/2)}%;background:${EL[r.b.el]}"></i></div>`).join('')}</div>
+    <div class="perk">${esc(Object.entries(r.b.kit).filter(([k]) => k !== 'Fragments').map(([k,v]) => v.split('/')[0].trim()).join(' · '))}</div>
+    <div class="dimrow">${equipButton(r.b.name, items, r.b.sub, loadoutExtras(r.b, c))}</div>
+    <div class="perk" id="c-status"></div><button type="button" class="btn sm" id="c-full">Open the full window</button>`;
+  root.querySelector('#c-prev').onclick = () => { CIDX--; renderCompact(); }; root.querySelector('#c-next').onclick = () => { CIDX++; renderCompact(); };
+  root.querySelector('#c-full').onclick = () => window.hunterApp && window.hunterApp.openMain ? window.hunterApp.openMain() : window.close();
+}
+const _renderAll3 = renderAll;
+renderAll = function(){ _renderAll3(); sendHotkeys(); renderActivity(); if(document.body.classList.contains('compact')) renderCompact(); };
+if(location.hash === '#compact'){ document.body.classList.add('compact'); if(window.hunterApp) window.hunterApp.onStatus(m => { const s = document.getElementById('c-status'); if(s) s.textContent = m; }); }
+
+/* ---------- update tab: sounds, compact, backup ---------- */
+if(IS_APP){
+  const card = document.getElementById('app-diag') && document.getElementById('app-diag').closest('.card');
+  if(card) card.insertAdjacentHTML('beforeend', `<div class="selrow"><label style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="app-sound" ${SND ? 'checked' : ''}> Sounds on clicks and new drops</label></div>
+    <p style="margin:8px 0"><button class="btn sm" id="app-compact">Open compact window</button> <button class="btn sm" id="app-backup">Back up DIM loadouts and tags</button></p><p class="perk" id="backup-msg"></p>
+    <p class="note">Hotkeys: pin up to 3 builds with ☆ Pin, then press Ctrl+Alt+1, 2 or 3 anywhere (also in game) to equip them.</p>`);
+  const sd = document.getElementById('app-sound'); if(sd) sd.onchange = () => { SND = sd.checked; STORE.set('hunterSound', SND); if(SND) playSound('chime'); };
+  const cb = document.getElementById('app-compact'); if(cb) cb.onclick = () => window.hunterApp.compact();
+  const bb = document.getElementById('app-backup'); if(bb) bb.onclick = async () => { const m = document.getElementById('backup-msg'); m.textContent = 'Backing up…';
+    const page = {}; try{ for(let i = 0; i < localStorage.length; i++){ const k = localStorage.key(i); if(/^hunter/.test(k)) page[k] = localStorage.getItem(k); } }catch(e){}
+    const r = await window.hunterApp.backup(page); m.textContent = r.ok ? `Saved ${r.loadouts} DIM loadouts, tags and your saved builds to ${r.file}` : 'Backup failed: ' + r.msg; if(r.ok) playSound('chime'); };
+}
+
+renderAll();
 
 /* ---------- motion layer 2: ripple, cursor spotlight, tilt, scroll reveal, theme crossfade ---------- */
 {

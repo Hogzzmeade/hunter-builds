@@ -1,7 +1,7 @@
 {
   "name": "hunter-builds",
   "productName": "Hunter Builds",
-  "version": "1.6.0",
+  "version": "1.7.0",
   "description": "Destiny 2 Hunter builds from your own inventory, powered by DIM",
   "main": "main.js",
   "author": "Hogzzmeade",

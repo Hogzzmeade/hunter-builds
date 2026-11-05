@@ -1,7 +1,7 @@
 // Hunter Builds — desktop app
 // One window shows the builds page; a second (hidden) window runs DIM with your own sign-in.
 // The app reads your inventory straight from DIM, so it needs nothing else to stay up to date.
-const { app, BrowserWindow, ipcMain, shell, Notification, nativeImage, session, Tray, Menu, clipboard, net } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, Notification, nativeImage, session, Tray, Menu, clipboard, net, globalShortcut } = require('electron');
 const os = require('os');
 const path = require('path');
 let autoUpdater = null; try { ({ autoUpdater } = require('electron-updater')); } catch (e) { /* not bundled in dev */ }
@@ -11,6 +11,7 @@ const DIM_HOME = 'https://app.destinyitemmanager.com/';
 const REFRESH_EVERY = 6 * 60 * 60 * 1000;
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36';
 
+let compactWin = null, hotkeys = [], lastActivity = null;
 let mainWin = null, dimWin = null, tray = null, refreshing = false, busy = Promise.resolve(), lastStatus = '';
 const HIDDEN_START = process.argv.includes('--hidden');
 let updateReady = null;
@@ -42,7 +43,7 @@ function diagnostics() {
 }
 function status(msg) {
   lastStatus = msg; log('status: ' + msg);
-  if (mainWin && !mainWin.isDestroyed()) mainWin.webContents.send('status', msg);
+  for (const w of [mainWin, compactWin]) if (w && !w.isDestroyed()) w.webContents.send('status', msg);
 }
 
 /* ---------- windows ---------- */
@@ -83,6 +84,16 @@ function createDim() {
   dimWin.loadURL(DIM_HOME);
 }
 function showDim(url) { if (url) dimWin.loadURL(url); dimWin.show(); dimWin.focus(); }
+// small always-on-top window with the current build and an Equip button
+function openCompact() {
+  if (compactWin && !compactWin.isDestroyed()) { compactWin.show(); compactWin.focus(); return; }
+  if (!fs.existsSync(file('page.html'))) return;
+  compactWin = new BrowserWindow({ width: 380, height: 600, minWidth: 320, minHeight: 360, alwaysOnTop: true, title: 'Hunter Builds — compact', backgroundColor: '#141a2e',
+    icon: path.join(__dirname, 'app', 'icon.png'), autoHideMenuBar: true, webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, sandbox: false } });
+  compactWin.webContents.setWindowOpenHandler(({ url }) => { if (url.startsWith(DIM_HOME)) showDim(url); else if (/^https?:/.test(url)) shell.openExternal(url); return { action: 'deny' }; });
+  compactWin.loadFile(file('page.html'), { hash: 'compact' });
+  compactWin.on('closed', () => { compactWin = null; });
+}
 
 /* ---------- page ---------- */
 function renderPage() {
@@ -100,6 +111,7 @@ function renderPage() {
     .replace('/*__HISTORY__*/null', history ? JSON.stringify(history) : 'null');
   fs.writeFileSync(file('page.html'), html);
   mainWin.loadFile(file('page.html'));
+  if (compactWin && !compactWin.isDestroyed()) compactWin.loadFile(file('page.html'), { hash: 'compact' });
 }
 
 /* ---------- export from DIM ---------- */
@@ -161,6 +173,8 @@ async function doRefresh(reason) {
       res.data.weekly = await dimWin.webContents.executeJavaScript(`(async () => { ${src}\n return await dimWeekly(); })()`, true);
       if (acct2) dimWin.loadURL(`${DIM_HOME}${acct2}/d2/inventory`);
     } catch (e) { res.data.weekly = prev && prev.weekly ? prev.weekly : null; }
+    const wk = res.data.weekly && res.data.weekly.xur && res.data.weekly.xur.items && res.data.weekly.xur.items.length ? weekKey(new Date()) : null;
+    if (wk && readJson('settings.json', {}).xurWeek !== wk) { saveSettings({ xurWeek: wk }); notify('Xûr is here', res.data.weekly.xur.items.filter(i => i.ex).map(i => i.n).join(', ') || 'Open This week to see what he sells.'); }
     fs.writeFileSync(file('data.json'), JSON.stringify(res.data));
     const added = addHistory(res.data);
     renderPage();
@@ -184,6 +198,48 @@ async function doRefresh(reason) {
   } finally { refreshing = false; }
 }
 
+// week number counted from the Tuesday 17:00 UTC reset
+function weekKey(d) { return Math.floor((d.getTime() - Date.UTC(2020, 0, 7, 17)) / (7 * 864e5)); }
+/* ---------- activity: which build fits what you are playing ---------- */
+async function pollActivity() {
+  if (refreshing || !dimWin || !/\/d2\//.test(dimWin.webContents.getURL())) return;
+  try {
+    await dimWin.webContents.executeJavaScript(`(() => { const b = document.querySelector('[title*="Refresh"], [aria-label*="Refresh"]'); if (b) b.click(); })()`, true);
+    await sleep(5000);
+    const src = fs.readFileSync(path.join(__dirname, 'app', 'dimexport.js'), 'utf8');
+    const a = await dimWin.webContents.executeJavaScript(`(() => { ${src}\n return dimActivity(); })()`, true);
+    if (!a) return;
+    const kind = !a.in ? 'none' : a.opp > 0 ? 'PvP' : a.players >= 4 ? 'Raid' : a.players >= 2 ? 'GM' : 'Solo';
+    const act = Object.assign({ kind, t: Date.now() }, a);
+    const changed = !lastActivity || lastActivity.kind !== kind; lastActivity = act;
+    if (changed) { log('activity: ' + kind); for (const w of [mainWin, compactWin]) if (w && !w.isDestroyed()) w.webContents.send('activity', act); }
+  } catch (e) { log('activity poll failed: ' + e.message); }
+}
+/* ---------- global hotkeys: Ctrl+Alt+1..3 equip pinned builds ---------- */
+function setHotkeys(list) {
+  hotkeys = (list || []).slice(0, 3);
+  globalShortcut.unregisterAll();
+  hotkeys.forEach((h, i) => { try { globalShortcut.register(`CommandOrControl+Alt+${i + 1}`, () => { notify('Hunter Builds', `Equipping ${h.name}…`); equip(h.payload).then(r => notify('Hunter Builds', r.ok ? `Equipped ${h.name}.` : `Could not equip: ${r.msg}`)); }); } catch (e) { log('hotkey failed: ' + e.message); } });
+}
+/* ---------- backup of DIM loadouts, tags and saved builds ---------- */
+async function backup(pageData) {
+  return queue(async () => {
+    try {
+      let dim = null;
+      try { dim = await dimWin.webContents.executeJavaScript(`(() => { for (const e of document.querySelectorAll('*')) { const k = Object.keys(e).find(k => k.startsWith('__reactFiber$')); if (!k) continue;
+        let r = e[k]; while (r.return) r = r.return; const q = [r]; let c = 0;
+        while (q.length && c < 20000) { const x = q.shift(); c++; const p = x && x.memoizedProps;
+          if (p && p.store && p.store.getState) { const s = p.store.getState(); return { profiles: s.dimApi.profiles, itemHashTags: s.dimApi.itemHashTags, searches: s.dimApi.searches }; }
+          if (x.child) q.push(x.child); if (x.sibling) q.push(x.sibling); } return null; } return null; })()`, true); } catch (e) { log('backup dim read failed: ' + e.message); }
+      const dir = path.join(app.getPath('documents'), 'Hunter Builds backups'); fs.mkdirSync(dir, { recursive: true });
+      const f = path.join(dir, `backup-${new Date().toISOString().slice(0, 16).replace(/[:T]/g, '-')}.json`);
+      const out = { made: new Date().toISOString(), app: app.getVersion(), dim, page: pageData || null, settings: readJson('settings.json', {}), history: readJson('history.json', []) };
+      fs.writeFileSync(f, JSON.stringify(out, null, 1)); shell.showItemInFolder(f); log('backup: ' + f);
+      const n = dim && dim.profiles ? Object.values(dim.profiles).reduce((t, pr) => t + Object.keys(pr.loadouts || {}).length, 0) : 0;
+      return { ok: true, file: f, loadouts: n };
+    } catch (e) { return { ok: false, msg: e.message }; }
+  });
+}
 function addHistory(data) {
   const hist = readJson('history.json', []);
   const last = hist[hist.length - 1];
@@ -192,7 +248,7 @@ function addHistory(data) {
   const curSet = new Set(cur);
   const removed = last ? [...prevIds].filter(id => !curSet.has(id)).map(id => ({ id, n: (readJson('names-cache.json', {})[id]) || '' })) : [];
   hist.forEach(h => delete h.ids);
-  hist.push({ t: data.updated, power: data.power, n: cur.length, ids: cur, added, removed });
+  hist.push({ t: data.updated, power: data.power, n: cur.length, vn: data.vault ? data.vault.n : null, ids: cur, added, removed });
   fs.writeFileSync(file('history.json'), JSON.stringify(hist.slice(-400)));
   const cache = readJson('names-cache.json', {}); data.items.forEach(i => { cache[i.id] = i.n; }); fs.writeFileSync(file('names-cache.json'), JSON.stringify(cache));
   return added;
@@ -214,6 +270,7 @@ function buildTrayMenu() {
     ...(updateReady ? [{ label: `Restart to update to ${updateReady}`, click: () => installUpdate() }] : []),
     { label: 'Refresh now', click: () => refresh('tray') },
     { label: 'Open DIM', click: () => showDim() },
+    { label: 'Compact window', click: () => openCompact() },
     { type: 'separator' },
     { label: 'Start with Windows', type: 'checkbox', checked: !!app.getLoginItemSettings({ args: ['--hidden'] }).openAtLogin, click: m => setStartup(m.checked) },
     { type: 'separator' },
@@ -318,6 +375,12 @@ function installUpdate() { if (!updateReady || !autoUpdater) return; app.isQuitt
 ipcMain.on('install-update', () => installUpdate());
 ipcMain.handle('equip', (_e, p) => equip(p));
 ipcMain.handle('bulk', (_e, p) => bulk(p));
+ipcMain.on('compact', () => openCompact());
+ipcMain.on('open-main', () => { if (mainWin) { mainWin.show(); mainWin.focus(); } });
+ipcMain.on('set-hotkeys', (_e, list) => setHotkeys(list));
+ipcMain.handle('activity', () => lastActivity);
+ipcMain.handle('backup', (_e, d) => backup(d));
+ipcMain.handle('copy-image', (_e, url) => { try { clipboard.writeImage(nativeImage.createFromDataURL(url)); return true; } catch (e) { return false; } });
 ipcMain.handle('undo', () => { const u = readJson('undo.json', null); if (!u || !u.items) return { ok: false, msg: 'Nothing to undo yet.' }; return equip({ name: 'Previous gear', notes: `Gear before "${u.from}"`, items: u.items, undo: true }); });
 ipcMain.handle('diagnostics', () => { const t = diagnostics(); clipboard.writeText(t); return t; });
 ipcMain.on('notify', (_e, t, b) => notify(t, b));
@@ -328,6 +391,7 @@ ipcMain.on('open-dim', () => showDim());
 ipcMain.handle('status', () => lastStatus);
 
 app.on('before-quit', () => { app.isQuitting = true; });
+app.on('will-quit', () => globalShortcut.unregisterAll());
 app.whenReady().then(() => {
   session.fromPartition('persist:dim').setUserAgent(UA);
   createDim();
@@ -340,6 +404,9 @@ app.whenReady().then(() => {
   if (age > 30 * 60 * 1000) setTimeout(() => refresh('startup'), 1500);
   setInterval(() => refresh('timer'), REFRESH_EVERY);
   let wasOnline = net.isOnline(); setInterval(() => { const on = net.isOnline(); if (on && !wasOnline) { log('back online'); refresh('online'); } wasOnline = on; }, 30 * 1000);
+  setInterval(pollActivity, 3 * 60 * 1000);
+  // Xûr arrives Friday 17:00 UTC: refresh soon after so the notification comes on time
+  setInterval(() => { const n = new Date(); if (n.getUTCDay() === 5 && n.getUTCHours() === 17 && n.getUTCMinutes() >= 10 && n.getUTCMinutes() < 20) refresh('xur'); }, 10 * 60 * 1000);
   log(`start ${app.getVersion()}`);
 });
 app.on('window-all-closed', () => { if (app.isQuitting) app.quit(); });

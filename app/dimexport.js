@@ -123,10 +123,21 @@ async function dimExport(MODE, SUBCLASS_NAMES) {
   const mats = {}; for (const i of [...hunter.items, ...vault.items]) if (MATS.includes(i.name)) mats[i.name] = (mats[i.name] || 0) + (i.amount || 1);
   for (const c of (state.inventory.currencies || [])) { const n = c.displayProperties?.name; if (n) mats[n] = c.quantity; }
   const wsrc = {}; for (const cdef of Object.values(col)) { const d = ii[cdef.itemHash]; if (!d || d.itemType !== 3 || !d.displayProperties?.name || !cdef.sourceString) continue; if (!wsrc[d.displayProperties.name]) wsrc[d.displayProperties.name] = cdef.sourceString.replace(/^Source:\s*/, ''); }
+  // seasonal artifact perks, exotic catalysts, crafting patterns, current activity (when in game)
+  const cart = p.characterProgressions?.data?.[hunter.id]?.seasonalArtifact;
+  const art = cart ? { used: cart.pointsUsed || 0, perks: (cart.tiers || []).flatMap((t, ti) => (t.items || []).filter(x => x.isVisible).map(x => { const d = ii[x.itemHash] || {}; return { n: d.displayProperties?.name || '', d: (d.displayProperties?.description || (d.perks || []).map(pk => sp[pk.perkHash]?.displayProperties?.description).filter(Boolean).join(' ') || '').slice(0, 300), on: x.isActive ? 1 : 0, tier: ti + 1, unl: t.isUnlocked ? 1 : 0 }; })).filter(x => x.n) } : null;
+  const allW = [...hunter.items, ...vault.items].filter(i => i.bucket.sort === 'Weapons');
+  const catal = []; for (const i of allW) { if (!i.isExotic || !i.catalystInfo || catal.some(c => c.n === i.name)) continue; const o = i.catalystInfo.objectives || [];
+    const pct = o.length ? Math.round(100 * o.reduce((t, x) => t + Math.min(1, (x.progress || 0) / (x.completionValue || 1)), 0) / o.length) : 0;
+    catal.push({ n: i.name, done: i.catalystInfo.complete ? 1 : 0, unl: i.catalystInfo.unlocked ? 1 : 0, pct }); }
+  const pats = []; for (const i of [...stores.flatMap(s => s.items)]) { const r = i.patternUnlockRecord; if (!r || pats.some(x => x.n === i.name)) continue; const o = (r.objectives || [])[0] || {};
+    pats.push({ n: i.name, have: o.progress || 0, need: o.completionValue || 0, done: (o.complete || (o.completionValue && o.progress >= o.completionValue)) ? 1 : 0 }); }
+  const tr = p.profileTransitoryData?.data || null;
+  const activity = tr && tr.currentActivity ? { players: tr.currentActivity.numberOfPlayers || (tr.partyMembers || []).length || 1, opp: tr.currentActivity.numberOfOpponents || 0, start: tr.currentActivity.startTime || null, party: (tr.partyMembers || []).length } : null;
   const classes = stores.filter(s => !s.isVault).map(s => ({ cls: s.classType, name: s.className, power: s.powerLevel }));
   const bk = await get('d2-manifest-InventoryBucket');
   const vaultInfo = { n: vault.items.length, cap: (bk && bk[138197802] && bk[138197802].itemCount) || 0 };
-  const base = { v: 2, vault: vaultInfo, subs, postmaster, mats, wsrc, updated: new Date().toISOString(), power: hunter.powerLevel || 0, classes, subclasses, aspects: [...aspects].sort(), exotics: [...exotics].sort(), items };
+  const base = { v: 2, vault: vaultInfo, subs, postmaster, mats, wsrc, art, catal, pats, activity, updated: new Date().toISOString(), power: hunter.powerLevel || 0, classes, subclasses, aspects: [...aspects].sort(), exotics: [...exotics].sort(), items };
   if (MODE === 'daily') {
     // compact: items already in the published data only send what changes day to day
     const knownItems = new Set(JSON.parse(localStorage.getItem('hunterExportKnownItems') || '[]'));
@@ -209,4 +220,18 @@ async function dimWeekly() {
     xur = { items, at: new Date().toISOString() };
   }
   return { at: new Date().toISOString(), milestones, xur };
+}
+
+// light read used every few minutes: am I in an activity right now?
+function dimActivity() {
+  let fiber = null;
+  for (const e of document.querySelectorAll('*')) { const k = Object.keys(e).find(k => k.startsWith('__reactFiber$')); if (k) { fiber = e[k]; break; } }
+  let root = fiber; while (root && root.return) root = root.return;
+  const q = [root]; let c = 0;
+  while (q.length && c < 20000) { const x = q.shift(); c++; const p = x && x.memoizedProps;
+    if (p && p.store && p.store.getState) { const s = p.store.getState(); const tr = s.inventory.profileResponse?.profileTransitoryData?.data;
+      if (!tr || !tr.currentActivity) return { in: 0 };
+      return { in: 1, players: tr.currentActivity.numberOfPlayers || (tr.partyMembers || []).length || 1, opp: tr.currentActivity.numberOfOpponents || 0, start: tr.currentActivity.startTime || null, party: (tr.partyMembers || []).length }; }
+    if (x && x.child) q.push(x.child); if (x && x.sibling) q.push(x.sibling); }
+  return null;
 }
