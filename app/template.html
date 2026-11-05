@@ -578,6 +578,20 @@ body.compact #compact{display:flex;flex-direction:column;gap:12px;padding:14px}
 .cicons{display:flex;flex-wrap:wrap;gap:6px}
 .cstats{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}.cstats div{background:var(--panel);border-radius:6px;padding:6px 8px;position:relative;overflow:hidden}.cstats span{font-size:11px;color:var(--mute);display:block}.cstats b{font-size:17px}.cstats i{position:absolute;left:0;bottom:0;height:3px}
 body.compact .dimrow{flex-wrap:wrap}
+.wcols{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:14px}
+@media (max-width:1000px){.wcols{grid-template-columns:1fr}}
+.wrank{list-style:none;margin:8px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+.wr{display:flex;gap:9px;align-items:flex-start;padding:8px;border-radius:7px;background:var(--bg);border:1px solid transparent}
+.wr.inlo{border-color:var(--tint);box-shadow:0 0 12px color-mix(in srgb,var(--tint) 22%,transparent)}
+.wr.low{opacity:.6}
+.wrn{width:22px;flex:none;text-align:right;color:var(--mute);font-size:12px;padding-top:7px}
+.wrb{flex:1;min-width:0}.wrt{font-size:14px}.wrs{font-size:15px;padding-top:6px;min-width:30px;text-align:right}
+.wrk{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}.wrk .chip{font-size:11px;padding:1px 7px}.chip.good{border-color:var(--good);color:var(--good)}.chip.bad{border-color:#c0545a;color:#e48a8f}
+.eldot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:0}
+.wbar{height:4px;border-radius:2px;background:var(--track,var(--line));margin-top:6px;overflow:hidden}.wbar i{display:block;height:100%;border-radius:2px;transition:width var(--t-slow) var(--ease-out)}
+.wtsel{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--mute)}.wtsel select{min-width:260px}
+@media (hover:hover){.wr:hover{filter:brightness(1.18);transform:translateX(3px)}}
+.wr{transition:filter var(--t-med),transform var(--t-med) var(--ease-out)}
 /* ===== extra themes ===== */
 .thwrap{position:relative;align-self:center}
 .thmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:60;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px;min-width:230px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
@@ -663,6 +677,7 @@ header.top{position:relative;z-index:50}
   <button role="tab" data-tab="cleanup" aria-selected="false">Vault cleanup</button>
   <button role="tab" data-tab="missing" aria-selected="false">Meta &amp; farming</button>
   <button role="tab" data-tab="week" aria-selected="false">This week</button>
+  <button role="tab" data-tab="weapons" aria-selected="false">Weapons</button>
   <button role="tab" data-tab="history" aria-selected="false">History</button>
   <button role="tab" data-tab="update" aria-selected="false">Update</button>
   <div class="qwrap"><input id="q" type="search" placeholder="Search items or perks…" aria-label="Search your items and perks" autocomplete="off"><div id="qres" class="qres" hidden></div></div>
@@ -679,6 +694,7 @@ header.top{position:relative;z-index:50}
   <div id="tab-inventory" hidden></div>
   <div id="tab-cleanup" hidden></div>
   <div id="tab-week" hidden></div>
+  <div id="tab-weapons" hidden></div>
   <div id="tab-history" hidden></div>
   <div id="tab-missing" hidden></div>
   <div id="tab-update" hidden>
@@ -1910,6 +1926,7 @@ const BG = {
  'The best builds from what you have in your inventory and vault':'Най-добрите билдове от това, което имаш в инвентара и трезора','Hover or focus an icon for its description.':'Задръж мишката върху икона за описание.','Aspect':'Аспект','Fragment':'Фрагмент','Champions':'Шампиони','Ready to build now':'Готови за игра сега','☀ Light':'☀ Светла','☾ Dark':'☾ Тъмна','Exotic Engram':'Екзотичен енграм','Distorted Engram':'Изкривен енграм',
  'Tower':'Кула','Traveler':'Пътешественика','Pyramid':'Пирамида','Vanguard terminal':'Терминал на Авангарда','Dreaming City':'Сънуващият град','The original dark blue':'Оригиналната тъмносиня','Bright and clean':'Светла и изчистена','Warm gold and ivory':'Топло злато и слонова кост','Black, violet, sharp edges':'Черно, виолетово, остри ръбове','Tactical HUD, monospace':'Тактически HUD, моноширинен шрифт','Twilight glass, pink and teal':'Здрач, стъкло, розово и тюркоазено',
  'What would make it better':'Какво би го подобрило','Boss damage':'Щети по бос','Artifact perks for this build':'Перкове от артефакта за билда','Share image':'Сподели картинка','What to focus at Rahool':'Какво да фокусираш при Rahool','Armor to farm':'Броня за фармене','Crafting patterns':'Шаблони за крафтване','Items and vault':'Предмети и трезор','New items per refresh':'Нови предмети при обновяване','Build scores over time':'Резултати на билдовете във времето','Open compact window':'Отвори малкия прозорец','Back up DIM loadouts and tags':'Резервно копие на DIM loadouts и тагове','Sounds on clicks and new drops':'Звуци при клик и нови предмети','Open the full window':'Отвори големия прозорец','Show':'Покажи','☆ Pin':'☆ Закачи','focus now':'фокусирай сега','active':'активен',
+ 'Weapons for your build':'Оръжия за билда ти','in the build':'в билда','recommended':'препоръчано','element':'елемент','god roll':'god roll','wish-list roll':'добър рол','trash roll':'лош рол','No weapons in this slot.':'Няма оръжия в този слот.',
  'Lock':'Заключи','Close':'Затвори','Perks':'Перкове','Stats':'Статове','Mods':'Модове','Intrinsic':'Вградено','Masterwork':'Мастъруърк'
 };
 const BG_RE = [
@@ -2187,6 +2204,35 @@ if(IS_APP){
     const page = {}; try{ for(let i = 0; i < localStorage.length; i++){ const k = localStorage.key(i); if(/^hunter/.test(k)) page[k] = localStorage.getItem(k); } }catch(e){}
     const r = await window.hunterApp.backup(page); m.textContent = r.ok ? `Saved ${r.loadouts} DIM loadouts, tags and your saved builds to ${r.file}` : 'Backup failed: ' + r.msg; if(r.ok) playSound('chime'); };
 }
+
+/* ---------- Weapons tab: every weapon you own, ranked for your build ---------- */
+let WT_BUILD = STORE.get('hunterWtBuild', 'auto');
+function wornBuild(){
+  const exo = DATA.items.find(i => !i.w && i.ex && i.loc === 'e');
+  const fit = exo ? RES.filter(r => r.ready && r.b.exotic === exo.n).sort((a,b) => b.total - a.total)[0] : null;
+  return fit || RES.find(r => r.b.id === current) || RES[0];
+}
+function renderWeaponsTab(){
+  const root = document.getElementById('tab-weapons'); if(!root || !RES.length) return;
+  const auto = wornBuild(); const r = WT_BUILD === 'auto' ? auto : (RES.find(x => x.b.id === WT_BUILD) || auto); const b = r.b;
+  const inLo = new Set(r.weap.loadout.filter(Boolean).map(x => x.w.i));
+  const rated = weapons().map(w => rateWeapon(w, b));
+  const cols = { kinetic: [], energy: [], power: [] }; rated.forEach(x => cols[slotOf(x.w)].push(x));
+  const LOC = { e: 'equipped', i: 'inventory', v: 'vault' };
+  const opts = RES.filter(x => x.ready).map(x => `<option value="${x.b.id}" ${WT_BUILD === x.b.id ? 'selected' : ''}>${esc(x.b.name)}</option>`).join('');
+  const col = (key, title) => { const list = cols[key].sort((x,y) => y.s - x.s || (y.w.item.pw||0) - (x.w.item.pw||0)); const top = Math.max(1, list[0] ? list[0].s : 1);
+    return `<div class="card wcol"><h3>${title} <span class="perk">(${list.length})</span></h3><ol class="wrank">${list.map((x, k) => { const w = x.w, g = w.item.wl;
+      const why = []; if(b.weap.names[w.name]) why.push('recommended'); if(b.weap.el[w.el]) why.push('element'); if(g && g[0] === 2) why.push('god roll'); else if(g && g[0] === 1) why.push('wish-list roll'); else if(g && g[0] === -1) why.push('trash roll');
+      return `<li class="wr ${inLo.has(w.i) ? 'inlo' : ''} ${x.s <= 0 ? 'low' : ''}"><span class="wrn">${k+1}</span>${ico(w.item,'sm')}<div class="wrb"><div class="wrt"><span class="${w.ex ? 'exn' : ''}">${esc(w.name)}</span>${inLo.has(w.i) ? ' <span class="tagk">in the build</span>' : ''}</div>
+        <div class="perk"><span class="eldot" style="background:${EL[w.el] || 'var(--mute)'}"></span>${esc(w.type)} · ${esc(w.el || '')} · ${w.item.pw || '–'} · ${LOC[w.loc] || w.loc}${w.tier ? ' · Tier ' + w.tier : ''}</div>
+        ${x.hits.length || why.length ? `<div class="wrk">${why.map(t => `<span class="chip ${t === 'trash roll' ? 'bad' : ''}">${t}</span>`).join('')}${x.hits.map(p => `<span class="chip good">${esc(p)}</span>`).join('')}</div>` : ''}
+        <div class="wbar"><i style="width:${Math.max(2, Math.min(100, x.s / top * 100))}%;background:${EL[b.el]}"></i></div></div><b class="wrs">${Math.round(x.s)}</b></li>`; }).join('') || '<li class="perk">No weapons in this slot.</li>'}</ol></div>`; };
+  root.innerHTML = `<div class="cleanhead card"><div><h3>Weapons for your build</h3><p class="lead">All your weapons in inventory and vault, from best to worst for <b>${esc(b.name)}</b>${WT_BUILD === 'auto' ? ' (the build that matches the exotic armor you wear now)' : ''}. Score = recommended weapon + matching perks + element + wish-list roll.</p></div>
+    <label class="wtsel">Build <select id="wt-build"><option value="auto" ${WT_BUILD === 'auto' ? 'selected' : ''}>The one I'm wearing (${esc(auto.b.name)})</option>${opts}</select></label></div>
+    <div class="wcols">${col('kinetic', 'Kinetic')}${col('energy', 'Energy')}${col('power', 'Power')}</div>`;
+  root.querySelector('#wt-build').onchange = e => { WT_BUILD = e.target.value; STORE.set('hunterWtBuild', WT_BUILD); renderWeaponsTab(); };
+}
+const _renderExtras4 = renderExtras; renderExtras = function(){ _renderExtras4(); renderWeaponsTab(); };
 
 renderAll();
 
