@@ -13,7 +13,7 @@
 <title>My Hunter builds from my inventory</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#141a2e; --panel:#1d2440; --panel2:#252d4d; --line:#343d63;
@@ -500,6 +500,67 @@ nav.tabs{align-items:center}
   *,*::before,*::after{animation-duration:1ms !important;animation-delay:0ms !important;animation-iteration-count:1 !important;transition-duration:1ms !important;scroll-behavior:auto !important}
   #overlay{backdrop-filter:none;-webkit-backdrop-filter:none}
 }
+/* ===== extra themes ===== */
+.thwrap{position:relative;align-self:center}
+.thmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:60;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px;min-width:230px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.thmenu[hidden]{display:none}
+.thopt{display:flex;align-items:center;gap:10px;width:100%;background:none;border:0;border-radius:6px;padding:7px 8px;text-align:left;color:var(--ink)}
+.thopt:hover,.thopt[aria-checked=true]{background:var(--panel2)}
+.thopt .sw{width:34px;height:22px;border-radius:4px;flex:none;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18)}
+.thopt small{display:block;color:var(--mute);font-size:11.5px;line-height:1.2}
+/* shared fixes for the new themes: use the palette everywhere */
+html.xt .pop{background:var(--panel);--bg:var(--bg)}
+html.xt .plug,html.xt .intr{background:var(--panel2);border-color:var(--line)}
+html.xt .plug.round{background:var(--panel2)}
+html.xt .pd{background:var(--bg)}
+html.xt .meter,html.xt .sb,html.xt .ico{background-color:var(--track)}
+html.xt .btn{background:var(--panel2);border-color:var(--line)}
+html.xt .btn.primary{background:var(--acc);border-color:var(--acc);color:var(--acc-ink)}
+html.xt nav.tabs button[aria-selected=true]{background:var(--panel2);border-color:var(--acc);color:var(--ink)}
+html.xt :focus-visible{outline-color:var(--acc)}
+html.xt a{color:var(--acc)}
+html.xt .chip.act.on{background:var(--acc);color:var(--acc-ink)}
+html.xt .pc{border-left-color:var(--acc2)}
+
+/* Traveler — warm ivory and gold on dark bronze */
+[data-theme=traveler]{--bg:#15120e;--panel:#211b14;--panel2:#2c241a;--line:#43372a;--ink:#f3e9d2;--mute:#b5a487;--exotic:#f0c24b;--acc:#e0b04a;--acc2:#9c7a3a;--acc-ink:#1a1306;--track:#382d20}
+[data-theme=traveler] body{background:radial-gradient(1200px 600px at 75% -10%,rgba(224,176,74,.16),transparent 60%),var(--bg)}
+[data-theme=traveler] h1,[data-theme=traveler] h2{color:#f6dc9b}
+[data-theme=traveler] .detail,[data-theme=traveler] .card{box-shadow:0 0 0 1px rgba(224,176,74,.12)}
+[data-theme=traveler] .bitem[aria-current=true]{border-color:#e0b04a}
+
+/* Pyramid — black, violet and sharp edges */
+[data-theme=pyramid]{--bg:#060609;--panel:#0e0e15;--panel2:#171722;--line:#2a2938;--ink:#e6e3f2;--mute:#8d8aa6;--exotic:#c9b25a;--acc:#8f6cff;--acc2:#5b45b0;--acc-ink:#fff;--track:#1d1c2a}
+[data-theme=pyramid] body{background:linear-gradient(180deg,rgba(143,108,255,.10),transparent 420px),var(--bg)}
+[data-theme=pyramid] .detail,[data-theme=pyramid] .card,[data-theme=pyramid] .bitem,[data-theme=pyramid] .btn,[data-theme=pyramid] nav.tabs button,[data-theme=pyramid] .st,[data-theme=pyramid] .pc,[data-theme=pyramid] .chip,[data-theme=pyramid] .mat{border-radius:0}
+[data-theme=pyramid] h1,[data-theme=pyramid] h2,[data-theme=pyramid] h3{text-transform:uppercase;letter-spacing:.12em}
+[data-theme=pyramid] .detail,[data-theme=pyramid] .card{border:1px solid var(--line)}
+[data-theme=pyramid] .bitem[aria-current=true]{border-color:var(--acc);box-shadow:0 0 18px rgba(143,108,255,.25)}
+
+/* Vanguard terminal — tactical HUD, cyan lines, monospace */
+[data-theme=terminal]{--bg:#030b0b;--panel:#071514;--panel2:#0c201e;--line:#13403b;--ink:#c9f7ee;--mute:#5fa89c;--exotic:#ffd166;--acc:#3fe0c5;--acc2:#1f8f7d;--acc-ink:#021312;--track:#0f2b28}
+[data-theme=terminal] body{background:repeating-linear-gradient(0deg,rgba(63,224,197,.035) 0 1px,transparent 1px 3px),var(--bg);font-family:"IBM Plex Mono",ui-monospace,Menlo,monospace;font-size:14px}
+[data-theme=terminal] h1,[data-theme=terminal] h2,[data-theme=terminal] h3,[data-theme=terminal] .meta b{font-family:"IBM Plex Mono",ui-monospace,monospace;text-transform:uppercase;letter-spacing:.08em;color:var(--acc)}
+[data-theme=terminal] .detail,[data-theme=terminal] .card,[data-theme=terminal] .bitem,[data-theme=terminal] .btn,[data-theme=terminal] nav.tabs button,[data-theme=terminal] .st,[data-theme=terminal] .pc,[data-theme=terminal] .mat{border-radius:2px}
+[data-theme=terminal] .detail,[data-theme=terminal] .card{border:1px solid var(--line)}
+[data-theme=terminal] .bitem{border-color:var(--line)}
+[data-theme=terminal] .bitem[aria-current=true]{border-color:var(--acc);background:#0a1f1d}
+[data-theme=terminal] nav.tabs button{text-transform:uppercase;font-size:12.5px;letter-spacing:.06em}
+
+/* Dreaming City — twilight purple, pink and teal, soft glass cards */
+[data-theme=dreaming]{--bg:#140c26;--panel:rgba(255,255,255,.055);--panel2:rgba(255,255,255,.09);--line:rgba(255,255,255,.13);--ink:#f6eefe;--mute:#b9a9d6;--exotic:#ffd36e;--acc:#ff8fcf;--acc2:#7fe3ea;--acc-ink:#2a0b22;--track:rgba(255,255,255,.1)}
+[data-theme=dreaming] body{background:radial-gradient(900px 520px at 10% 0%,rgba(255,143,207,.22),transparent 60%),radial-gradient(900px 600px at 100% 30%,rgba(127,227,234,.16),transparent 60%),linear-gradient(180deg,#1d1036,#120a22 70%) fixed}
+[data-theme=dreaming] .detail,[data-theme=dreaming] .card,[data-theme=dreaming] .bitem{border-radius:14px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border:1px solid var(--line)}
+[data-theme=dreaming] .btn,[data-theme=dreaming] nav.tabs button{border-radius:999px}
+[data-theme=dreaming] .st,[data-theme=dreaming] .pc,[data-theme=dreaming] .mat{border-radius:10px;background:rgba(0,0,0,.18)}
+[data-theme=dreaming] .pop{background:#21123c}
+[data-theme=dreaming] .thmenu{background:#21123c}
+[data-theme=dreaming] .bitem[aria-current=true]{border-color:var(--acc);box-shadow:0 0 22px rgba(255,143,207,.22)}
+[data-theme=dreaming] h1{background:linear-gradient(90deg,#ffb3dd,#9ff0f4);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+header.top{position:relative;z-index:50}
+[data-theme=pyramid] header.top h1 small,[data-theme=terminal] header.top h1 small{text-transform:none;letter-spacing:0}
+[data-theme=dreaming] .thmenu{background:#24143f;backdrop-filter:none}
 </style>
 </head>
 <body>
@@ -513,7 +574,7 @@ nav.tabs{align-items:center}
     <div>Updated<b id="m-upd">–</b></div>
     <div>Class<b id="m-class">Hunter</b></div>
     <div hidden>Vault<b id="m-vault">–</b></div>
-    <button type="button" class="btn sm themebtn" id="theme-btn">☀ Light</button>
+    <div class="thwrap"><button type="button" class="btn sm themebtn" id="theme-btn" aria-haspopup="true" aria-expanded="false">◐ Theme</button><div class="thmenu" id="thmenu" role="menu" hidden></div></div>
   </div>
 </header>
 <nav class="tabs" role="tablist">
@@ -1290,8 +1351,17 @@ function kitHtml(b){
 function setTint(el){ document.body.style.setProperty('--tint', ({Arc:'#7cc4f2',Solar:'#f2803a',Void:'#b68ce6',Stasis:'#5d8fff',Strand:'#3fdc78'})[el] || '#7cc4f2'); }
 
 /* ---------- theme ---------- */
-function applyTheme(t){ document.documentElement.dataset.theme = t; STORE.set('hunterTheme', t);
-  const b = document.getElementById('theme-btn'); if(b){ b.textContent = t === 'light' ? '☾ Dark' : '☀ Light'; b.setAttribute('aria-label', t === 'light' ? 'Switch to dark theme' : 'Switch to light theme'); } }
+const THEMES = [
+  ['dark','Tower','The original dark blue','linear-gradient(135deg,#141a2e 50%,#7cc4f2 50%)','#141a2e'],
+  ['light','Light','Bright and clean','linear-gradient(135deg,#eef0f6 50%,#2d3b78 50%)','#eef0f6'],
+  ['traveler','Traveler','Warm gold and ivory','linear-gradient(135deg,#15120e 50%,#e0b04a 50%)','#15120e'],
+  ['pyramid','Pyramid','Black, violet, sharp edges','linear-gradient(135deg,#060609 50%,#8f6cff 50%)','#060609'],
+  ['terminal','Vanguard terminal','Tactical HUD, monospace','linear-gradient(135deg,#030b0b 50%,#3fe0c5 50%)','#030b0b'],
+  ['dreaming','Dreaming City','Twilight glass, pink and teal','linear-gradient(135deg,#1d1036 50%,#ff8fcf 50%)','#1d1036']];
+function applyTheme(t){ if(!THEMES.some(x => x[0] === t)) t = 'dark'; const d = document.documentElement; d.dataset.theme = t; d.classList.toggle('xt', !['dark','light'].includes(t)); STORE.set('hunterTheme', t);
+  const th = THEMES.find(x => x[0] === t); const mc = document.querySelector('meta[name=theme-color]'); if(mc) mc.content = th[4];
+  const b = document.getElementById('theme-btn'); if(b){ b.textContent = '◐ ' + th[1]; b.setAttribute('aria-label', 'Theme: ' + th[1] + '. Choose another theme'); }
+  const m = document.getElementById('thmenu'); if(m) m.innerHTML = THEMES.map(([id,n,dsc,sw]) => `<button type="button" class="thopt" role="menuitemradio" aria-checked="${id===t}" data-theme-id="${id}"><span class="sw" style="background:${sw}"></span><span>${n}<small>${dsc}</small></span></button>`).join(''); }
 
 /* ---------- custom build ---------- */
 const IMP = [['Ignore',0],['Low',.8],['Medium',1.6],['High',3]];
@@ -1701,7 +1771,12 @@ function notifyBetter(){
   inp.addEventListener('focus', () => { if(inp.value.trim().length >= 2) renderSearch(); }); }
 
 applyTheme(STORE.get('hunterTheme','dark'));
-document.getElementById('theme-btn').onclick = () => applyTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
+{ const tb = document.getElementById('theme-btn'), tm = document.getElementById('thmenu');
+  const close = () => { tm.hidden = true; tb.setAttribute('aria-expanded','false'); };
+  tb.onclick = e => { e.stopPropagation(); tm.hidden = !tm.hidden; tb.setAttribute('aria-expanded', String(!tm.hidden)); if(!tm.hidden){ const on = tm.querySelector('[aria-checked=true]'); if(on) on.focus(); } };
+  tm.addEventListener('click', e => { const o = e.target.closest('[data-theme-id]'); if(o){ applyTheme(o.dataset.themeId); close(); tb.focus(); } });
+  document.addEventListener('click', e => { if(!e.target.closest('.thwrap')) close(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape' && !tm.hidden){ close(); tb.focus(); } }); }
 /* desktop app mode */
 if(window.hunterApp){
   const up = document.getElementById('tab-update');
@@ -1755,10 +1830,11 @@ const BG = {
  "You're missing:":'Липсва ти:','Gold outline = needed for a meta build above.':'Златна рамка = нужно за мета билд горе.',
  'Restart and update':'Рестартирай и обнови','Click again to confirm':'Кликни пак за потвърждение','Search items or perks…':'Търси предмети или перкове…',
  'The best builds from what you have in your inventory and vault':'Най-добрите билдове от това, което имаш в инвентара и трезора','Hover or focus an icon for its description.':'Задръж мишката върху икона за описание.','Aspect':'Аспект','Fragment':'Фрагмент','Champions':'Шампиони','Ready to build now':'Готови за игра сега','☀ Light':'☀ Светла','☾ Dark':'☾ Тъмна','Exotic Engram':'Екзотичен енграм','Distorted Engram':'Изкривен енграм',
+ 'Tower':'Кула','Traveler':'Пътешественика','Pyramid':'Пирамида','Vanguard terminal':'Терминал на Авангарда','Dreaming City':'Сънуващият град','The original dark blue':'Оригиналната тъмносиня','Bright and clean':'Светла и изчистена','Warm gold and ivory':'Топло злато и слонова кост','Black, violet, sharp edges':'Черно, виолетово, остри ръбове','Tactical HUD, monospace':'Тактически HUD, моноширинен шрифт','Twilight glass, pink and teal':'Здрач, стъкло, розово и тюркоазено',
  'Lock':'Заключи','Close':'Затвори','Perks':'Перкове','Stats':'Статове','Mods':'Модове','Intrinsic':'Вградено','Masterwork':'Мастъруърк'
 };
 const BG_RE = [
- [/^target (\d+)$/, 'цел $1'], [/^Postmaster (\d+)\/(\d+)$/, 'Пощальон $1/$2'], [/^Version (.+)$/, 'Версия $1'],
+ [/^◐ (.+)$/, (_, n) => '◐ ' + (BG[n] || n)], [/^target (\d+)$/, 'цел $1'], [/^Postmaster (\d+)\/(\d+)$/, 'Пощальон $1/$2'], [/^Version (.+)$/, 'Версия $1'],
  [/^Updated (.+) · (\d+) items$/, 'Обновено $1 · $2 предмета'], [/^Refreshing from DIM…$/, 'Обновяване от DIM…'],
  [/^Equipping (.+)…$/, 'Екипиране на $1…'], [/^Equipped (.+)\.$/, 'Екипирано: $1.'], [/^Previous gear equipped\.$/, 'Предишната екипировка е върната.'],
  [/^Offline: (.+)$/, 'Няма интернет: $1'], [/^\((\d+) without mods\)$/, '($1 без модове)']
@@ -1794,7 +1870,7 @@ const trObs = new MutationObserver(ms => { if(LANG !== 'bg') return; trObs.disco
 function setLang(l){ LANG = l; STORE.set('hunterLang', l); document.documentElement.lang = l; const b = document.getElementById('lang-btn'); if(b) b.textContent = l === 'bg' ? 'EN' : 'BG';
   if(l === 'bg'){ trTree(document.body); trObs.observe(document.body, { childList:true, subtree:true, characterData:true }); } else if(document.documentElement.dataset.bg){ location.reload(); } if(l === 'bg') document.documentElement.dataset.bg = '1'; }
 { const tb = document.getElementById('theme-btn'); const lb = document.createElement('button'); lb.type = 'button'; lb.className = 'btn sm themebtn langbtn'; lb.id = 'lang-btn'; lb.setAttribute('aria-label', 'Switch language / Смени езика');
-  tb.insertAdjacentElement('afterend', lb); lb.onclick = () => setLang(LANG === 'bg' ? 'en' : 'bg'); setLang(LANG); }
+  tb.closest('.thwrap').insertAdjacentElement('afterend', lb); lb.onclick = () => setLang(LANG === 'bg' ? 'en' : 'bg'); setLang(LANG); }
 
 /* ---------- micro-interactions ---------- */
 function countUp(el){
