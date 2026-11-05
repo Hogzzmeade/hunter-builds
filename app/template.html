@@ -500,6 +500,53 @@ nav.tabs{align-items:center}
   *,*::before,*::after{animation-duration:1ms !important;animation-delay:0ms !important;animation-iteration-count:1 !important;transition-duration:1ms !important;scroll-behavior:auto !important}
   #overlay{backdrop-filter:none;-webkit-backdrop-filter:none}
 }
+/* =====================  MOTION LAYER 2  ===================== */
+@keyframes rippleOut{from{opacity:.5;transform:translate(-50%,-50%) scale(0)}to{opacity:0;transform:translate(-50%,-50%) scale(1)}}
+@keyframes breathe{0%,100%{box-shadow:0 0 0 1px color-mix(in srgb,var(--tint) 35%,transparent),0 0 0 rgba(0,0,0,0)}50%{box-shadow:0 0 0 1px color-mix(in srgb,var(--tint) 70%,transparent),0 0 22px color-mix(in srgb,var(--tint) 28%,transparent)}}
+@keyframes exoShine{0%,86%{transform:translateX(-120%) skewX(-20deg)}100%{transform:translateX(240%) skewX(-20deg)}}
+@keyframes rvIn{from{opacity:0;transform:translate3d(0,18px,0)}to{opacity:1;transform:none}}
+@keyframes floatY{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+@keyframes glowText{0%,100%{text-shadow:0 0 0 transparent}50%{text-shadow:0 0 14px color-mix(in srgb,var(--tint) 60%,transparent)}}
+
+/* brighten on hover: every menu, item, card and tile lights up a little */
+nav.tabs button,.btn,.bitem,.card,.pc,.st,.ktile,.mat,.alt,.fitem,.chip,.thopt,.champ,.needl li,.meta > div,.qres button{transition:filter var(--t-med) var(--ease-out),background-color var(--t-med),border-color var(--t-med),box-shadow var(--t-med) var(--ease-out),transform var(--t-med) var(--ease-out),color var(--t-fast)}
+.ripple-host{position:relative;overflow:hidden}
+.ripple{position:absolute;border-radius:50%;pointer-events:none;background:radial-gradient(circle,rgba(255,255,255,.55),rgba(255,255,255,0) 70%);animation:rippleOut 620ms var(--ease-out) forwards}
+.bitem[aria-current=true]{animation:breathe 3.6s ease-in-out infinite}
+.bitem[aria-current=true] .score{animation:glowText 3.6s ease-in-out infinite}
+button.ico.ex::after{animation:exoShine 7s var(--ease-out) infinite;animation-delay:calc(var(--sd,0) * 1s)}
+.rv:not(.in){opacity:0!important;animation:none!important}
+.rv.in{animation:rvIn 600ms var(--ease-out) both}
+.ktile .kico{transition:transform var(--t-med) var(--ease-spring),filter var(--t-med),box-shadow var(--t-med)}
+.spot{background-image:radial-gradient(240px circle at var(--mx,50%) var(--my,50%),rgba(255,255,255,.075),transparent 65%)}
+.tilt{transform:perspective(700px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-3px)!important}
+#toast.on{animation:floatY 2.4s ease-in-out 400ms infinite}
+::view-transition-old(root),::view-transition-new(root){animation-duration:420ms;animation-timing-function:var(--ease-out)}
+
+@media (hover:hover){
+  nav.tabs button:hover{filter:brightness(1.25);background:color-mix(in srgb,var(--panel2) 70%,transparent);text-shadow:0 0 10px color-mix(in srgb,var(--tint) 45%,transparent)}
+  nav.tabs button:hover::after{transform:scaleX(.45)}
+  nav.tabs button[aria-selected=true]:hover::after{transform:scaleX(1)}
+  .btn:hover{filter:brightness(1.2)}
+  .bitem:hover{filter:brightness(1.18);background-color:color-mix(in srgb,var(--panel) 82%,#fff 18%)}
+  .card:hover,.pc:hover,.st:hover,.mat:hover,.champ:hover{filter:brightness(1.12)}
+  .ktile:hover{filter:brightness(1.22);transform:translateY(-2px);background-color:color-mix(in srgb,var(--bg) 80%,#fff 20%)}
+  .ktile:hover .kico{transform:scale(1.12) rotate(-4deg);box-shadow:0 0 14px color-mix(in srgb,var(--tint) 55%,transparent)}
+  .alt:hover,.fitem:hover,.needl li:hover{filter:brightness(1.25);transform:translateX(3px)}
+  .fitem:hover{background:color-mix(in srgb,var(--panel2) 70%,transparent)}
+  .chip:hover{filter:brightness(1.25)}
+  .thopt:hover .sw{transform:scale(1.1) rotate(-6deg)}
+  .thopt .sw{transition:transform var(--t-med) var(--ease-spring)}
+  .meta > div:hover{filter:brightness(1.3);transform:translateY(-2px)}
+  .meta > div:hover b{text-shadow:0 0 12px color-mix(in srgb,var(--tint) 55%,transparent)}
+  button.ico:hover{filter:brightness(1.2) saturate(1.15)}
+  table.w tbody tr:hover{background:rgba(255,255,255,.05)}
+  .qres button:hover{filter:brightness(1.25)}
+}
+@media (prefers-reduced-motion:reduce){
+  .bitem[aria-current=true],.bitem[aria-current=true] .score,button.ico.ex::after,#toast.on{animation:none!important}
+  .rv{opacity:1}.tilt{transform:none!important}
+}
 /* ===== extra themes ===== */
 .thwrap{position:relative;align-self:center}
 .thmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:60;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px;min-width:230px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
@@ -1871,6 +1918,38 @@ function setLang(l){ LANG = l; STORE.set('hunterLang', l); document.documentElem
   if(l === 'bg'){ trTree(document.body); trObs.observe(document.body, { childList:true, subtree:true, characterData:true }); } else if(document.documentElement.dataset.bg){ location.reload(); } if(l === 'bg') document.documentElement.dataset.bg = '1'; }
 { const tb = document.getElementById('theme-btn'); const lb = document.createElement('button'); lb.type = 'button'; lb.className = 'btn sm themebtn langbtn'; lb.id = 'lang-btn'; lb.setAttribute('aria-label', 'Switch language / Смени езика');
   tb.closest('.thwrap').insertAdjacentElement('afterend', lb); lb.onclick = () => setLang(LANG === 'bg' ? 'en' : 'bg'); setLang(LANG); }
+
+
+/* ---------- motion layer 2: ripple, cursor spotlight, tilt, scroll reveal, theme crossfade ---------- */
+{
+  const RIP = 'nav.tabs > button, .btn, .bsel, .chip.act, .thopt, .exopt, .seg button';
+  document.addEventListener('pointerdown', e => { if(REDUCED) return; const el = e.target.closest(RIP); if(!el) return;
+    const host = el.classList.contains('bsel') ? el.closest('.bitem') || el : el; host.classList.add('ripple-host');
+    const r = host.getBoundingClientRect(), s = Math.max(r.width, r.height) * 2.2; const sp = document.createElement('span'); sp.className = 'ripple';
+    sp.style.cssText = `width:${s}px;height:${s}px;left:${e.clientX - r.left}px;top:${e.clientY - r.top}px`; host.appendChild(sp); setTimeout(() => sp.remove(), 700); });
+  const SPOT = '.bitem, .card, .detail, .pc, .ktile, .mat, .champ';
+  let spotEl = null;
+  document.addEventListener('pointermove', e => {
+    const el = e.target.closest(SPOT);
+    if(spotEl && spotEl !== el){ spotEl.classList.remove('spot','tilt'); spotEl.style.removeProperty('--rx'); spotEl.style.removeProperty('--ry'); }
+    spotEl = el; if(!el) return;
+    const r = el.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    el.style.setProperty('--mx', x + 'px'); el.style.setProperty('--my', y + 'px'); el.classList.add('spot');
+    if(!REDUCED && el.classList.contains('pc')){ el.classList.add('tilt'); el.style.setProperty('--ry', ((x / r.width - .5) * 10).toFixed(2) + 'deg'); el.style.setProperty('--rx', ((.5 - y / r.height) * 10).toFixed(2) + 'deg'); }
+  }, { passive: true });
+  document.addEventListener('pointerleave', () => { if(spotEl){ spotEl.classList.remove('spot','tilt'); spotEl = null; } });
+  // exotic icons shine one after another instead of all at once
+  const stagger = root => root.querySelectorAll && root.querySelectorAll('button.ico.ex').forEach((b, i) => b.style.setProperty('--sd', (i * 0.7 % 7).toFixed(1)));
+  // sections below the fold slide in as you scroll to them
+  const io = 'IntersectionObserver' in window && !REDUCED ? new IntersectionObserver(es => es.forEach(en => { if(en.isIntersecting){ en.target.classList.add('in'); io.unobserve(en.target); } }), { rootMargin: '0px 0px -40px 0px' }) : null;
+  const reveal = root => { if(!io || !root.querySelectorAll) return; root.querySelectorAll('section.blk, .card, .champ').forEach(el => {
+    if(el.classList.contains('rv')) return; const r = el.getBoundingClientRect(); if(r.top < innerHeight) return; el.classList.add('rv'); io.observe(el); }); };
+  const mo = new MutationObserver(ms => { for(const m of ms) m.addedNodes.forEach(n => { if(n.nodeType === 1){ stagger(n); reveal(n); } }); });
+  mo.observe(document.body, { childList: true, subtree: true }); stagger(document.body); reveal(document.body);
+  // smooth crossfade when the theme changes
+  const _apply = applyTheme;
+  applyTheme = function(t){ if(document.startViewTransition && !REDUCED && document.body.classList.contains('booted')) document.startViewTransition(() => _apply(t)); else _apply(t); };
+}
 
 /* ---------- micro-interactions ---------- */
 function countUp(el){
