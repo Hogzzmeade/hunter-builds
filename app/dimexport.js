@@ -145,12 +145,19 @@ async function dimExport(MODE, SUBCLASS_NAMES) {
         return { n: rd.displayProperties?.name || '', d: (rd.displayProperties?.description || '').slice(0, 140), pct: Math.round(pct * 100) }; }).filter(x => x && x.n && !(x.pct === 0 && /Obsolete|Retired/.test(x.d)));
       seals.push({ n: d.displayProperties.name, title: rec[d.completionRecordHash]?.titleInfo?.titlesByGender?.Male || '', have: st.progressValue || 0, need: st.completionValue || 0, todo: todo.sort((a, b) => b.pct - a.pct).slice(0, 4) }); }
   } catch (e) { seals = []; }
+  // armor mods you can socket (name -> [hash, slot, energy]) from the plug sets of your equipped armor
+  const modCat = {};
+  for (const it of hunter.items.filter(i => i.equipped && i.bucket?.sort === 'Armor')) for (const cat of (it.sockets?.categories || [])) {
+    if (!/MODS/i.test(cat.category?.displayProperties?.name || '')) continue;
+    for (const ix of cat.socketIndexes) { const sk = it.sockets.allSockets.find(z => z.socketIndex === ix);
+      for (const pl of (sk?.plugSet?.plugs || [])) { const pd = pl.plugDef; const pc = pd.plug?.plugCategoryIdentifier || ''; if (!/^enhancements\.v2_/.test(pc)) continue;
+        const n = pd.displayProperties?.name; if (n && !modCat[n]) modCat[n] = [pd.hash, pc.replace('enhancements.v2_', ''), pd.plug?.energyCost?.energyCost || 0]; } } }
   const tr = p.profileTransitoryData?.data || null;
   const activity = tr && tr.currentActivity ? { players: tr.currentActivity.numberOfPlayers || (tr.partyMembers || []).length || 1, opp: tr.currentActivity.numberOfOpponents || 0, start: tr.currentActivity.startTime || null, party: (tr.partyMembers || []).length } : null;
   const classes = stores.filter(s => !s.isVault).map(s => ({ cls: s.classType, name: s.className, power: s.powerLevel }));
   const bk = await get('d2-manifest-InventoryBucket');
   const vaultInfo = { n: vault.items.length, cap: (bk && bk[138197802] && bk[138197802].itemCount) || 0 };
-  const base = { v: 2, vault: vaultInfo, subs, postmaster, mats, wsrc, art, catal, pats, activity, seals, updated: new Date().toISOString(), power: hunter.powerLevel || 0, classes, subclasses, aspects: [...aspects].sort(), exotics: [...exotics].sort(), items };
+  const base = { v: 2, vault: vaultInfo, subs, postmaster, mats, wsrc, art, catal, pats, activity, seals, modCat, updated: new Date().toISOString(), power: hunter.powerLevel || 0, classes, subclasses, aspects: [...aspects].sort(), exotics: [...exotics].sort(), items };
   if (MODE === 'daily') {
     // compact: items already in the published data only send what changes day to day
     const knownItems = new Set(JSON.parse(localStorage.getItem('hunterExportKnownItems') || '[]'));

@@ -614,6 +614,51 @@ body.compact .dimrow{flex-wrap:wrap}
 #splash .gh{fill:var(--tint,#7cc4f2);transform-origin:60px 60px;animation:ghSpin 1.3s var(--ease-out) both}#splash .eye{fill:none;stroke:var(--tint,#7cc4f2);stroke-width:2;animation:ghEye 1.3s ease-in-out infinite}#splash .eye2{fill:#fff;animation:ghEye 1.3s ease-in-out infinite}
 #splash .spt{font-family:Oswald,Arial,sans-serif;font-size:22px;letter-spacing:.2em;text-transform:uppercase;color:var(--ink);animation:fadeUp 700ms 300ms var(--ease-out) both}
 @keyframes ghSpin{from{transform:rotate(-140deg) scale(.4);opacity:0}to{transform:none;opacity:1}}@keyframes ghEye{0%,100%{opacity:.5}50%{opacity:1}}
+/* ===== 1.10 ===== */
+body{zoom:var(--zoom,1)}
+.modg{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:8px}.modc{background:var(--bg);border-radius:7px;padding:8px 10px;display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start}.modc .pcl{width:100%}
+.pwl{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;margin-top:8px}.pwr{display:flex;align-items:center;gap:8px;background:var(--bg);border-radius:6px;padding:5px 8px}.pwr span{flex:1;font-size:12.5px;color:var(--mute)}.pwr.low{box-shadow:inset 0 0 0 1px #c0545a}.pwr.low b{color:#e48a8f}
+.setl{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:10px;margin-top:8px}.setc{background:var(--bg);border-radius:8px;padding:10px}.setp{border-left:3px solid var(--line);padding:4px 8px;margin-top:6px}.setp.on{border-left-color:var(--good)}
+.ttk{color:var(--txt,inherit);white-space:nowrap}
+/* rarity glow */
+@keyframes exoGlow{0%,100%{box-shadow:0 0 0 1px rgba(230,200,74,.5),0 0 6px rgba(230,200,74,.15)}50%{box-shadow:0 0 0 1px rgba(255,220,110,.95),0 0 14px rgba(230,200,74,.45)}}
+button.ico.ex{animation:exoGlow 3.2s ease-in-out infinite;animation-delay:calc(var(--sd,0) * -.5s)}
+/* stat thresholds */
+@keyframes hitPulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--tint) 70%,transparent)}100%{box-shadow:0 0 0 12px transparent}}
+.st.hit100{border-color:color-mix(in srgb,var(--tint) 60%,transparent);animation:hitPulse 1.2s var(--ease-out) 2}.st.hit100 .val::after{content:" ✦";color:var(--tint);font-size:.6em;vertical-align:super}
+.st.hit200{border-color:var(--exotic);animation:hitPulse 1.2s var(--ease-out) 3}.st.hit200 .val{color:var(--exotic)}.st.hit200 .val::after{content:" ✦✦";color:var(--exotic);font-size:.6em;vertical-align:super}
+.st.hit100 .meter i,.st.hit200 .meter i{background-image:linear-gradient(90deg,transparent,rgba(255,255,255,.45),transparent);background-size:60% 100%;background-repeat:no-repeat;animation:meterShine 2.4s linear infinite}
+@keyframes meterShine{from{background-position:-60% 0}to{background-position:160% 0}}
+/* tab slide direction */
+@keyframes slideR{from{opacity:0;transform:translate3d(28px,0,0)}to{opacity:1;transform:none}}@keyframes slideL{from{opacity:0;transform:translate3d(-28px,0,0)}to{opacity:1;transform:none}}
+[id^=tab-].fromR{animation:slideR 380ms var(--ease-out)}[id^=tab-].fromL{animation:slideL 380ms var(--ease-out)}
+/* icon flip card */
+.flipc{position:fixed;z-index:150;width:220px;perspective:800px;pointer-events:none}
+.flipin{position:relative;height:150px;transform-style:preserve-3d;transform:rotateY(0deg) scale(.6);opacity:0;transition:transform 420ms var(--ease-out),opacity 200ms}
+.flipc.on .flipin{transform:rotateY(180deg) scale(1);opacity:1}
+.ffront,.fback{position:absolute;inset:0;backface-visibility:hidden;border-radius:10px}
+.ffront{background-color:var(--panel2);background-repeat:no-repeat;background-position:center !important;border:1px solid var(--line)}
+.fback{transform:rotateY(180deg);background:var(--panel);border:1px solid var(--tint);box-shadow:0 12px 30px rgba(0,0,0,.45);padding:10px 12px;display:flex;flex-direction:column;gap:3px;overflow:hidden}
+.fback b{font-size:14px}.fback ul{margin:4px 0 0;padding-left:16px;font-size:12.5px}
+/* density */
+html.dense .card,html.dense section.blk{padding:12px 14px}html.dense .bitem{padding-top:6px;padding-bottom:6px}html.dense .grp{margin-top:8px}html.dense .wr{padding:5px 7px}html.dense .two{gap:10px}
+.lookrow{display:flex;align-items:center;gap:8px;padding:7px 8px;border-top:1px solid var(--line);font-size:13px;color:var(--ink)}.lookrow input[type=range]{width:110px}
+/* holiday themes (on top of your theme) */
+[data-holiday=festival] body{background:radial-gradient(900px 500px at 85% -5%,rgba(255,120,30,.20),transparent 60%),radial-gradient(800px 500px at 0% 100%,rgba(130,60,200,.18),transparent 60%),var(--bg)}
+[data-holiday=festival] h1::after{content:" 🎃";font-size:.7em}
+[data-holiday=festival] nav.tabs button[aria-selected=true]{box-shadow:inset 0 -2px 0 #ff8a2a,0 0 14px rgba(255,138,42,.25)}
+[data-holiday=dawning] body{background:radial-gradient(900px 500px at 80% -5%,rgba(170,215,255,.22),transparent 60%),radial-gradient(700px 400px at 10% 100%,rgba(255,215,120,.12),transparent 60%),var(--bg)}
+[data-holiday=dawning] h1::after{content:" ❄";font-size:.7em;color:#cfe8ff}
+[data-holiday=dawning] nav.tabs button[aria-selected=true]{box-shadow:inset 0 -2px 0 #bfe3ff,0 0 14px rgba(191,227,255,.3)}
+/* command palette */
+.palette{position:fixed;inset:0;z-index:300;background:rgba(5,8,18,.55);display:flex;justify-content:center;align-items:flex-start;padding-top:12vh;animation:fadeIn 160ms}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.palbox{width:min(620px,92vw);background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden;animation:fadeUp 220ms var(--ease-out)}
+.palbox input{width:100%;border:0;border-bottom:1px solid var(--line);background:transparent;color:var(--ink);font-size:17px;padding:14px 16px;outline:none;border-radius:0}
+.palbox ul{list-style:none;margin:0;padding:6px;max-height:52vh;overflow:auto}.palbox li{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:7px;cursor:pointer}
+.palbox li[aria-selected=true]{background:color-mix(in srgb,var(--tint) 22%,var(--panel2))}.palbox .ct{flex:1}.palbox .kk{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);width:48px;text-align:center;border:1px solid var(--line);border-radius:4px;padding:1px 0}
+.palh{padding:6px 14px 10px}
+@media (prefers-reduced-motion:reduce){button.ico.ex,.st.hit100,.st.hit200,.st.hit100 .meter i,.st.hit200 .meter i{animation:none!important}.flipin{transition:none}}
 /* ===== extra themes ===== */
 .thwrap{position:relative;align-self:center}
 .thmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:60;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px;min-width:230px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
@@ -1954,6 +1999,7 @@ const BG = {
  'What would make it better':'Какво би го подобрило','Boss damage':'Щети по бос','Artifact perks for this build':'Перкове от артефакта за билда','Share image':'Сподели картинка','What to focus at Rahool':'Какво да фокусираш при Rahool','Armor to farm':'Броня за фармене','Crafting patterns':'Шаблони за крафтване','Items and vault':'Предмети и трезор','New items per refresh':'Нови предмети при обновяване','Build scores over time':'Резултати на билдовете във времето','Open compact window':'Отвори малкия прозорец','Back up DIM loadouts and tags':'Резервно копие на DIM loadouts и тагове','Sounds on clicks and new drops':'Звуци при клик и нови предмети','Open the full window':'Отвори големия прозорец','Show':'Покажи','☆ Pin':'☆ Закачи','focus now':'фокусирай сега','active':'активен',
  'Weapons for your build':'Оръжия за билда ти','in the build':'в билда','recommended':'препоръчано','element':'елемент','god roll':'god roll','wish-list roll':'добър рол','trash roll':'лош рол','No weapons in this slot.':'Няма оръжия в този слот.',
  'Home':'Начало','Wearing now':'Носиш сега','Postmaster':'Пощальон','Pinned builds':'Закачени билдове','New items':'Нови предмети','Materials':'Материали','Titles':'Титли','Compare':'Сравни','Clear':'Изчисти','Champions and shields this week':'Шампиони и щитове тази седмица','Vendors this week':'Търговци тази седмица','Builds for raids and dungeons':'Билдове за рейдове и подземия','Add clear':'Чистене на врагове','Survive / support':'Оцеляване / подкрепа','⤢ Large view':'⤢ Голям изглед','Animated background':'Анимиран фон','Use element colors':'Цветове по елемент','ready to claim':'готово за взимане',
+ 'Armor mods':'Модове за бронята','Save the look I wear now':'Запази визията, която нося','Forget look':'Забрави визията','Path to the next Power level':'Път до следващото ниво сила','Armor sets':'Сетове броня','Fireteam':'Отбор','Copy my code':'Копирай моя код','Text size':'Размер на текста','Compact layout':'Сбит изглед','Nothing found.':'Нищо не е намерено.',
  'Lock':'Заключи','Close':'Затвори','Perks':'Перкове','Stats':'Статове','Mods':'Модове','Intrinsic':'Вградено','Masterwork':'Мастъруърк'
 };
 const BG_RE = [
@@ -2432,6 +2478,173 @@ const _renderExtras5 = renderExtras; renderExtras = function(){ _renderExtras5()
 /* ---------- splash: Ghost while the app starts ---------- */
 { const sp = document.getElementById('splash'); if(sp){ const go = () => { sp.classList.add('out'); setTimeout(() => sp.remove(), 650); };
   if(document.readyState === 'complete') setTimeout(go, 700); else addEventListener('load', () => setTimeout(go, 700)); } }
+
+/* =====================  1.10 FEATURES  ===================== */
+/* ---------- armor mods per build ---------- */
+const ROLEFOCUS = { gyrfalcon:'weapons', tempest:'melee', assassin:'melee', yas:'grenade', frost:'grenade', cyrta:'class', fealty:'melee', graviton:'grenade', coyote:'class', foetracer:'weapons', raiden:'super', gwisin:'super', tricksleeves:'weapons', 'coyote-pvp':'pvp', 'graviton-pvp':'pvp', 'yas-pvp':'pvp' };
+function armorModPlan(r){
+  const b = r.b, cat = DATA.modCat || {}; const has = n => !!cat[n];
+  const lo = r.weap && r.weap.loadout ? r.weap.loadout.filter(Boolean).map(x => x.w) : [];
+  const wEl = (lo.find(w => slotOf(w) === 'energy') || lo[0] || {}).el || b.el; const kEl = (lo.find(w => slotOf(w) === 'kinetic') || {}).el || 'Kinetic';
+  const pick = (...ns) => ns.find(n => n && has(n)) || ns.find(n => n);
+  const focus = ROLEFOCUS[b.id] || (b.auto ? 'weapons' : 'weapons');
+  const pvp = focus === 'pvp' || actsOf(b).includes('PvP') && b.act;
+  const plan = {
+    Helmet: pvp ? [pick('Heavy Ammo Scout','Heavy Ammo Finder'), pick('Special Ammo Scout','Special Ammo Finder'), pick(wEl + ' Targeting')] : [pick(b.el + ' Siphon', 'Harmonic Siphon'), pick('Heavy Ammo Finder'), pick(focus === 'super' ? 'Super Font' : wEl + ' Targeting')],
+    Gauntlets: focus === 'melee' ? [pick('Heavy Handed'), pick('Focusing Strike'), pick('Melee Font')] : focus === 'grenade' ? [pick('Firepower'), pick('Grenade Kickstart'), pick('Grenade Font')] : [pick(kEl + ' Loader', 'Harmonic Loader'), pick(wEl + ' Loader', 'Harmonic Loader'), pick(focus === 'class' ? 'Momentum Transfer' : 'Impact Induction')],
+    'Chest Armor': pvp ? [pick('Unflinching ' + kEl + ' Aim'), pick('Unflinching ' + wEl + ' Aim'), pick('Concussive Dampener')] : [pick('Concussive Dampener'), pick(b.el === 'Kinetic' ? 'Melee Damage Resistance' : 'Sniper Damage Resistance'), pick('Charged Up', 'Health Font')],
+    'Leg Armor': [pick(wEl + ' Weapon Surge'), pick(wEl + ' Weapon Surge'), pick(pvp ? 'Enhanced Athletics' : focus === 'grenade' ? 'Innervation' : focus === 'class' ? 'Better Already' : 'Absolution')],
+    'Hunter Cloak': [pick(focus === 'grenade' ? 'Bomber' : focus === 'melee' ? 'Outreach' : 'Distribution'), pick(focus === 'class' ? 'Utility Kickstart' : 'Reaper'), pick('Powerful Attraction')]
+  };
+  return plan;
+}
+function modHashes(plan){ const cat = DATA.modCat || {}; return Object.values(plan).flat().map(n => cat[n] && cat[n][0]).filter(Boolean); }
+let LOOKS = STORE.get('hunterLooks', {});
+const _loadoutExtras2 = loadoutExtras;
+loadoutExtras = function(b, c){ const ex = _loadoutExtras2(b, c); const r = RES.find(x => x.b === b || x.b.id === b.id);
+  if(r && DATA.modCat){ const hs = modHashes(armorModPlan(r)); if(hs.length){ ex.mods = [...ex.mods, ...hs]; ex.summary = (ex.summary || 'The loadout also sets: ').replace(/\.$/, '') + `, ${hs.length} armor mods.`; } }
+  if(LOOKS[b.id]){ ex.look = LOOKS[b.id]; ex.summary = (ex.summary || 'The loadout also sets: ').replace(/\.$/, '') + ', your saved look (shaders and ornaments).'; }
+  return ex; };
+const _dimLoadoutUrl2 = dimLoadoutUrl;
+dimLoadoutUrl = function(name, items, notes, ex){ const u = _dimLoadoutUrl2(name, items, notes, ex); if(!ex || !ex.look) return u;
+  try{ const url = new URL(u); const lo = JSON.parse(url.searchParams.get('loadout')); lo.parameters = Object.assign(lo.parameters || {}, { modsByBucket: ex.look }); url.searchParams.set('loadout', JSON.stringify(lo)); return url.toString(); }catch(e){ return u; } };
+const _equipButton2 = equipButton;
+equipButton = function(name, items, notes, ex){ const h = _equipButton2(name, items, notes, ex); if(!ex || !ex.look) return h;
+  return h.replace(/data-equip="([^"]*)"/, (m, enc) => { const t = document.createElement('textarea'); t.innerHTML = enc; const p = JSON.parse(t.value); p.look = ex.look; return `data-equip="${esc(JSON.stringify(p))}"`; }); };
+const _buildPayload2 = buildPayload;
+buildPayload = function(r){ const p = _buildPayload2(r); if(p && LOOKS[r.b.id]) p.look = LOOKS[r.b.id]; return p; };
+
+/* ---------- detail: armor mods + fashion ---------- */
+const _renderDetail3 = renderDetail;
+renderDetail = function(){ _renderDetail3(); const r = RES.find(x => x.b.id === current) || RES[0]; if(!r || !r.ready) return; const det = document.getElementById('detail');
+  const plan = armorModPlan(r); const cat = DATA.modCat || {};
+  const html = `<section class="blk"><h3>Armor mods</h3><p class="lead">Put on by Equip now and the DIM loadout, next to the stat mods. DIM places each mod where the armor has room.</p><div class="modg">${Object.entries(plan).map(([slot, ms]) => `<div class="modc"><div class="pcl">${slot}</div>${ms.map(m => `<span class="chip ${cat[m] ? '' : 'bad'}" title="${cat[m] ? 'Energy ' + cat[m][2] : 'Not unlocked or not found'}">${esc(m || '—')}</span>`).join('')}</div>`).join('')}</div>
+    ${IS_APP ? `<p style="margin:10px 0 0"><button type="button" class="btn sm" data-look="${r.b.id}">${LOOKS[r.b.id] ? '✓ Look saved — save again' : 'Save the look I wear now'}</button>${LOOKS[r.b.id] ? ` <button type="button" class="btn sm" data-unlook="${r.b.id}">Forget look</button>` : ''} <span class="perk">Shaders and ornaments go on with the build.</span></p>` : ''}</section>`;
+  const eqSec = [...det.querySelectorAll('section.blk')].find(s => /Equip it/.test((s.querySelector('h3') || {}).textContent || ''));
+  if(eqSec) eqSec.insertAdjacentHTML('beforebegin', html); };
+document.addEventListener('click', async e => {
+  const lk = e.target.closest('[data-look]'); if(lk && window.hunterApp && window.hunterApp.getLook){ lk.disabled = true; lk.textContent = 'Reading your look…'; const look = await window.hunterApp.getLook();
+    if(look && Object.keys(look).length){ LOOKS[lk.dataset.look] = look; STORE.set('hunterLooks', LOOKS); appToast('Look saved for this build.', 'ok'); } else appToast('Could not read your look from DIM.', 'err'); renderDetail(); sendHotkeys(); return; }
+  const ul = e.target.closest('[data-unlook]'); if(ul){ delete LOOKS[ul.dataset.unlook]; STORE.set('hunterLooks', LOOKS); renderDetail(); sendHotkeys(); }
+});
+
+/* ---------- power path ---------- */
+const ARM_SLOT = { H: 'Helmet', A: 'Gauntlets', C: 'Chest Armor', L: 'Leg Armor', K: 'Hunter Cloak' };
+function powerPath(){
+  const H = DATA.items.filter(i => (i.w || ARM_SLOT[i.s]) && i.pw);
+  const slots = {}; H.forEach(i => { const s = i.w ? i.s.replace(/ Weapons$/, '') : ARM_SLOT[i.s]; if(!slots[s] || i.pw > slots[s].pw) slots[s] = i; });
+  const L = Object.entries(slots).sort((a,b) => a[1].pw - b[1].pw); if(L.length < 3) return null;
+  const avg = L.reduce((t, [,i]) => t + i.pw, 0) / L.length;
+  return { avg, list: L, low: L[0], need: Math.ceil(avg) - avg > 0 ? Math.round((Math.ceil(avg + 0.0001) - avg) * L.length) : L.length };
+}
+function powerCard(){ const p = powerPath(); if(!p) return ''; const rew = (DATA.weekly ? DATA.weekly.milestones.filter(m => m.rew).map(m => m.n) : []).slice(0, 5);
+  return `<div class="card"><h3>Path to the next Power level</h3><p class="lead">Your best per slot averages <b>${p.avg.toFixed(2)}</b>. About <b>${p.need}</b> more power points across your slots gets you to ${Math.floor(p.avg) + 1}.</p>
+    <div class="pwl">${p.list.map(([s, i], k) => `<div class="pwr ${k < 2 ? 'low' : ''}">${ico(i,'sm')}<span>${esc(s)}</span><b>${i.pw}</b></div>`).join('')}</div>
+    <p class="note">Drops usually land on a random slot, so raise the lowest ones (${esc(p.low[0])}${p.list[1] ? ', ' + esc(p.list[1][0]) : ''}) with focused engrams or by infusing a higher item.${rew.length ? ' Weekly rewards still open: ' + rew.map(esc).join(', ') + '.' : ''}</p></div>`; }
+
+/* ---------- armor sets ---------- */
+function setsCard(){
+  const A = DATA.items.filter(i => !i.w && i.set && i.set[0] && ARM_SLOT[i.s]);
+  const by = {}; A.forEach(i => { const s = by[i.set[0]] = by[i.set[0]] || { n: i.set[0], perks: i.set[1] || [], slots: {} }; const sl = ARM_SLOT[i.s]; (s.slots[sl] = s.slots[sl] || []).push(i); });
+  const SL = ['Helmet','Gauntlets','Chest Armor','Leg Armor','Hunter Cloak'];
+  const list = Object.values(by).map(s => ({ ...s, have: Object.keys(s.slots).length })).filter(s => s.have >= 1).sort((a,b) => b.have - a.have).slice(0, 8);
+  if(!list.length) return '';
+  return `<div class="card"><h3>Armor sets</h3><p class="lead">Set bonuses you can complete. Green = active with what you own, any 2 or 4 different slots.</p><div class="setl">${list.map(s => `<div class="setc"><div class="sealh"><b>${esc(s.n)}</b><span class="perk">${s.have}/5 slots</span></div>
+    <div class="cicons">${SL.map(sl => s.slots[sl] ? ico(s.slots[sl].sort((a,b) => (b.tier||0) - (a.tier||0))[0], 'sm') : `<span class="ico none sm" title="Missing: ${sl}"></span>`).join('')}</div>
+    ${s.perks.map(([n, pn, pd]) => `<div class="setp ${s.have >= n ? 'on' : ''}"><b>${n}-piece · ${esc(pn)}</b><div class="perk">${esc(pd)}</div></div>`).join('')}
+    ${s.have < 4 ? `<p class="perk">Missing: ${SL.filter(sl => !s.slots[sl]).join(', ')}</p>` : ''}</div>`).join('')}</div></div>`; }
+const _renderFarm3 = renderFarm;
+renderFarm = function(){ _renderFarm3(); const root = document.getElementById('tab-missing'); root.insertAdjacentHTML('beforeend', `<div class="two" style="margin-top:14px">${powerCard()}${setsCard()}</div>`); };
+
+/* ---------- fireteam: complementary build from a friend's code ---------- */
+function myCode(){ const r = wornBuild(); if(!r) return ''; const o = { n: r.b.name, el: r.b.el, sub: r.b.sub, ex: r.b.exotic, roles: ROLE[r.b.id] || ['add'] };
+  return 'HB1:' + btoa(unescape(encodeURIComponent(JSON.stringify(o)))); }
+function complement(code){
+  try{ const f = JSON.parse(decodeURIComponent(escape(atob(code.trim().replace(/^HB1:/, ''))))); const need = ['add','boss','survive'].filter(x => !(f.roles || []).includes(x));
+    const best = RES.filter(r => r.ready && r.b.exotic !== f.ex).map(r => { const ro = ROLE[r.b.id] || ['add']; let s = r.total; ro.forEach(x => { if(need.includes(x)) s += 25; }); if(r.b.el !== f.el) s += 10; if(/invis/i.test(f.n) && ro.includes('boss')) s += 5; return { r, s, ro }; }).sort((a,b) => b.s - a.s)[0];
+    return { f, best, need }; }catch(e){ return null; } }
+WIDGETS.team = () => `<h3>Fireteam</h3><p class="perk">Send your code to a friend with Hunter Builds, paste theirs to get a build that fits with them.</p>
+  <div class="selrow"><button type="button" class="btn sm" data-copy="${esc(myCode())}">Copy my code</button></div>
+  <input type="text" id="team-in" placeholder="Paste a friend's code (HB1:…)" style="width:100%;margin-top:8px"><div id="team-out"></div>`;
+if(!HOME.includes('team')) HOME.push('team');
+document.addEventListener('input', e => { if(e.target.id !== 'team-in') return; const o = document.getElementById('team-out'); const c = complement(e.target.value); if(!c || !c.best){ o.innerHTML = e.target.value ? '<p class="perk">That code doesn\'t look right.</p>' : ''; return; }
+  const r = c.best.r; o.innerHTML = `<p class="perk" style="margin-top:8px">Friend: <b>${esc(c.f.n)}</b> (${esc(c.f.el)}). Your team still needs: ${c.need.join(', ') || 'nothing — pick what you like'}.</p><div class="alt">${ico(exoItem(r.b.exotic),'sm')}<span><b>${esc(r.b.name)}</b> <span class="perk">${r.total} · ${c.best.ro.join(', ')}</span></span></div>
+    <div class="dimrow">${equipButton(r.b.name, [...r.combos[0].set.map(p => p.item), ...r.weap.loadout.filter(Boolean).map(x => x.w.item)], r.b.sub, loadoutExtras(r.b, r.combos[0]))}</div>`; });
+
+/* ---------- PvP time to kill (archetype values, base resilience) ---------- */
+const TTK = { 'Auto Rifle':[[360,.83,'5c 1b',1.33],[450,.80,'5c 2b',1.20],[600,.80,'8c 1b',1.30],[720,.77,'9c 1b',1.17]], 'Hand Cannon':[[110,1.10,'2c 1b',1.63],[120,1.00,'2c 1b',1.50],[140,.87,'3c',1.73],[150,.80,'3c',1.60],[180,1.00,'2c 2b',1.33]],
+  'Pulse Rifle':[[340,.67,'5c 1b',1.20],[390,.93,'5c 2b',1.47],[450,.87,'7c 1b',1.33],[540,.80,'7c 2b',1.40]], 'Scout Rifle':[[120,1.00,'2c 1b',1.50],[150,.80,'3c',1.60],[180,1.00,'2c 2b',1.67],[200,.90,'3c 1b',1.80],[260,.93,'3c 2b',1.40]],
+  'Sidearm':[[260,.70,'2c 2b',.93],[300,.60,'4c',1.00],[325,.73,'3c 2b',1.10],[360,.67,'3c 2b',1.00],[450,.67,'5c 1b',.93],[491,.73,'5c 2b',1.10]], 'Submachine Gun':[[600,.80,'6c 3b',1.10],[750,.67,'9c',1.00],[900,.67,'11c',1.13]],
+  'Trace Rifle':[[1000,.73,'9c 3b',.93]], 'Machine Gun':[[360,.50,'4c',.83],[450,.53,'4c 1b',.80],[900,.47,'8c',.67]] };
+function ttkOf(w){ const t = TTK[w.type]; if(!t) return null; const rpm = ((w.item.st || []).find(s => s[0] === 'Rounds Per Minute') || [])[1]; if(!rpm) return null;
+  const row = t.slice().sort((a,b) => Math.abs(a[0] - rpm) - Math.abs(b[0] - rpm))[0]; if(Math.abs(row[0] - rpm) > 30) return null; return { rpm, opt: row[1], shots: row[2], body: row[3] }; }
+const _renderWT2 = renderWeaponsTab;
+renderWeaponsTab = function(){ _renderWT2(); const root = document.getElementById('tab-weapons'); if(!root) return; const W = weapons();
+  root.querySelectorAll('.wr').forEach(li => { const ic = li.querySelector('[data-item]'); if(!ic) return; const w = W.find(x => x.i === ic.dataset.item); const t = w && ttkOf(w); if(!t) return;
+    li.querySelector('.wrb > .perk').insertAdjacentHTML('beforeend', ` · <span class="ttk" title="PvP time to kill at base resilience: ${t.shots} (c = head, b = body). Body only: ${t.body}s. Perks like Rangefinder don't change it, damage perks do.">PvP ${t.opt.toFixed(2)}s · ${t.shots}</span>`); });
+  root.querySelector('.cleanhead .lead') && root.querySelector('.cleanhead .lead').insertAdjacentHTML('beforeend', ' <span class="perk">PvP time-to-kill is the archetype value at base health; c = headshots, b = body shots.</span>'); };
+
+/* ---------- send weekly status for the Monday reminder ---------- */
+function sendWeek(){ if(!IS_APP || !window.hunterApp.weekStatus || !DATA.weekly) return; const c = checks(); const ms = DATA.weekly.milestones.map(m => m.n);
+  window.hunterApp.weekStatus({ done: c.done.filter(n => ms.includes(n)).length, total: ms.length, open: ms.filter(n => !c.done.includes(n)) }); }
+const _renderWeek4 = renderWeek; renderWeek = function(){ _renderWeek4(); sendWeek(); };
+
+/* ---------- visuals: stat thresholds, tab slide direction, icon flip ---------- */
+const _renderDetail4 = renderDetail;
+renderDetail = function(){ _renderDetail4(); document.querySelectorAll('#detail .st').forEach(st => { const v = parseInt((st.querySelector('.val') || {}).textContent, 10); if(v >= 200) st.classList.add('hit200'); else if(v >= 100) st.classList.add('hit100'); }); };
+let TAB_IDX = 0;
+document.addEventListener('click', e => { const b = e.target.closest('nav.tabs > button[role=tab]'); if(!b) return; const all = [...document.querySelectorAll('nav.tabs > button[role=tab]')]; const i = all.indexOf(b); const dir = i >= TAB_IDX ? 'fromR' : 'fromL'; TAB_IDX = i;
+  const p = document.getElementById('tab-' + b.dataset.tab); if(p && !REDUCED){ p.classList.remove('fromR','fromL'); void p.offsetWidth; p.classList.add(dir); } }, true);
+{ let tmr = 0, flip = null;
+  const hide = () => { clearTimeout(tmr); if(flip){ const f = flip; f.classList.remove('on'); setTimeout(() => f.remove(), 250); flip = null; } };
+  document.addEventListener('pointerover', e => { const ic = e.target.closest('button.ico[data-item]'); if(!ic){ if(!e.target.closest('.flipc')) hide(); return; } if(flip && flip.dataset.id === ic.dataset.item) return; hide();
+    tmr = setTimeout(() => { const it = itemById(ic.dataset.item); if(!it) return; const perks = (it.sk || []).filter(c => /PERK|INTRINSIC/i.test(c[0])).flatMap(c => c[1].map(x => PLUGS[x[0]] && PLUGS[x[0]].n)).filter(n => n && !/^(Empty|Default)/.test(n)).slice(0, 5);
+      const names = perks.length ? perks : (it.w ? weapons().find(w => w.i === it.id)?.perks || [] : []).slice(0, 5);
+      flip = document.createElement('div'); flip.className = 'flipc'; flip.dataset.id = it.id; const r = ic.getBoundingClientRect();
+      flip.innerHTML = `<div class="flipin"><div class="ffront" style="${ic.getAttribute('style') || ''}"></div><div class="fback"><b>${esc(it.n)}</b><span class="perk">${esc(it.t)}${it.pw ? ' · ' + it.pw : ''}</span>${!it.w && it.st && it.st.length ? `<span class="perk">${it.st.filter(x => x[1] > 0).sort((x,y) => y[1] - x[1]).slice(0,3).map(x => esc(x[0]) + ' ' + x[1]).join(' · ')}</span>` : ''}${names.length ? `<ul>${names.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}</div></div>`;
+      flip.style.left = Math.min(innerWidth - 230, Math.max(8, r.left + r.width / 2 - 110)) + 'px'; flip.style.top = (r.bottom + 8 + 160 > innerHeight ? r.top - 168 : r.bottom + 8) + 'px';
+      document.body.appendChild(flip); requestAnimationFrame(() => flip && flip.classList.add('on')); }, 450); });
+  document.addEventListener('pointerdown', hide, true); addEventListener('scroll', hide, { passive: true }); }
+
+/* ---------- holiday themes, text size and density ---------- */
+const HOLIDAY = (() => { const d = new Date(), m = d.getMonth() + 1, day = d.getDate(); if((m === 10 && day >= 15) || (m === 11 && day <= 5)) return ['festival','Festival of the Lost']; if((m === 12 && day >= 10) || (m === 1 && day <= 5)) return ['dawning','The Dawning']; return null; })();
+let HOLI = STORE.get('hunterHoliday', true), ZOOM = STORE.get('hunterZoom', 100), DENSE = STORE.get('hunterDense', false);
+function applyLook(){ const d = document.documentElement; d.style.setProperty('--zoom', ZOOM / 100); d.classList.toggle('dense', DENSE);
+  if(HOLIDAY && HOLI){ d.dataset.holiday = HOLIDAY[0]; } else delete d.dataset.holiday; }
+applyLook();
+{ const m = document.getElementById('thmenu'); const add = () => { if(m.querySelector('.lookrow')) return;
+    m.insertAdjacentHTML('beforeend', `<div class="lookrow"><label>Text size <input type="range" id="zoom-in" min="85" max="125" step="5" value="${ZOOM}"> <span id="zoom-v">${ZOOM}%</span></label></div>
+      <label class="lookrow"><input type="checkbox" id="dense-in" ${DENSE ? 'checked' : ''}> Compact layout</label>
+      <label class="lookrow"><input type="checkbox" id="holi-in" ${HOLI ? 'checked' : ''}> Holiday themes${HOLIDAY ? ` (${HOLIDAY[1]} now)` : ' (Festival of the Lost, The Dawning)'}</label>`);
+    m.querySelector('#zoom-in').oninput = e => { ZOOM = +e.target.value; m.querySelector('#zoom-v').textContent = ZOOM + '%'; STORE.set('hunterZoom', ZOOM); applyLook(); };
+    m.querySelector('#dense-in').onchange = e => { DENSE = e.target.checked; STORE.set('hunterDense', DENSE); applyLook(); };
+    m.querySelector('#holi-in').onchange = e => { HOLI = e.target.checked; STORE.set('hunterHoliday', HOLI); applyLook(); }; };
+  new MutationObserver(add).observe(m, { childList: true }); add(); m.addEventListener('click', e => { if(e.target.closest('.lookrow')) e.stopPropagation(); }, true); }
+
+/* ---------- Ctrl+K command palette ---------- */
+{
+  let pal = null, sel = 0, list = [];
+  const cmds = () => { const L = [];
+    document.querySelectorAll('nav.tabs > button[role=tab]').forEach(b => L.push({ t: 'Go to ' + b.textContent.trim(), k: 'tab', run: () => b.click() }));
+    RES.forEach(r => { L.push({ t: r.b.name, k: 'build', sub: r.ready ? 'score ' + r.total : 'missing something', run: () => { current = r.b.id; openTab('builds'); renderList(); swapDetail(); } });
+      if(r.ready && IS_APP) L.push({ t: 'Equip ' + r.b.name, k: 'equip', run: async () => { appToast(`Equipping ${r.b.name}…`, 'busy'); const res = await window.hunterApp.equip(buildPayload(r)); appToast(res.ok ? `Equipped ${r.b.name}.` : 'Could not equip: ' + res.msg, res.ok ? 'ok' : 'err'); } }); });
+    THEMES.forEach(([id, n]) => L.push({ t: 'Theme: ' + n, k: 'theme', run: () => applyTheme(id) }));
+    if(IS_APP){ L.push({ t: 'Refresh from DIM', k: 'action', run: () => window.hunterApp.refresh() }); if(window.hunterApp.compact) L.push({ t: 'Open compact window', k: 'action', run: () => window.hunterApp.compact() }); }
+    DATA.items.forEach(i => L.push({ t: i.n, k: i.w ? 'weapon' : 'armor', sub: (i.t || '') + (i.pw ? ' · ' + i.pw : ''), it: i, run: () => openItem(i.id) }));
+    return L; };
+  const score = (q, s) => { s = s.toLowerCase(); if(!q) return 1; if(s.startsWith(q)) return 3; if(s.includes(' ' + q)) return 2.5; if(s.includes(q)) return 2; let i = 0; for(const ch of s) if(ch === q[i]) i++; return i === q.length ? 1 : 0; };
+  const draw = () => { const q = pal.querySelector('input').value.trim().toLowerCase(); const all = cmds();
+    list = all.map(c => ({ c, s: score(q, c.t) + (c.k === 'build' ? 1 : c.k === 'tab' ? .5 : 0) })).filter(x => x.s > 0).sort((a,b) => b.s - a.s).slice(0, 12).map(x => x.c); sel = Math.min(sel, Math.max(0, list.length - 1));
+    pal.querySelector('ul').innerHTML = list.map((c, i) => `<li role="option" aria-selected="${i === sel}" data-i="${i}">${c.it ? ico(c.it,'sm').replace('<button', '<span').replace('</button>', '</span>') : `<span class="kk">${c.k}</span>`}<span class="ct">${esc(c.t)}</span>${c.sub ? `<span class="perk">${esc(c.sub)}</span>` : ''}</li>`).join('') || '<li class="perk">Nothing found.</li>'; };
+  const close = () => { if(pal){ pal.remove(); pal = null; } };
+  const open = () => { if(pal) return close(); pal = document.createElement('div'); pal.className = 'palette'; pal.innerHTML = `<div class="palbox" role="dialog" aria-label="Command palette"><input type="text" placeholder="Search builds, items, tabs, actions…" aria-label="Search"><ul role="listbox"></ul><div class="perk palh">↑↓ to choose · Enter to run · Esc to close</div></div>`;
+    document.body.appendChild(pal); sel = 0; draw(); const inp = pal.querySelector('input'); inp.focus();
+    inp.oninput = () => { sel = 0; draw(); };
+    inp.onkeydown = e => { if(e.key === 'ArrowDown'){ sel = Math.min(list.length - 1, sel + 1); draw(); e.preventDefault(); } else if(e.key === 'ArrowUp'){ sel = Math.max(0, sel - 1); draw(); e.preventDefault(); } else if(e.key === 'Enter'){ const c = list[sel]; close(); if(c) c.run(); } else if(e.key === 'Escape'){ close(); } };
+    pal.onclick = e => { const li = e.target.closest('li[data-i]'); if(li){ const c = list[+li.dataset.i]; close(); c.run(); } else if(e.target === pal) close(); }; };
+  document.addEventListener('keydown', e => { if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){ e.preventDefault(); open(); } });
+  { const sb = document.querySelector('.search, #q, input[type=search]'); if(sb) sb.placeholder = (sb.placeholder || 'Search items or perks…') + '  (Ctrl+K for everything)'; }
+}
 
 renderAll();
 

@@ -336,6 +336,7 @@ async function equip(p) {
       if (!p.undo) { try { await dimGo('inventory'); const snap = await js(SNAPSHOT); if (snap && snap.length) fs.writeFileSync(file('undo.json'), JSON.stringify({ t: Date.now(), from: p.name, items: snap })); } catch (e) { log('snapshot failed: ' + e.message); } }
       const lo = { id: 'hb-' + p.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 40), name: 'HB: ' + p.name, classType: 1, clearSpace: false, notes: p.notes || '', equipped: p.items, unequipped: [] };
       if (p.mods && p.mods.length) lo.parameters = { mods: p.mods };
+      if (p.look && Object.keys(p.look).length) lo.parameters = Object.assign(lo.parameters || {}, { modsByBucket: p.look });
       await dimGo('loadouts?loadout=' + encodeURIComponent(JSON.stringify(lo)));
       // save the loadout from DIM's editor (new: "Save", existing: "Save Changes")
       const saved = await js(`(async () => { for (let i = 0; i < 20; i++) { const f = [...document.querySelectorAll('form button[type=submit]')].find(b => b.offsetParent && !b.disabled); if (f) { f.click(); return true; } await new Promise(r => setTimeout(r, 500)); } return false; })()`);
@@ -404,6 +405,24 @@ ipcMain.on('rec-weapons', (_e, list) => { try { fs.writeFileSync(file('recweapon
 ipcMain.handle('activity', () => lastActivity);
 ipcMain.handle('backup', (_e, d) => backup(d));
 ipcMain.handle('copy-image', (_e, url) => { try { clipboard.writeImage(nativeImage.createFromDataURL(url)); return true; } catch (e) { return false; } });
+// the shaders and ornaments you wear now, per armor bucket, for DIM's modsByBucket
+ipcMain.handle('get-look', () => queue(async () => { try { await dimGo('inventory'); return await js(`(() => {
+  for (const e of document.querySelectorAll('*')) { const k = Object.keys(e).find(k => k.startsWith('__reactFiber$')); if (!k) continue;
+    let r = e[k]; while (r.return) r = r.return; const q = [r]; let c = 0;
+    while (q.length && c < 20000) { const x = q.shift(); c++; const p = x && x.memoizedProps;
+      if (p && p.store && p.store.getState) { const h = p.store.getState().inventory.stores.find(z => z.classType === 1 && !z.isVault); const out = {};
+        for (const i of h.items.filter(i => i.equipped && i.bucket.sort === 'Armor')) { const cat = (i.sockets && i.sockets.categories || []).find(c => /COSMETIC/i.test(c.category.displayProperties.name));
+          if (!cat) continue; out[i.bucket.hash] = cat.socketIndexes.map(ix => i.sockets.allSockets.find(z => z.socketIndex === ix)).filter(sk => sk && sk.plugged && !/^Default|^Empty/.test(sk.plugged.plugDef.displayProperties.name)).map(sk => sk.plugged.plugDef.hash); }
+        return out; }
+      if (x.child) q.push(x.child); if (x.sibling) q.push(x.sibling); }
+    return null; }
+  return null; })()`); } catch (e) { log('get-look: ' + e.message); return null; } }));
+// Monday evening reminder if the weekly checklist isn't done
+let weekStatus = null;
+ipcMain.on('week-status', (_e, s) => { weekStatus = s; });
+setInterval(() => { const n = new Date(); if (n.getDay() !== 1 || n.getHours() < 19 || !weekStatus) return; const wk = weekKey(n); const st = readJson('settings.json', {});
+  if (st.remindWeek === wk || weekStatus.done >= weekStatus.total) return; saveSettings({ remindWeek: wk });
+  notify('Weekly reset tomorrow', `${weekStatus.total - weekStatus.done} of ${weekStatus.total} weekly activities are still open: ${(weekStatus.open || []).slice(0, 3).join(', ')}.`); }, 15 * 60 * 1000);
 ipcMain.handle('undo', () => { const u = readJson('undo.json', null); if (!u || !u.items) return { ok: false, msg: 'Nothing to undo yet.' }; return equip({ name: 'Previous gear', notes: `Gear before "${u.from}"`, items: u.items, undo: true }); });
 ipcMain.handle('diagnostics', () => { const t = diagnostics(); clipboard.writeText(t); return t; });
 ipcMain.on('notify', (_e, t, b) => notify(t, b));
