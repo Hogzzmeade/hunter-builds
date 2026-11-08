@@ -449,8 +449,6 @@ span.ico[data-miss]{cursor:help}
 [data-theme=light] .kico{background-color:#1d2440}
 [data-theme=light] .cmpt td.best{color:#b06d10}
 [data-theme=light] p.ok,[data-theme=light] .needl .ok{color:#1f6b3f}
-[data-theme=light] .pop{color:#ece7dc}
-[data-theme=light] .pop{--ink:#ece7dc;--mute:#9aa0bb;--line:#343d63;--bg:#141a2e;--panel2:#252d4d}
 [data-theme=light] .tray{background:#fff;border-color:var(--line)}
 [data-theme=light] .seg button.on{background:#3a4fa8}
 [data-theme=light] .btn.primary{color:#fff}
@@ -741,6 +739,54 @@ html.xt .pc{border-left-color:var(--acc2)}
 header.top{position:relative;z-index:50}
 [data-theme=pyramid] header.top h1 small,[data-theme=terminal] header.top h1 small{text-transform:none;letter-spacing:0}
 [data-theme=dreaming] .thmenu{background:#24143f;backdrop-filter:none}
+/* ===== more themes ===== */
+[data-theme=neomuna]{--bg:#070816;--panel:#0f1230;--panel2:#171b44;--line:#2a2f66;--ink:#f1edff;--mute:#9b97c9;--exotic:#ffd166;--acc:#ff4fd8;--acc2:#4fd6ff;--acc-ink:#1a0418;--track:#1d2152;--pop:#121538;--pop2:#0b0d26;--popline:#2f3577}
+[data-theme=neomuna] body{background:linear-gradient(180deg,#0a0b22,#070816 60%)}
+[data-theme=neomuna] h1{color:#fff;text-shadow:0 0 12px rgba(255,79,216,.6),0 0 30px rgba(79,214,255,.25)}
+[data-theme=neomuna] .detail,[data-theme=neomuna] .card,[data-theme=neomuna] .bitem{border:1px solid var(--line);border-radius:4px}
+[data-theme=neomuna] .bitem[aria-current=true]{border-color:#ff4fd8;box-shadow:0 0 16px rgba(255,79,216,.35),inset 0 0 12px rgba(79,214,255,.12)}
+[data-theme=neomuna] nav.tabs button[aria-selected=true]{border-color:#4fd6ff;box-shadow:0 0 12px rgba(79,214,255,.35)}
+[data-theme=europa]{--bg:#0b1520;--panel:#12202e;--panel2:#1a2c3d;--line:#2b4257;--ink:#eaf5ff;--mute:#93aec4;--exotic:#ffd77a;--acc:#9fd6ff;--acc2:#5aa7d8;--acc-ink:#062033;--track:#1f3346;--pop:#142434;--pop2:#0d1a26;--popline:#2e4a61}
+[data-theme=europa] body{background:radial-gradient(1000px 600px at 50% -10%,rgba(159,214,255,.16),transparent 60%),var(--bg)}
+[data-theme=europa] .detail,[data-theme=europa] .card,[data-theme=europa] .bitem{border:1px solid rgba(159,214,255,.14);border-radius:10px}
+[data-theme=europa] h1{color:#dff1ff}
+[data-theme=europa] .bitem[aria-current=true]{border-color:#9fd6ff;box-shadow:0 0 18px rgba(159,214,255,.25)}
+[data-theme=hive]{--bg:#070b08;--panel:#0f1611;--panel2:#162019;--line:#24352a;--ink:#e3f2e3;--mute:#86a38b;--exotic:#e8d36a;--acc:#8cff6a;--acc2:#3d9c4a;--acc-ink:#071a06;--track:#1a281e;--pop:#111a13;--pop2:#0a100b;--popline:#2a3f30}
+[data-theme=hive] body{background:radial-gradient(900px 500px at 50% 110%,rgba(140,255,106,.10),transparent 60%),var(--bg)}
+[data-theme=hive] h1,[data-theme=hive] h2{color:#c8ffb5;letter-spacing:.04em}
+[data-theme=hive] .detail,[data-theme=hive] .card,[data-theme=hive] .bitem{border:1px solid var(--line);border-radius:3px}
+[data-theme=hive] .bitem[aria-current=true]{border-color:#8cff6a;box-shadow:0 0 16px rgba(140,255,106,.25)}
+[data-theme=ember]{--bg:#140907;--panel:#1f100c;--panel2:#2b1610;--line:#4a261b;--ink:#fbe9df;--mute:#c09a88;--exotic:#ffcf5a;--acc:#ff7a2f;--acc2:#c2441c;--acc-ink:#260c02;--track:#3a1d14;--pop:#22120d;--pop2:#170b08;--popline:#55301f}
+[data-theme=ember] body{background:radial-gradient(1100px 600px at 50% 120%,rgba(255,110,40,.18),transparent 60%),var(--bg)}
+[data-theme=ember] h1{color:#ffd2b3;text-shadow:0 0 18px rgba(255,122,47,.35)}
+[data-theme=ember] .detail,[data-theme=ember] .card,[data-theme=ember] .bitem{border:1px solid var(--line)}
+[data-theme=ember] .bitem[aria-current=true]{border-color:#ff7a2f;box-shadow:0 0 18px rgba(255,122,47,.3)}
+[data-theme=nebula]{--bg:#05060f;--panel:#0d0f22;--panel2:#151833;--line:#262a4d;--ink:#ecebff;--mute:#9a98c2;--exotic:#ffd77a;--acc:#b8a6ff;--acc2:#ff8fd0;--acc-ink:#120a2e;--track:#1b1e3d;--pop:#10122a;--pop2:#090a1a;--popline:#2c3060}
+[data-theme=nebula] .detail,[data-theme=nebula] .card,[data-theme=nebula] .bitem{border:1px solid rgba(184,166,255,.14);border-radius:12px;background-color:rgba(13,15,34,.85)}
+[data-theme=nebula] h1{background:linear-gradient(90deg,#d9cfff,#ffb3df);-webkit-background-clip:text;background-clip:text;color:transparent}
+[data-theme=nebula] .bitem[aria-current=true]{border-color:#b8a6ff;box-shadow:0 0 20px rgba(184,166,255,.3)}
+
+/* ===== item popup: solid, in the theme's colors ===== */
+html{--pop:#171c33;--pop2:#0f1428;--popline:#343d63}
+#overlay .pop .plug.sel,#overlay .pop .intr.sel{outline-color:var(--tint)}
+[data-theme=light]{--pop:#ffffff;--pop2:#f1f3f9;--popline:#d2d7e6}
+[data-theme=traveler]{--pop:#241d15;--pop2:#1a150f;--popline:#4a3c2c}
+[data-theme=pyramid]{--pop:#101018;--pop2:#08080d;--popline:#2e2c40}
+[data-theme=terminal]{--pop:#071816;--pop2:#041010;--popline:#15463f}
+[data-theme=dreaming]{--pop:#2a1747;--pop2:#1e1036;--popline:#4a3470}
+#overlay{background:color-mix(in srgb,var(--bg) 80%,transparent);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}
+#overlay .pop,html.xt #overlay .pop,[data-theme=dreaming] #overlay .pop{background:var(--pop);border:1px solid color-mix(in srgb,var(--tint) 40%,var(--popline));box-shadow:0 20px 60px rgba(0,0,0,.55),0 0 0 1px color-mix(in srgb,var(--tint) 15%,transparent),0 0 40px color-mix(in srgb,var(--tint) 14%,transparent);backdrop-filter:none}
+#overlay .pop .pd{background:var(--pop2);border-color:var(--popline)}
+#overlay .pop .plug,#overlay .pop .intr{background:var(--pop2);border-color:var(--popline)}
+#overlay .pop .plug.round{background:var(--popline)}#overlay .pop .plug.round.on{background:color-mix(in srgb,var(--tint) 65%,var(--pop2));border-color:var(--tint)}
+#overlay .pop .sb,#overlay .pop .setp .cnt{background:var(--popline)}
+#overlay .pop .pcol{background:color-mix(in srgb,var(--ink) 4%,transparent)}
+#overlay .pop .pclose{background:color-mix(in srgb,#000 22%,transparent)}
+[data-theme=light] #overlay .pop{--ink:#1b2033;--mute:#5b6380;--line:#d2d7e6;--bg:#f1f3f9;--panel2:#e7eaf4;color:#1b2033}
+[data-theme=light] #overlay .pop .sb i{background:#3a4470}
+[data-theme=light] #overlay .pop .clar b{color:#2a5ea8}
+[data-theme=light] #overlay .pop .pst .up,[data-theme=light] #overlay .pop .sv.up{color:#a8650f}
+.bigside{background:var(--pop)}
 </style>
 </head>
 <body>
@@ -1545,10 +1591,16 @@ const THEMES = [
   ['traveler','Traveler','Warm gold and ivory','linear-gradient(135deg,#15120e 50%,#e0b04a 50%)','#15120e'],
   ['pyramid','Pyramid','Black, violet, sharp edges','linear-gradient(135deg,#060609 50%,#8f6cff 50%)','#060609'],
   ['terminal','Vanguard terminal','Tactical HUD, monospace','linear-gradient(135deg,#030b0b 50%,#3fe0c5 50%)','#030b0b'],
-  ['dreaming','Dreaming City','Twilight glass, pink and teal','linear-gradient(135deg,#1d1036 50%,#ff8fcf 50%)','#1d1036']];
+  ['dreaming','Dreaming City','Twilight glass, pink and teal','linear-gradient(135deg,#1d1036 50%,#ff8fcf 50%)','#1d1036'],
+  ['neomuna','Neomuna','Neon city, moving grid','linear-gradient(135deg,#070816 50%,#ff4fd8 50%)','#070816'],
+  ['europa','Europa','Ice blue, falling snow','linear-gradient(135deg,#0b1520 50%,#9fd6ff 50%)','#0b1520'],
+  ['hive','Hive','Moon dark, green wisps','linear-gradient(135deg,#070b08 50%,#8cff6a 50%)','#070b08'],
+  ['ember','Ember','Forge red, rising embers','linear-gradient(135deg,#140907 50%,#ff7a2f 50%)','#140907'],
+  ['nebula','Nebula','Deep space, shooting stars','linear-gradient(135deg,#05060f 50%,#b8a6ff 50%)','#05060f']];
 function applyTheme(t){ if(!THEMES.some(x => x[0] === t)) t = 'dark'; const d = document.documentElement; d.dataset.theme = t; d.classList.toggle('xt', !['dark','light'].includes(t)); STORE.set('hunterTheme', t);
   const th = THEMES.find(x => x[0] === t); const mc = document.querySelector('meta[name=theme-color]'); if(mc) mc.content = th[4];
   const b = document.getElementById('theme-btn'); if(b){ b.textContent = '◐ ' + th[1]; b.setAttribute('aria-label', 'Theme: ' + th[1] + '. Choose another theme'); }
+  if(window.fxTheme) window.fxTheme(t);
   const m = document.getElementById('thmenu'); if(m) m.innerHTML = THEMES.map(([id,n,dsc,sw]) => `<button type="button" class="thopt" role="menuitemradio" aria-checked="${id===t}" data-theme-id="${id}"><span class="sw" style="background:${sw}"></span><span>${n}<small>${dsc}</small></span></button>`).join(''); }
 
 /* ---------- custom build ---------- */
@@ -2024,6 +2076,7 @@ const BG = {
  'Home':'Начало','Wearing now':'Носиш сега','Postmaster':'Пощальон','Pinned builds':'Закачени билдове','New items':'Нови предмети','Materials':'Материали','Titles':'Титли','Compare':'Сравни','Clear':'Изчисти','Champions and shields this week':'Шампиони и щитове тази седмица','Vendors this week':'Търговци тази седмица','Builds for raids and dungeons':'Билдове за рейдове и подземия','Add clear':'Чистене на врагове','Survive / support':'Оцеляване / подкрепа','⤢ Large view':'⤢ Голям изглед','Animated background':'Анимиран фон','Use element colors':'Цветове по елемент','ready to claim':'готово за взимане',
  'Armor mods':'Модове за бронята','Save the look I wear now':'Запази визията, която нося','Forget look':'Забрави визията','Path to the next Power level':'Път до следващото ниво сила','Armor sets':'Сетове броня','Fireteam':'Отбор','Copy my code':'Копирай моя код','Text size':'Размер на текста','Compact layout':'Сбит изглед','Nothing found.':'Нищо не е намерено.',
  'Weekly':'Седмични','Left to do':'Остават','Done':'Готови','Weekly milestones':'Седмични задачи','Raids':'Рейдове','Dungeons':'Подземия','Orders':'Поръчки','Bounties':'Задачи с награда',
+ 'Neomuna':'Неомуна','Europa':'Европа','Hive':'Кошер','Ember':'Жарава','Nebula':'Мъглявина','Neon city, moving grid':'Неонов град, движеща се мрежа','Ice blue, falling snow':'Леденосиньо, падащ сняг','Moon dark, green wisps':'Тъмна луна, зелени духчета','Forge red, rising embers':'Червено като ковачница, искри','Deep space, shooting stars':'Дълбок космос, падащи звезди','Background':'Фон','Theme animation':'Анимация на темата','By element':'По елемент','Off':'Изключен',
  'Lock':'Заключи','Close':'Затвори','Perks':'Перкове','Stats':'Статове','Mods':'Модове','Intrinsic':'Вградено','Masterwork':'Мастъруърк'
 };
 const BG_RE = [
@@ -2436,39 +2489,78 @@ const _openItem2 = openItem;
 openItem = function(id, opener){ _openItem2(id, opener); const it = itemById(id); if(!it || !it.ss) return; const ph = document.querySelector('.pop .ph .pht');
   if(ph) { ph.insertAdjacentHTML('beforeend', `<button type="button" class="btn sm" id="big-btn">⤢ Large view</button>`); document.getElementById('big-btn').onclick = () => bigView(it); } };
 
-/* ---------- animated element background ---------- */
-let BG_ON = STORE.get('hunterFx', true);
+/* ---------- animated background: one animation per theme (or per element) ---------- */
+let BG_ON = STORE.get('hunterFx', true), FX_MODE = STORE.get('hunterFxMode', 'theme');
 {
   const cv = document.createElement('canvas'); cv.id = 'fxbg'; cv.setAttribute('aria-hidden', 'true'); document.body.prepend(cv); const g = cv.getContext('2d');
-  let W = 0, H = 0, P = [], el = '', raf = 0, last = 0;
-  const size = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; }; size(); addEventListener('resize', size);
-  const spawn = e => { const n = e === 'Arc' ? 28 : 46; P = Array.from({ length: n }, () => ({ x: Math.random() * W, y: Math.random() * H, v: .2 + Math.random() * .6, a: Math.random() * 6.28, r: 1 + Math.random() * 2.6, t: Math.random() * 100 })); };
-  const COL = { Arc:'124,196,242', Solar:'242,128,58', Void:'182,140,230', Stasis:'93,143,255', Strand:'63,220,120' };
-  function frame(ts){ raf = requestAnimationFrame(frame); if(ts - last < 33) return; last = ts; g.clearRect(0, 0, W, H); const c = COL[el] || COL.Arc;
-    for(const p of P){ p.t += 1;
-      if(el === 'Solar'){ p.y -= p.v * 1.4; p.x += Math.sin(p.t / 30) * .4; if(p.y < -10){ p.y = H + 10; p.x = Math.random() * W; } g.fillStyle = `rgba(${c},${.18 + .2 * Math.sin(p.t / 12) ** 2})`; g.beginPath(); g.arc(p.x, p.y, p.r, 0, 6.28); g.fill(); }
-      else if(el === 'Void'){ p.a += .004; p.x += Math.cos(p.a) * p.v * .5; p.y += Math.sin(p.a) * p.v * .5; if(p.x < -60) p.x = W + 60; if(p.x > W + 60) p.x = -60; if(p.y < -60) p.y = H + 60; if(p.y > H + 60) p.y = -60;
-        const gr = g.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 22); gr.addColorStop(0, `rgba(${c},.07)`); gr.addColorStop(1, `rgba(${c},0)`); g.fillStyle = gr; g.fillRect(p.x - p.r * 22, p.y - p.r * 22, p.r * 44, p.r * 44); }
-      else if(el === 'Stasis'){ p.y += p.v * .5; p.x += Math.sin(p.t / 50) * .25; if(p.y > H + 10){ p.y = -10; p.x = Math.random() * W; } g.strokeStyle = `rgba(${c},.28)`; g.lineWidth = 1; const s = p.r * 2.2;
-        g.beginPath(); for(let k = 0; k < 3; k++){ const an = k * 1.047 + p.t / 200; g.moveTo(p.x - Math.cos(an) * s, p.y - Math.sin(an) * s); g.lineTo(p.x + Math.cos(an) * s, p.y + Math.sin(an) * s); } g.stroke(); }
-      else if(el === 'Strand'){ p.x += Math.cos(p.a) * p.v; p.y += Math.sin(p.a) * p.v; p.a += Math.sin(p.t / 40) * .02; if(p.x < 0 || p.x > W || p.y < 0 || p.y > H){ p.x = Math.random() * W; p.y = Math.random() * H; }
-        for(const q of P){ if(q === p) continue; const d = Math.hypot(p.x - q.x, p.y - q.y); if(d < 110){ g.strokeStyle = `rgba(${c},${.12 * (1 - d / 110)})`; g.beginPath(); g.moveTo(p.x, p.y); g.lineTo(q.x, q.y); g.stroke(); } } }
-      else { if(Math.random() < .006){ g.strokeStyle = `rgba(${c},.35)`; g.lineWidth = 1.2; g.beginPath(); let x = p.x, y = p.y; g.moveTo(x, y); for(let k = 0; k < 6; k++){ x += (Math.random() - .5) * 46; y += 14 + Math.random() * 18; g.lineTo(x, y); } g.stroke(); }
-        p.x += (Math.random() - .5) * .8; p.y += (Math.random() - .5) * .8; g.fillStyle = `rgba(${c},.25)`; g.fillRect(p.x, p.y, 1.6, 1.6); } } }
-  window.fxSet = e => { if(e === el && raf) return; el = e; spawn(e); if(!raf && BG_ON && !REDUCED) raf = requestAnimationFrame(frame); };
-  window.fxToggle = on => { BG_ON = on; STORE.set('hunterFx', on); cv.style.display = on && !REDUCED ? '' : 'none'; if(!on && raf){ cancelAnimationFrame(raf); raf = 0; } else if(on && !raf && !REDUCED) raf = requestAnimationFrame(frame); };
-  document.addEventListener('visibilitychange', () => { if(document.hidden && raf){ cancelAnimationFrame(raf); raf = 0; } else if(!document.hidden && BG_ON && !REDUCED && !raf) raf = requestAnimationFrame(frame); });
-  cv.style.display = BG_ON && !REDUCED ? '' : 'none';
+  let W = 0, H = 0, P = [], key = '', raf = 0, last = 0, T = 0, el = 'Arc', theme = 'dark';
+  const size = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; if(key) spawn(); }; addEventListener('resize', size);
+  const R = (a, b) => a + Math.random() * (b - a);
+  const ELC = { Arc:'124,196,242', Solar:'242,128,58', Void:'182,140,230', Stasis:'93,143,255', Strand:'63,220,120' };
+  const COUNT = { tower:40, light:26, traveler:45, pyramid:9, terminal:0, dreaming:34, neomuna:0, europa:90, hive:30, ember:70, nebula:160, Arc:28, Solar:46, Void:46, Stasis:46, Strand:46 };
+  const CHARS = 'アイウエオカキクケコ0123456789ABCDEF<>/{}=+*';
+  let cols = [];
+  function spawn(){ P = Array.from({ length: COUNT[key] || 40 }, () => ({ x: R(0, W), y: R(0, H), v: R(.2, .8), a: R(0, 6.28), r: R(1, 2.8), t: R(0, 200), s: R(.4, 1), z: R(.2, 1) }));
+    if(key === 'terminal'){ const n = Math.ceil(W / 16); cols = Array.from({ length: n }, () => ({ y: R(-H, 0), v: R(2, 5), on: Math.random() < .55 })); }
+    if(key === 'pyramid') P.forEach(p => { p.r = R(40, 140); p.v = R(.0008, .003) * (Math.random() < .5 ? -1 : 1); });
+    if(key === 'dreaming') P.forEach(p => { p.c = Math.random() < .5 ? '255,143,207' : '127,227,234'; }); }
+  const dot = (x, y, r, c) => { g.fillStyle = c; g.beginPath(); g.arc(x, y, r, 0, 6.28); g.fill(); };
+  const glow = (x, y, r, c, a) => { const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, `rgba(${c},${a})`); gr.addColorStop(1, `rgba(${c},0)`); g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2); };
+  const DRAW = {
+    tower(){ for(const p of P){ p.t++; p.y -= p.v * .15; p.x += Math.sin(p.t / 90) * .15; if(p.y < -20){ p.y = H + 20; p.x = R(0, W); } glow(p.x, p.y, p.r * 9, '124,196,242', .05 + .05 * Math.sin(p.t / 40) ** 2); } },
+    light(){ for(const p of P){ p.t++; p.y -= p.v * .35; p.x += Math.sin(p.t / 70) * .3; if(p.y < -40){ p.y = H + 40; p.x = R(0, W); } g.strokeStyle = 'rgba(45,59,120,.12)'; g.lineWidth = 1.2; g.beginPath(); g.arc(p.x, p.y, p.r * 8, 0, 6.28); g.stroke(); glow(p.x - p.r * 2, p.y - p.r * 2, p.r * 4, '255,255,255', .5); } },
+    traveler(){ glow(W * .78, -H * .05, Math.min(W, H) * .55, '224,176,74', .07 + .03 * Math.sin(T / 120)); for(const p of P){ p.t++; p.y -= p.v * .5; p.x += Math.sin(p.t / 60) * .3; if(p.y < -10){ p.y = H + 10; p.x = R(0, W); } dot(p.x, p.y, p.r * .7, `rgba(240,200,110,${.25 + .35 * Math.sin(p.t / 25) ** 2})`); } },
+    pyramid(){ for(const p of P){ p.a += p.v; p.y += .05; if(p.y - p.r > H) p.y = -p.r; g.strokeStyle = `rgba(143,108,255,${.06 + .05 * p.s})`; g.lineWidth = 1; g.beginPath();
+        for(let k = 0; k < 3; k++){ const an = p.a + k * 2.094; const x = p.x + Math.cos(an) * p.r, y = p.y + Math.sin(an) * p.r; k ? g.lineTo(x, y) : g.moveTo(x, y); } g.closePath(); g.stroke(); } },
+    terminal(){ g.font = '14px "IBM Plex Mono", monospace'; cols.forEach((c, i) => { if(!c.on) return; c.y += c.v; if(c.y > H + 200){ c.y = R(-300, 0); c.v = R(2, 5); }
+        for(let k = 0; k < 12; k++){ const y = c.y - k * 16; if(y < 0 || y > H) continue; g.fillStyle = k ? `rgba(63,224,197,${.22 - k * .017})` : 'rgba(190,255,240,.5)'; g.fillText(CHARS[(i * 7 + k * 3 + Math.floor(T / 8)) % CHARS.length], i * 16, y); } }); },
+    dreaming(){ for(const p of P){ p.t++; p.y += p.v * .45; p.x += Math.sin(p.t / 50) * .7; p.a += .01; if(p.y > H + 20){ p.y = -20; p.x = R(0, W); }
+        g.save(); g.translate(p.x, p.y); g.rotate(p.a); g.fillStyle = `rgba(${p.c},${.18 + .12 * p.s})`; g.beginPath(); g.ellipse(0, 0, p.r * 2.6, p.r * 1.2, 0, 0, 6.28); g.fill(); g.restore();
+        if(p.t % 140 < 20) glow(p.x, p.y, 10, '255,255,255', .25); } },
+    neomuna(){ const hz = H * .62, sp = (T * 1.2) % 40; g.lineWidth = 1;
+      for(let i = 0; i < 18; i++){ const y = hz + Math.pow((i * 40 + sp) / 720, 2) * (H - hz) * 1.6; if(y > H) continue; g.strokeStyle = `rgba(255,79,216,${.05 + (y - hz) / (H - hz) * .18})`; g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+      for(let i = -20; i <= 20; i++){ g.strokeStyle = 'rgba(79,214,255,.10)'; g.beginPath(); g.moveTo(W / 2 + i * 12, hz); g.lineTo(W / 2 + i * 140, H); g.stroke(); }
+      glow(W / 2, hz, W * .35, '255,79,216', .06); },
+    europa(){ for(const p of P){ p.t++; p.y += p.v * p.z * 1.4; p.x += Math.sin(p.t / 60 + p.a) * .5 * p.z - .25; if(p.y > H + 5){ p.y = -5; p.x = R(0, W + 100); } dot(p.x, p.y, p.r * p.z, `rgba(220,240,255,${.25 + .45 * p.z})`); } },
+    hive(){ for(const p of P){ p.t++; p.y -= p.v * .6; p.x += Math.sin(p.t / 30 + p.a) * .6; if(p.y < -30){ p.y = H + 30; p.x = R(0, W); }
+        const fl = .5 + .5 * Math.sin(p.t / 6 + p.a) * Math.sin(p.t / 17); glow(p.x, p.y, p.r * 10, '140,255,106', .05 + .08 * fl); dot(p.x, p.y, p.r * .6, `rgba(190,255,170,${.3 + .4 * fl})`); } },
+    ember(){ for(const p of P){ p.t++; p.y -= p.v * 1.6; p.x += Math.sin(p.t / 18 + p.a) * .9; if(p.y < -10){ p.y = H + 10; p.x = R(0, W); }
+        const life = Math.max(0, p.y / H); dot(p.x, p.y, p.r * .8, `rgba(255,${120 + 80 * life | 0},40,${.15 + .55 * life})`); if(p.r > 2.2) glow(p.x, p.y, 14, '255,122,47', .08 * life); }
+      const gr = g.createLinearGradient(0, H, 0, H * .6); gr.addColorStop(0, 'rgba(255,90,30,.10)'); gr.addColorStop(1, 'rgba(255,90,30,0)'); g.fillStyle = gr; g.fillRect(0, H * .6, W, H * .4); },
+    nebula(){ glow(W * .2, H * .3, W * .4, '120,90,255', .06); glow(W * .85, H * .75, W * .35, '255,120,200', .05);
+      for(const p of P){ p.t++; p.x -= p.z * .15; if(p.x < 0) p.x = W; dot(p.x, p.y, p.r * .5 * p.z, `rgba(230,230,255,${.2 + .6 * p.z * (.6 + .4 * Math.sin(p.t / (10 + p.z * 30)))})`); }
+      if(!DRAW.star && Math.random() < .006) DRAW.star = { x: R(W * .3, W), y: R(0, H * .4), l: 0 };
+      if(DRAW.star){ const s = DRAW.star; s.l += 14; const x = s.x - s.l, y = s.y + s.l * .45; const gr = g.createLinearGradient(x, y, x + 120, y - 54); gr.addColorStop(0, 'rgba(255,255,255,.8)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+        g.strokeStyle = gr; g.lineWidth = 1.6; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 120, y - 54); g.stroke(); if(s.l > 500) DRAW.star = null; } },
+    element(){ const c = ELC[el] || ELC.Arc;
+      for(const p of P){ p.t += 1;
+        if(el === 'Solar'){ p.y -= p.v * 1.4; p.x += Math.sin(p.t / 30) * .4; if(p.y < -10){ p.y = H + 10; p.x = R(0, W); } dot(p.x, p.y, p.r, `rgba(${c},${.18 + .2 * Math.sin(p.t / 12) ** 2})`); }
+        else if(el === 'Void'){ p.a += .004; p.x += Math.cos(p.a) * p.v * .5; p.y += Math.sin(p.a) * p.v * .5; if(p.x < -60) p.x = W + 60; if(p.x > W + 60) p.x = -60; if(p.y < -60) p.y = H + 60; if(p.y > H + 60) p.y = -60; glow(p.x, p.y, p.r * 22, c, .07); }
+        else if(el === 'Stasis'){ p.y += p.v * .5; p.x += Math.sin(p.t / 50) * .25; if(p.y > H + 10){ p.y = -10; p.x = R(0, W); } g.strokeStyle = `rgba(${c},.28)`; g.lineWidth = 1; const s = p.r * 2.2; g.beginPath(); for(let k = 0; k < 3; k++){ const an = k * 1.047 + p.t / 200; g.moveTo(p.x - Math.cos(an) * s, p.y - Math.sin(an) * s); g.lineTo(p.x + Math.cos(an) * s, p.y + Math.sin(an) * s); } g.stroke(); }
+        else if(el === 'Strand'){ p.x += Math.cos(p.a) * p.v; p.y += Math.sin(p.a) * p.v; p.a += Math.sin(p.t / 40) * .02; if(p.x < 0 || p.x > W || p.y < 0 || p.y > H){ p.x = R(0, W); p.y = R(0, H); } for(const q of P){ if(q === p) continue; const d = Math.hypot(p.x - q.x, p.y - q.y); if(d < 110){ g.strokeStyle = `rgba(${c},${.12 * (1 - d / 110)})`; g.beginPath(); g.moveTo(p.x, p.y); g.lineTo(q.x, q.y); g.stroke(); } } }
+        else { if(Math.random() < .006){ g.strokeStyle = `rgba(${c},.35)`; g.lineWidth = 1.2; g.beginPath(); let x = p.x, y = p.y; g.moveTo(x, y); for(let k = 0; k < 6; k++){ x += (Math.random() - .5) * 46; y += 14 + Math.random() * 18; g.lineTo(x, y); } g.stroke(); } p.x += (Math.random() - .5) * .8; p.y += (Math.random() - .5) * .8; g.fillStyle = `rgba(${c},.25)`; g.fillRect(p.x, p.y, 1.6, 1.6); } } }
+  };
+  function frame(ts){ raf = requestAnimationFrame(frame); if(ts - last < 33) return; last = ts; T++; g.clearRect(0, 0, W, H); const f = DRAW[key === 'element' || ELC[key] ? 'element' : key]; if(f) f(); }
+  const run = () => { const want = BG_ON && !REDUCED && FX_MODE !== 'off'; cv.style.display = want ? '' : 'none'; if(want && !raf) raf = requestAnimationFrame(frame); if(!want && raf){ cancelAnimationFrame(raf); raf = 0; } };
+  const choose = () => { const k = FX_MODE === 'element' ? el : (DRAW[theme] ? theme : 'tower'); const nk = FX_MODE === 'element' ? 'element:' + el : k; if(nk !== key){ key = FX_MODE === 'element' ? el : k; spawn(); } run(); };
+  size();
+  window.fxSet = e => { el = e || 'Arc'; if(FX_MODE === 'element') choose(); else if(!key) choose(); };
+  window.fxTheme = t => { theme = t === 'dark' ? 'tower' : t; choose(); };
+  window.fxMode = m => { FX_MODE = m; STORE.set('hunterFxMode', m); BG_ON = m !== 'off'; STORE.set('hunterFx', BG_ON); key = ''; choose(); };
+  window.fxToggle = on => window.fxMode(on ? (FX_MODE === 'off' ? 'theme' : FX_MODE) : 'off');
+  document.addEventListener('visibilitychange', () => { if(document.hidden && raf){ cancelAnimationFrame(raf); raf = 0; } else if(!document.hidden) run(); });
+  if(!BG_ON) FX_MODE = 'off';
+  window.fxTheme(document.documentElement.dataset.theme || 'dark');
 }
 /* ---------- custom accent color ---------- */
 let ACCENT = STORE.get('hunterAccent', '');
 const _setTint2 = setTint;
 setTint = function(el){ _setTint2(el); if(ACCENT) document.body.style.setProperty('--tint', ACCENT); if(window.fxSet) window.fxSet(el || 'Arc'); };
 { const m = document.getElementById('thmenu'); const add = () => { if(m.querySelector('.accrow')) return; m.insertAdjacentHTML('beforeend', `<div class="accrow"><label>Accent <input type="color" id="acc-in" value="${ACCENT || '#7cc4f2'}"></label><button type="button" class="btn sm" id="acc-reset">Use element colors</button></div>
-    <label class="accrow"><input type="checkbox" id="fx-in" ${BG_ON ? 'checked' : ''}> Animated background</label>`);
+    <label class="accrow">Background <select id="fx-in">${[['theme','Theme animation'],['element','By element'],['off','Off']].map(([k,l]) => `<option value="${k}" ${FX_MODE === k ? 'selected' : ''}>${l}</option>`).join('')}</select></label>`);
     m.querySelector('#acc-in').oninput = e => { ACCENT = e.target.value; STORE.set('hunterAccent', ACCENT); document.body.style.setProperty('--tint', ACCENT); };
     m.querySelector('#acc-reset').onclick = () => { ACCENT = ''; STORE.set('hunterAccent', ''); const r = RES.find(x => x.b.id === current); setTint(r ? r.b.el : 'Arc'); };
-    m.querySelector('#fx-in').onchange = e => window.fxToggle(e.target.checked); };
+    m.querySelector('#fx-in').onchange = e => window.fxMode(e.target.value); };
   new MutationObserver(add).observe(m, { childList: true }); add(); m.addEventListener('click', e => { if(e.target.closest('.accrow')) e.stopPropagation(); }, true); }
 
 /* ---------- Home tab: widgets you can drag around ---------- */
