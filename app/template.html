@@ -659,6 +659,27 @@ html.dense .card,html.dense section.blk{padding:12px 14px}html.dense .bitem{padd
 .palbox li[aria-selected=true]{background:color-mix(in srgb,var(--tint) 22%,var(--panel2))}.palbox .ct{flex:1}.palbox .kk{font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;color:var(--mute);width:48px;text-align:center;border:1px solid var(--line);border-radius:4px;padding:1px 0}
 .palh{padding:6px 14px 10px}
 @media (prefers-reduced-motion:reduce){button.ico.ex,.st.hit100,.st.hit200,.st.hit100 .meter i,.st.hit200 .meter i{animation:none!important}.flipin{transition:none}}
+/* ===== Weekly tab ===== */
+.wkhead{display:flex;justify-content:space-between;gap:16px;align-items:flex-end;flex-wrap:wrap}.wkhead > div:first-child{flex:1;min-width:280px}
+.wkbar{height:8px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:8px}.wkbar i{display:block;height:100%;background:linear-gradient(90deg,var(--good),#7ee0a1);border-radius:4px;transition:width 900ms var(--ease-out)}
+.wkg{margin:18px 0 8px;font-family:Oswald,Arial,sans-serif;font-weight:500;letter-spacing:.03em}
+.wkgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:12px}
+.wkc{position:relative;padding:14px 16px;transition:border-color var(--t-med),box-shadow var(--t-med),filter var(--t-med),transform var(--t-med) var(--ease-out)}
+.wkt{display:flex;gap:10px;align-items:center;margin-bottom:8px;padding-right:30px}.wkt img{width:36px;height:36px;border-radius:6px;background:var(--bg);flex:none}
+.wko{margin-top:6px}.wkol{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--mute)}.wkol span:last-child{white-space:nowrap;color:var(--ink)}
+.wkc.done{border:1px solid color-mix(in srgb,var(--good) 70%,transparent);box-shadow:0 0 0 1px color-mix(in srgb,var(--good) 25%,transparent),0 0 18px color-mix(in srgb,var(--good) 18%,transparent)}
+.wkc.done .wkt b{color:var(--good)}.wkc.done .cbar i{background:var(--good)}
+.wktick{position:absolute;top:10px;right:10px;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;background:var(--good);color:#06240f;box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 30%,transparent),0 0 16px color-mix(in srgb,var(--good) 55%,transparent);animation:tickGlow 2.6s ease-in-out infinite}
+.wktick path{stroke-dasharray:24;stroke-dashoffset:0}
+.wkc.fresh .wktick{animation:tickPop 700ms var(--ease-spring) both,tickGlow 2.6s 700ms ease-in-out infinite}.wkc.fresh .wktick path{animation:tickDraw 500ms 250ms var(--ease-out) both}
+@keyframes tickPop{0%{transform:scale(0) rotate(-40deg);opacity:0}70%{transform:scale(1.25) rotate(6deg);opacity:1}100%{transform:none}}
+@keyframes tickDraw{from{stroke-dashoffset:24}to{stroke-dashoffset:0}}
+@keyframes tickGlow{0%,100%{box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 30%,transparent),0 0 10px color-mix(in srgb,var(--good) 35%,transparent)}50%{box-shadow:0 0 0 4px color-mix(in srgb,var(--good) 40%,transparent),0 0 22px color-mix(in srgb,var(--good) 70%,transparent)}}
+nav.tabs > button[data-tab=weekly][data-badge]::before{content:attr(data-badge);position:absolute;top:-7px;right:-7px;left:auto;inset:auto -7px auto auto;transform:none;opacity:1;animation:none;background:#c0545a;color:#fff;font-size:10.5px;line-height:17px;min-width:17px;height:17px;border-radius:9px;padding:0 4px;text-align:center;z-index:2}
+nav.tabs > button[data-tab=weekly][data-badge="✓"]::before{background:var(--good);color:#06240f}
+nav.tabs > button[data-tab=weekly]{overflow:visible}
+@media (hover:hover){.wkc:hover{filter:brightness(1.12);transform:translateY(-2px)}}
+@media (prefers-reduced-motion:reduce){.wktick,.wkc.fresh .wktick,.wkc.fresh .wktick path{animation:none!important}}
 /* ===== extra themes ===== */
 .thwrap{position:relative;align-self:center}
 .thmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:60;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px;min-width:230px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
@@ -746,6 +767,7 @@ header.top{position:relative;z-index:50}
   <button role="tab" data-tab="inventory" aria-selected="false">What to keep</button>
   <button role="tab" data-tab="cleanup" aria-selected="false">Vault cleanup</button>
   <button role="tab" data-tab="missing" aria-selected="false">Meta &amp; farming</button>
+  <button role="tab" data-tab="weekly" aria-selected="false">Weekly</button>
   <button role="tab" data-tab="week" aria-selected="false">This week</button>
   <button role="tab" data-tab="weapons" aria-selected="false">Weapons</button>
   <button role="tab" data-tab="history" aria-selected="false">History</button>
@@ -765,6 +787,7 @@ header.top{position:relative;z-index:50}
   <div id="tab-cleanup" hidden></div>
   <div id="tab-week" hidden></div>
   <div id="tab-home" hidden></div>
+  <div id="tab-weekly" hidden></div>
   <div id="tab-weapons" hidden></div>
   <div id="tab-history" hidden></div>
   <div id="tab-missing" hidden></div>
@@ -2000,6 +2023,7 @@ const BG = {
  'Weapons for your build':'Оръжия за билда ти','in the build':'в билда','recommended':'препоръчано','element':'елемент','god roll':'god roll','wish-list roll':'добър рол','trash roll':'лош рол','No weapons in this slot.':'Няма оръжия в този слот.',
  'Home':'Начало','Wearing now':'Носиш сега','Postmaster':'Пощальон','Pinned builds':'Закачени билдове','New items':'Нови предмети','Materials':'Материали','Titles':'Титли','Compare':'Сравни','Clear':'Изчисти','Champions and shields this week':'Шампиони и щитове тази седмица','Vendors this week':'Търговци тази седмица','Builds for raids and dungeons':'Билдове за рейдове и подземия','Add clear':'Чистене на врагове','Survive / support':'Оцеляване / подкрепа','⤢ Large view':'⤢ Голям изглед','Animated background':'Анимиран фон','Use element colors':'Цветове по елемент','ready to claim':'готово за взимане',
  'Armor mods':'Модове за бронята','Save the look I wear now':'Запази визията, която нося','Forget look':'Забрави визията','Path to the next Power level':'Път до следващото ниво сила','Armor sets':'Сетове броня','Fireteam':'Отбор','Copy my code':'Копирай моя код','Text size':'Размер на текста','Compact layout':'Сбит изглед','Nothing found.':'Нищо не е намерено.',
+ 'Weekly':'Седмични','Left to do':'Остават','Done':'Готови','Weekly milestones':'Седмични задачи','Raids':'Рейдове','Dungeons':'Подземия','Orders':'Поръчки','Bounties':'Задачи с награда',
  'Lock':'Заключи','Close':'Затвори','Perks':'Перкове','Stats':'Статове','Mods':'Модове','Intrinsic':'Вградено','Masterwork':'Мастъруърк'
 };
 const BG_RE = [
@@ -2645,6 +2669,38 @@ applyLook();
   document.addEventListener('keydown', e => { if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){ e.preventDefault(); open(); } });
   { const sb = document.querySelector('.search, #q, input[type=search]'); if(sb) sb.placeholder = (sb.placeholder || 'Search items or perks…') + '  (Ctrl+K for everything)'; }
 }
+
+/* ---------- Weekly tab: what is left this week, with a green tick when done ---------- */
+let TASKS = (DATA.weekly && DATA.weekly.tasks) ? { at: DATA.weekly.at, tasks: DATA.weekly.tasks } : null, WK_FILTER = STORE.get('hunterWkFilter', 'open'), WK_DONE_SEEN = new Set(STORE.get('hunterWkSeen', []));
+const cleanObj = s => (s || '').replace(/\[[^\]]*\]\s*/g, '').replace(/:\s*$/, '').trim() || 'Progress';
+const fmtNum = n => n >= 10000 ? (n / 1000).toLocaleString('en-US', { maximumFractionDigits: 0 }) + 'k' : n.toLocaleString('en-US');
+function timeLeft(iso){ if(!iso) return ''; const ms = new Date(iso) - Date.now(); if(ms <= 0) return 'expired'; const d = Math.floor(ms / 864e5), h = Math.floor(ms % 864e5 / 36e5); return d ? `${d}d ${h}h left` : `${h}h ${Math.floor(ms % 36e5 / 6e4)}m left`; }
+function renderWeekly(){
+  const root = document.getElementById('tab-weekly'); if(!root) return;
+  if(!TASKS || !TASKS.tasks){ root.innerHTML = `<div class="card"><h3>Weekly</h3><p class="lead">Your weekly activities appear after the next refresh from DIM.</p></div>`; return; }
+  const T = TASKS.tasks.slice().sort((a,b) => a.done - b.done || ['Raid','Dungeon','Milestone'].indexOf(a.kind) - ['Raid','Dungeon','Milestone'].indexOf(b.kind));
+  const done = T.filter(t => t.done).length, pct = T.length ? Math.round(100 * done / T.length) : 0;
+  const reset = (() => { const n = new Date(); const r = new Date(Date.UTC(n.getUTCFullYear(), n.getUTCMonth(), n.getUTCDate(), 17)); while(r.getUTCDay() !== 2 || r <= n) r.setUTCDate(r.getUTCDate() + 1); return r.toISOString(); })();
+  const vis = T.filter(t => WK_FILTER === 'all' || (WK_FILTER === 'done' ? t.done : !t.done));
+  const groups = {}; vis.forEach(t => { const g = /Raid|Dungeon|Milestone/.test(t.kind) ? (t.kind === 'Milestone' ? 'Weekly milestones' : t.kind + 's') : /Order/.test(t.kind) ? 'Orders' : 'Bounties'; (groups[g] = groups[g] || []).push(t); });
+  root.innerHTML = `<div class="card wkhead"><div><h3>Weekly</h3><p class="lead"><b>${done} of ${T.length}</b> done · resets in ${timeLeft(reset).replace(' left', '')} · live from your profile, updated ${new Date(TASKS.at).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</p>
+      <div class="wkbar"><i style="width:${pct}%"></i></div></div>
+    <div class="actchips" role="group" aria-label="Show">${[['open','Left to do'],['done','Done'],['all','All']].map(([k, l]) => `<button type="button" class="chip act ${WK_FILTER === k ? 'on' : ''}" data-wkf="${k}" aria-pressed="${WK_FILTER === k}">${l} (${k === 'open' ? T.length - done : k === 'done' ? done : T.length})</button>`).join('')}</div></div>
+    ${Object.keys(groups).length ? ['Raids','Dungeons','Weekly milestones','Bounties','Orders'].filter(g => groups[g]).map(g => [g, groups[g]]).map(([g, L]) => `<h3 class="wkg">${g}</h3><div class="wkgrid">${L.map(t => { const fresh = t.done && !WK_DONE_SEEN.has(t.n);
+      return `<div class="card wkc ${t.done ? 'done' : ''} ${fresh ? 'fresh' : ''}">${t.done ? '<span class="wktick" aria-label="Done"><svg viewBox="0 0 24 24" width="18" height="18"><path d="M5 12.5l4.2 4.2L19 7" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' : ''}
+        <div class="wkt">${t.icon ? `<img src="https://www.bungie.net${esc(t.icon)}" alt="" loading="lazy">` : ''}<div><b>${esc(t.n)}</b><div class="perk">${esc(t.kind)}${t.end ? ' · ' + timeLeft(t.end) : ''}</div></div></div>
+        ${t.prog.map(p => { const pr = Math.min(100, Math.round(100 * p.have / (p.need || 1))); return `<div class="wko"><div class="wkol"><span>${esc(cleanObj(p.d))}</span><span>${p.done ? '✓' : `${fmtNum(p.have)} / ${fmtNum(p.need)}`}</span></div><div class="cbar"><i style="width:${p.done ? 100 : pr}%"></i></div></div>`; }).join('')}</div>`; }).join('')}</div>`).join('')
+      : `<div class="card"><p class="lead">${WK_FILTER === 'open' ? '🎉 Everything is done for this week.' : 'Nothing here yet.'}</p></div>`}`;
+  root.querySelectorAll('[data-wkf]').forEach(b => b.onclick = () => { WK_FILTER = b.dataset.wkf; STORE.set('hunterWkFilter', WK_FILTER); renderWeekly(); });
+  if(!document.getElementById('tab-weekly').hidden){ T.filter(t => t.done).forEach(t => WK_DONE_SEEN.add(t.n)); STORE.set('hunterWkSeen', [...WK_DONE_SEEN].slice(-100)); }
+  const btn = document.querySelector('nav.tabs > button[data-tab=weekly]'); if(btn) btn.dataset.badge = T.length - done ? String(T.length - done) : '✓';
+}
+const _renderExtras6 = renderExtras; renderExtras = function(){ _renderExtras6(); renderWeekly(); };
+if(IS_APP && window.hunterApp.onTasks) window.hunterApp.onTasks(t => { const before = TASKS ? new Set(TASKS.tasks.filter(x => x.done).map(x => x.n)) : null; TASKS = t; renderWeekly();
+  if(before && t.tasks.some(x => x.done && !before.has(x.n))) playSound('chime'); });
+document.addEventListener('click', e => { const b = e.target.closest('nav.tabs > button[data-tab=weekly]'); if(b) setTimeout(renderWeekly, 450); });
+// new week: forget which ticks were already shown
+{ const wk = weekKey(new Date()); if(STORE.get('hunterWkSeenWeek', 0) !== wk){ WK_DONE_SEEN = new Set(); STORE.set('hunterWkSeen', []); STORE.set('hunterWkSeenWeek', wk); } }
 
 renderAll();
 

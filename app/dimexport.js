@@ -253,7 +253,8 @@ async function dimWeekly() {
   }
   // modifier descriptions for champion and shield detection
   for (const m of milestones) m.modd = [...new Set((Object.values(cm).find(x => (ms[x.milestoneHash]?.displayProperties?.name || '') === m.n)?.activities || []).flatMap(a => (a.modifierHashes || []).map(h => (mod[h]?.displayProperties?.name || '') + ': ' + (mod[h]?.displayProperties?.description || ''))))].join(' | ').slice(0, 1500);
-  return { at: new Date().toISOString(), milestones, xur, vendors };
+  let tasks = null; try { tasks = (await dimTasks())?.tasks || null; } catch (e) {}
+  return { at: new Date().toISOString(), milestones, xur, vendors, tasks };
 }
 
 // light read used every few minutes: am I in an activity right now?
@@ -268,4 +269,41 @@ function dimActivity() {
       return { in: 1, players: tr.currentActivity.numberOfPlayers || (tr.partyMembers || []).length || 1, opp: tr.currentActivity.numberOfOpponents || 0, start: tr.currentActivity.startTime || null, party: (tr.partyMembers || []).length }; }
     if (x && x.child) q.push(x.child); if (x && x.sibling) q.push(x.sibling); }
   return null;
+}
+
+// weekly checklist from Bungie: milestones with challenges or rewards, weekly orders and bounties
+async function dimTasks() {
+  let fiber = null;
+  for (const e of document.querySelectorAll('*')) { const k = Object.keys(e).find(k => k.startsWith('__reactFiber$')); if (k) { fiber = e[k]; break; } }
+  let root = fiber; while (root && root.return) root = root.return;
+  let store = null; const q = [root]; let c = 0;
+  while (q.length && c < 20000) { const x = q.shift(); c++; const p = x && x.memoizedProps; if (p && p.store && p.store.getState) { store = p.store; break; } if (x && x.child) q.push(x.child); if (x && x.sibling) q.push(x.sibling); }
+  if (!store) return null;
+  const state = store.getState();
+  const db = await new Promise((res, rej) => { const r = indexedDB.open('keyval-store'); r.onsuccess = () => res(r.result); r.onerror = rej; });
+  const get = k => new Promise(r => { const t = db.transaction('keyval').objectStore('keyval').get(k); t.onsuccess = () => r(t.result); });
+  const ms = await get('d2-manifest-Milestone'), act = await get('d2-manifest-Activity'), ob = await get('d2-manifest-Objective'), ii = await get('d2-manifest-InventoryItem');
+  const pr = state.inventory.profileResponse; const hunter = state.inventory.stores.find(s => s.classType === 1 && !s.isVault); if (!pr || !hunter) return null;
+  const cm = (pr.characterProgressions?.data?.[hunter.id] || {}).milestones || {};
+  const tasks = [], seen = new Set();
+  for (const m of Object.values(cm)) {
+    const d = ms[m.milestoneHash] || {}; const n = d.displayProperties?.name; if (!n || seen.has(n)) continue;
+    const ch = (m.activities || []).flatMap(a => (a.challenges || []).map(cc => ({ d: ob[cc.objective.objectiveHash]?.progressDescription || act[a.activityHash]?.displayProperties?.name || '', have: cc.objective.progress || 0, need: cc.objective.completionValue || 1, done: !!cc.objective.complete })));
+    const uniq = []; ch.forEach(x => { if (!uniq.some(u => u.d === x.d && u.need === x.need)) uniq.push(x); });
+    const ents = (m.rewards || []).flatMap(r => r.entries || []); const rw = ents.length ? [{ d: 'Rewards earned', have: ents.filter(e => e.earned).length, need: ents.length, done: ents.every(e => e.earned) }] : [];
+    const prog = uniq.length ? uniq : rw; if (!prog.length) continue;
+    seen.add(n);
+    tasks.push({ n, kind: prog.some(x => /Raid completed|encounters/i.test(x.d)) ? 'Raid' : /Dungeon/i.test(prog.map(x => x.d).join(' ')) ? 'Dungeon' : 'Milestone',
+      desc: (d.displayProperties?.description || '').slice(0, 160), icon: d.displayProperties?.icon || '', prog, done: prog.every(x => x.done), end: m.endDate || null });
+  }
+  const week = Date.now() + 8 * 864e5;
+  for (const i of hunter.items) {
+    if (!(i.bucket?.name === 'Quests' || i.bucket?.name === 'Orders')) continue;
+    const exp = i.pursuit?.expiration?.expirationDate ? new Date(i.pursuit.expiration.expirationDate).getTime() : null;
+    const weekly = i.bucket.name === 'Orders' || /Bounty|Order|Weekly/i.test(i.typeName || '') || (exp && exp < week);
+    if (!weekly || !(i.objectives || []).length) continue;
+    const prog = i.objectives.map(o => ({ d: ob[o.objectiveHash]?.progressDescription || '', have: o.progress || 0, need: o.completionValue || 1, done: !!o.complete }));
+    tasks.push({ n: i.name, kind: i.typeName || 'Bounty', desc: (ii[i.hash]?.displayProperties?.description || '').slice(0, 160), icon: i.icon || '', prog, done: !!i.complete || prog.every(x => x.done), end: exp ? new Date(exp).toISOString() : null });
+  }
+  return { at: new Date().toISOString(), tasks };
 }

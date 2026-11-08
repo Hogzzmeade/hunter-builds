@@ -230,6 +230,9 @@ async function pollActivity() {
     const src = fs.readFileSync(path.join(__dirname, 'app', 'dimexport.js'), 'utf8');
     const a = await dimWin.webContents.executeJavaScript(`(() => { ${src}\n return dimActivity(); })()`, true);
     if (!a) return;
+    try { const t = await dimWin.webContents.executeJavaScript(`(async () => { ${src}\n return await dimTasks(); })()`, true);
+      if (t && t.tasks) { const prevT = readJson('tasks.json', null); fs.writeFileSync(file('tasks.json'), JSON.stringify(t)); for (const w of [mainWin, compactWin]) if (w && !w.isDestroyed()) w.webContents.send('tasks', t);
+        if (prevT && prevT.tasks) { const was = new Set(prevT.tasks.filter(x => x.done).map(x => x.n)); const now = t.tasks.filter(x => x.done && !was.has(x.n)); if (now.length) notify('Weekly done ✓', now.map(x => x.n).join(', ')); } } } catch (e) { log('tasks poll: ' + e.message); }
     const kind = !a.in ? 'none' : a.opp > 0 ? 'PvP' : a.players >= 4 ? 'Raid' : a.players >= 2 ? 'GM' : 'Solo';
     const act = Object.assign({ kind, t: Date.now() }, a);
     const changed = !lastActivity || lastActivity.kind !== kind; lastActivity = act;
@@ -403,6 +406,7 @@ ipcMain.on('open-main', () => { if (mainWin) { mainWin.show(); mainWin.focus(); 
 ipcMain.on('set-hotkeys', (_e, list) => setHotkeys(list));
 ipcMain.on('rec-weapons', (_e, list) => { try { fs.writeFileSync(file('recweapons.json'), JSON.stringify(list || [])); } catch (e) {} });
 ipcMain.handle('activity', () => lastActivity);
+ipcMain.handle('tasks', () => readJson('tasks.json', null));
 ipcMain.handle('backup', (_e, d) => backup(d));
 ipcMain.handle('copy-image', (_e, url) => { try { clipboard.writeImage(nativeImage.createFromDataURL(url)); return true; } catch (e) { return false; } });
 // the shaders and ornaments you wear now, per armor bucket, for DIM's modsByBucket

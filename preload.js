@@ -11,6 +11,7 @@ contextBridge.exposeInMainWorld('hunterApp', {
   setHotkeys: l => ipcRenderer.send('set-hotkeys', l),
   setRecWeapons: l => ipcRenderer.send('rec-weapons', l),
   getLook: () => ipcRenderer.invoke('get-look'),
+  onTasks: cb => { ipcRenderer.on('tasks', (_e, t) => cb(t)); ipcRenderer.invoke('tasks').then(t => t && cb(t)); },
   weekStatus: s => ipcRenderer.send('week-status', s),
   onActivity: cb => { ipcRenderer.on('activity', (_e, a) => cb(a)); ipcRenderer.invoke('activity').then(a => a && cb(a)); },
   backup: d => ipcRenderer.invoke('backup', d),
