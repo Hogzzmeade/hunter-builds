@@ -1,7 +1,7 @@
 // Hunter Builds — desktop app
 // One window shows the builds page; a second (hidden) window runs DIM with your own sign-in.
 // The app reads your inventory straight from DIM, so it needs nothing else to stay up to date.
-const { app, BrowserWindow, ipcMain, shell, Notification, nativeImage, session, Tray, Menu, clipboard, net, globalShortcut } = require('electron');
+const { app, BrowserWindow, ipcMain, shell, Notification, nativeImage, session, Tray, Menu, clipboard, net, globalShortcut, screen } = require('electron');
 const os = require('os');
 const path = require('path');
 let autoUpdater = null; try { ({ autoUpdater } = require('electron-updater')); } catch (e) { /* not bundled in dev */ }
@@ -11,7 +11,7 @@ const DIM_HOME = 'https://app.destinyitemmanager.com/';
 const REFRESH_EVERY = 6 * 60 * 60 * 1000;
 const UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/142.0.0.0 Safari/537.36';
 
-let compactWin = null, hotkeys = [], lastActivity = null;
+let compactWin = null, overlayWin = null, overlayInteract = false, hotkeys = [], lastActivity = null;
 let mainWin = null, dimWin = null, tray = null, refreshing = false, busy = Promise.resolve(), lastStatus = '';
 const HIDDEN_START = process.argv.includes('--hidden');
 let updateReady = null;
@@ -56,7 +56,7 @@ function diagnostics() {
 }
 function status(msg) {
   lastStatus = msg; log('status: ' + msg);
-  for (const w of [mainWin, compactWin]) if (w && !w.isDestroyed()) w.webContents.send('status', msg);
+  for (const w of [mainWin, compactWin, overlayWin]) if (w && !w.isDestroyed()) w.webContents.send('status', msg);
 }
 
 /* ---------- windows ---------- */
@@ -97,6 +97,35 @@ function createDim() {
   dimWin.loadURL(DIM_HOME);
 }
 function showDim(url) { if (url) dimWin.loadURL(url); dimWin.show(); dimWin.focus(); }
+/* ---------- in-game overlay: transparent, always on top, click-through; no hooks into the game ---------- */
+function overlayCfg() { return Object.assign({ corner: 'tr', scale: 1, opacity: 0.92 }, readJson('settings.json', {}).overlay || {}); }
+function placeOverlay() {
+  if (!overlayWin || overlayWin.isDestroyed()) return; const c = overlayCfg(); const wa = screen.getPrimaryDisplay().workArea;
+  const w = Math.round(340 * c.scale), h = Math.round(640 * c.scale), m = 16;
+  const x = c.corner.includes('l') ? wa.x + m : wa.x + wa.width - w - m, y = c.corner.includes('t') ? wa.y + m + 30 : wa.y + wa.height - h - m;
+  overlayWin.setBounds({ x, y, width: w, height: h }); overlayWin.setOpacity(Math.max(0.3, Math.min(1, c.opacity)));
+  overlayWin.webContents.setZoomFactor(c.scale);
+}
+function setOverlayInteract(on) {
+  overlayInteract = !!on; if (!overlayWin || overlayWin.isDestroyed()) return;
+  overlayWin.setIgnoreMouseEvents(!overlayInteract, { forward: true }); overlayWin.setFocusable(overlayInteract);
+  if (overlayInteract) overlayWin.focus(); overlayWin.webContents.send('overlay-mode', { interact: overlayInteract, cfg: overlayCfg() });
+}
+function toggleOverlay(force) {
+  if (overlayWin && !overlayWin.isDestroyed()) { const show = force != null ? force : !overlayWin.isVisible(); if (show) { overlayWin.showInactive(); placeOverlay(); } else overlayWin.hide(); saveSettings({ overlayOn: show }); return; }
+  if (force === false || !fs.existsSync(file('page.html'))) return;
+  overlayWin = new BrowserWindow({ width: 340, height: 560, frame: false, transparent: true, backgroundColor: '#00000000', resizable: false, movable: false, minimizable: false, maximizable: false,
+    skipTaskbar: true, focusable: false, hasShadow: false, show: false, alwaysOnTop: true, title: 'Hunter Builds overlay',
+    webPreferences: { preload: path.join(__dirname, 'preload.js'), contextIsolation: true, sandbox: false, backgroundThrottling: false } });
+  overlayWin.setAlwaysOnTop(true, 'screen-saver'); overlayWin.setVisibleOnAllWorkspaces(true, { visibleOnFullScreen: true });
+  overlayWin.setIgnoreMouseEvents(true, { forward: true });
+  overlayWin.webContents.setWindowOpenHandler(({ url }) => { if (url.startsWith(DIM_HOME)) showDim(url); else if (/^https?:/.test(url)) shell.openExternal(url); return { action: 'deny' }; });
+  overlayWin.loadFile(file('page.html'), { hash: 'overlay' });
+  overlayWin.once('ready-to-show', () => { placeOverlay(); overlayWin.showInactive(); });
+  overlayWin.webContents.on('did-finish-load', () => overlayWin.webContents.send('overlay-mode', { interact: overlayInteract, cfg: overlayCfg() }));
+  overlayWin.on('closed', () => { overlayWin = null; overlayInteract = false; });
+  saveSettings({ overlayOn: true });
+}
 // small always-on-top window with the current build and an Equip button
 function openCompact() {
   if (compactWin && !compactWin.isDestroyed()) { compactWin.show(); compactWin.focus(); return; }
@@ -125,6 +154,7 @@ function renderPage() {
   fs.writeFileSync(file('page.html'), html);
   mainWin.loadFile(file('page.html'));
   if (compactWin && !compactWin.isDestroyed()) compactWin.loadFile(file('page.html'), { hash: 'compact' });
+  if (overlayWin && !overlayWin.isDestroyed()) overlayWin.loadFile(file('page.html'), { hash: 'overlay' });
 }
 
 /* ---------- export from DIM ---------- */
@@ -231,12 +261,12 @@ async function pollActivity() {
     const a = await dimWin.webContents.executeJavaScript(`(() => { ${src}\n return dimActivity(); })()`, true);
     if (!a) return;
     try { const t = await dimWin.webContents.executeJavaScript(`(async () => { ${src}\n return await dimTasks(); })()`, true);
-      if (t && t.tasks) { const prevT = readJson('tasks.json', null); fs.writeFileSync(file('tasks.json'), JSON.stringify(t)); for (const w of [mainWin, compactWin]) if (w && !w.isDestroyed()) w.webContents.send('tasks', t);
+      if (t && t.tasks) { const prevT = readJson('tasks.json', null); fs.writeFileSync(file('tasks.json'), JSON.stringify(t)); for (const w of [mainWin, compactWin, overlayWin]) if (w && !w.isDestroyed()) w.webContents.send('tasks', t);
         if (prevT && prevT.tasks) { const was = new Set(prevT.tasks.filter(x => x.done).map(x => x.n)); const now = t.tasks.filter(x => x.done && !was.has(x.n)); if (now.length) notify('Weekly done ✓', now.map(x => x.n).join(', ')); } } } catch (e) { log('tasks poll: ' + e.message); }
     const kind = !a.in ? 'none' : a.opp > 0 ? 'PvP' : a.players >= 4 ? 'Raid' : a.players >= 2 ? 'GM' : 'Solo';
     const act = Object.assign({ kind, t: Date.now() }, a);
     const changed = !lastActivity || lastActivity.kind !== kind; lastActivity = act;
-    if (changed) { log('activity: ' + kind); for (const w of [mainWin, compactWin]) if (w && !w.isDestroyed()) w.webContents.send('activity', act); }
+    if (changed) { log('activity: ' + kind); for (const w of [mainWin, compactWin, overlayWin]) if (w && !w.isDestroyed()) w.webContents.send('activity', act); }
   } catch (e) { log('activity poll failed: ' + e.message); }
 }
 /* ---------- global hotkeys: Ctrl+Alt+1..3 equip pinned builds ---------- */
@@ -244,6 +274,7 @@ function setHotkeys(list) {
   hotkeys = (list || []).slice(0, 3);
   globalShortcut.unregisterAll();
   jumpList();
+  try { globalShortcut.register('CommandOrControl+Alt+O', () => toggleOverlay()); globalShortcut.register('CommandOrControl+Alt+I', () => { if (!overlayWin || !overlayWin.isVisible()) toggleOverlay(true); setOverlayInteract(!overlayInteract); }); } catch (e) { log('overlay keys: ' + e.message); }
   hotkeys.forEach((h, i) => { try { globalShortcut.register(`CommandOrControl+Alt+${i + 1}`, () => { notify('Hunter Builds', `Equipping ${h.name}…`); equip(h.payload).then(r => notify('Hunter Builds', r.ok ? `Equipped ${h.name}.` : `Could not equip: ${r.msg}`)); }); } catch (e) { log('hotkey failed: ' + e.message); } });
 }
 /* ---------- backup of DIM loadouts, tags and saved builds ---------- */
@@ -296,6 +327,7 @@ function buildTrayMenu() {
     { label: 'Refresh now', click: () => refresh('tray') },
     { label: 'Open DIM', click: () => showDim() },
     { label: 'Compact window', click: () => openCompact() },
+    { label: 'In-game overlay (Ctrl+Alt+O)', click: () => toggleOverlay() },
     { type: 'separator' },
     { label: 'Start with Windows', type: 'checkbox', checked: !!app.getLoginItemSettings({ args: ['--hidden'] }).openAtLogin, click: m => setStartup(m.checked) },
     { type: 'separator' },
@@ -402,6 +434,9 @@ ipcMain.on('install-update', () => installUpdate());
 ipcMain.handle('equip', (_e, p) => equip(p));
 ipcMain.handle('bulk', (_e, p) => bulk(p));
 ipcMain.on('compact', () => openCompact());
+ipcMain.on('overlay-toggle', () => toggleOverlay());
+ipcMain.on('overlay-interact', (_e, on) => setOverlayInteract(on));
+ipcMain.on('overlay-cfg', (_e, c) => { const cur = overlayCfg(); saveSettings({ overlay: Object.assign(cur, c || {}) }); placeOverlay(); if (overlayWin && !overlayWin.isDestroyed()) overlayWin.webContents.send('overlay-mode', { interact: overlayInteract, cfg: overlayCfg() }); });
 ipcMain.on('open-main', () => { if (mainWin) { mainWin.show(); mainWin.focus(); } });
 ipcMain.on('set-hotkeys', (_e, list) => setHotkeys(list));
 ipcMain.on('rec-weapons', (_e, list) => { try { fs.writeFileSync(file('recweapons.json'), JSON.stringify(list || [])); } catch (e) {} });
@@ -452,6 +487,9 @@ app.whenReady().then(() => {
   let wasOnline = net.isOnline(); setInterval(() => { const on = net.isOnline(); if (on && !wasOnline) { log('back online'); refresh('online'); } wasOnline = on; }, 30 * 1000);
   setInterval(pollActivity, 3 * 60 * 1000);
   jumpList(); handleArgs(process.argv);
+  setHotkeys(hotkeys);
+  if (readJson('settings.json', {}).overlayOn) setTimeout(() => toggleOverlay(true), 4000);
+  screen.on('display-metrics-changed', placeOverlay);
   // Xûr arrives Friday 17:00 UTC: refresh soon after so the notification comes on time
   setInterval(() => { const n = new Date(); if (n.getUTCDay() === 5 && n.getUTCHours() === 17 && n.getUTCMinutes() >= 10 && n.getUTCMinutes() < 20) refresh('xur'); }, 10 * 60 * 1000);
   log(`start ${app.getVersion()}`);

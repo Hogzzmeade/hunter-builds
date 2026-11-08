@@ -678,6 +678,27 @@ nav.tabs > button[data-tab=weekly][data-badge="✓"]::before{background:var(--go
 nav.tabs > button[data-tab=weekly]{overflow:visible}
 @media (hover:hover){.wkc:hover{filter:brightness(1.12);transform:translateY(-2px)}}
 @media (prefers-reduced-motion:reduce){.wktick,.wkc.fresh .wktick,.wkc.fresh .wktick path{animation:none!important}}
+/* ===== in-game overlay ===== */
+html.ovlmode,html.ovlmode body{background:transparent!important;overflow:hidden}
+body.overlay .wrap,body.overlay #fxbg,body.overlay #splash,body.overlay #compact,body.overlay #toast,body.overlay #actbar{display:none!important}
+#ovl{display:none}
+body.overlay #ovl{display:flex;flex-direction:column;gap:8px;padding:10px;height:100vh;overflow:hidden;box-sizing:border-box;font-size:13px;user-select:none}
+#ovl > div{background:color-mix(in srgb,var(--panel) 86%,transparent);border:1px solid color-mix(in srgb,var(--tint) 30%,var(--line));border-radius:10px;padding:8px 10px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+#ovl .ovh{display:flex;justify-content:space-between;align-items:center;padding:6px 10px;font-family:Oswald,Arial,sans-serif;letter-spacing:.05em}
+#ovl .ovh b{color:var(--tint)}
+#ovl.interact > div{border-color:var(--tint)}
+#ovl .ovt{display:flex;gap:8px;align-items:center}#ovl .ovt b{display:block;font-size:14px;line-height:1.2}#ovl .ovt .perk{font-size:11.5px}
+#ovl .ovst{display:grid;grid-template-columns:repeat(6,1fr);gap:4px;margin-top:6px}#ovl .ovst div{background:var(--bg);border-radius:5px;text-align:center;padding:3px 0}#ovl .ovst span{display:block;font-size:9.5px;color:var(--mute)}#ovl .ovst b{font-size:13px}#ovl .ovst .hi b{color:var(--tint)}
+#ovl .ovk{margin-top:5px;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ovl .ovact{border-color:var(--tint);box-shadow:0 0 14px color-mix(in srgb,var(--tint) 30%,transparent)}
+#ovl .ovwh{display:flex;justify-content:space-between;align-items:baseline}.ovok{color:var(--good);font-weight:600}
+#ovl .wkbar{height:5px;margin:5px 0 4px}
+#ovl .ovw{display:grid;grid-template-columns:1fr auto;gap:1px 8px;margin-top:5px;font-size:12px}#ovl .ovw .cbar{grid-column:1/-1;height:3px;margin-top:2px}
+#ovl .ovw.done .ovwn{color:var(--good)}#ovl .ovw.done .cbar i{background:var(--good)}
+#ovl .ovtick{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:var(--good);color:#06240f;font-size:10px;font-weight:700;margin-right:5px;box-shadow:0 0 8px color-mix(in srgb,var(--good) 60%,transparent)}
+#ovl .ovp{display:flex;gap:8px;align-items:center;margin-top:4px;font-size:12px}#ovl kbd{font-family:"IBM Plex Mono",monospace;font-size:10.5px;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:var(--tint)}
+#ovl .ovf{text-align:center;font-size:10.5px;background:transparent!important;border:0!important;box-shadow:none!important;padding:2px!important;text-shadow:0 1px 3px #000}
+#ovl .ovset{display:flex;flex-direction:column;gap:6px}#ovl .ovrow{display:flex;gap:5px;align-items:center;flex-wrap:wrap;font-size:12px}#ovl .ovrow input[type=range]{flex:1}
 /* ===== extra themes ===== */
 .thwrap{position:relative;align-self:center}
 .thmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:60;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px;min-width:230px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
@@ -791,7 +812,7 @@ html{--pop:#171c33;--pop2:#0f1428;--popline:#343d63}
 </head>
 <body>
 <div id="splash" aria-hidden="true"><svg viewBox="0 0 120 120" width="120" height="120"><g class="gh"><polygon points="60,8 74,40 60,34 46,40" /><polygon points="60,112 74,80 60,86 46,80" /><polygon points="8,60 40,46 34,60 40,74" /><polygon points="112,60 80,46 86,60 80,74" /><polygon points="22,22 46,36 40,40 36,46" /><polygon points="98,22 84,46 80,40 74,36" /><polygon points="22,98 36,74 40,80 46,84" /><polygon points="98,98 74,84 80,80 84,74" /></g><circle class="eye" cx="60" cy="60" r="11"/><circle class="eye2" cx="60" cy="60" r="4"/></svg><div class="spt">Hunter Builds</div></div>
-<script>try{ if(sessionStorage.getItem('hbSplash') || location.hash === '#compact' || matchMedia('(prefers-reduced-motion: reduce)').matches){ document.getElementById('splash').remove(); } else sessionStorage.setItem('hbSplash','1'); }catch(e){ document.getElementById('splash').remove(); }</script>
+<script>try{ if(sessionStorage.getItem('hbSplash') || location.hash === '#compact' || location.hash === '#overlay' || matchMedia('(prefers-reduced-motion: reduce)').matches){ document.getElementById('splash').remove(); } else sessionStorage.setItem('hbSplash','1'); }catch(e){ document.getElementById('splash').remove(); }</script>
 <div class="wrap">
 <header class="top">
   <h1>My Hunter<small>The best builds from what you have in your inventory and vault</small></h1>
@@ -2077,6 +2098,7 @@ const BG = {
  'Armor mods':'Модове за бронята','Save the look I wear now':'Запази визията, която нося','Forget look':'Забрави визията','Path to the next Power level':'Път до следващото ниво сила','Armor sets':'Сетове броня','Fireteam':'Отбор','Copy my code':'Копирай моя код','Text size':'Размер на текста','Compact layout':'Сбит изглед','Nothing found.':'Нищо не е намерено.',
  'Weekly':'Седмични','Left to do':'Остават','Done':'Готови','Weekly milestones':'Седмични задачи','Raids':'Рейдове','Dungeons':'Подземия','Orders':'Поръчки','Bounties':'Задачи с награда',
  'Neomuna':'Неомуна','Europa':'Европа','Hive':'Кошер','Ember':'Жарава','Nebula':'Мъглявина','Neon city, moving grid':'Неонов град, движеща се мрежа','Ice blue, falling snow':'Леденосиньо, падащ сняг','Moon dark, green wisps':'Тъмна луна, зелени духчета','Forge red, rising embers':'Червено като ковачница, искри','Deep space, shooting stars':'Дълбок космос, падащи звезди','Background':'Фон','Theme animation':'Анимация на темата','By element':'По елемент','Off':'Изключен',
+ 'In-game overlay':'Overlay в играта','Quick equip':'Бързо екипиране','Hide overlay':'Скрий overlay',
  'Lock':'Заключи','Close':'Затвори','Perks':'Перкове','Stats':'Статове','Mods':'Модове','Intrinsic':'Вградено','Masterwork':'Мастъруърк'
 };
 const BG_RE = [
@@ -2317,7 +2339,7 @@ function renderActivity(){
   bar.querySelector('#act-show').onclick = () => { current = best.b.id; openTab('builds'); renderList(); swapDetail(); };
 }
 if(IS_APP && window.hunterApp.onActivity) window.hunterApp.onActivity(a => { const changed = !ACTIVITY || ACTIVITY.kind !== a.kind; ACTIVITY = a; renderActivity();
-  if(changed && a.kind !== 'none' && window.hunterApp.notify && !document.body.classList.contains('compact')){ const best = RES.find(r => r.ready && actsOf(r.b).includes(a.kind)); if(best) window.hunterApp.notify('Build for this activity', `${best.b.name} fits ${a.kind}. Open Hunter Builds to equip it.`); } });
+  if(changed && a.kind !== 'none' && window.hunterApp.notify && !document.body.classList.contains('compact') && location.hash !== '#overlay'){ const best = RES.find(r => r.ready && actsOf(r.b).includes(a.kind)); if(best) window.hunterApp.notify('Build for this activity', `${best.b.name} fits ${a.kind}. Open Hunter Builds to equip it.`); } });
 
 /* ---------- compact window ---------- */
 let CIDX = 0;
@@ -2789,10 +2811,54 @@ function renderWeekly(){
 }
 const _renderExtras6 = renderExtras; renderExtras = function(){ _renderExtras6(); renderWeekly(); };
 if(IS_APP && window.hunterApp.onTasks) window.hunterApp.onTasks(t => { const before = TASKS ? new Set(TASKS.tasks.filter(x => x.done).map(x => x.n)) : null; TASKS = t; renderWeekly();
-  if(before && t.tasks.some(x => x.done && !before.has(x.n))) playSound('chime'); });
+  if(before && location.hash !== '#overlay' && t.tasks.some(x => x.done && !before.has(x.n))) playSound('chime'); });
 document.addEventListener('click', e => { const b = e.target.closest('nav.tabs > button[data-tab=weekly]'); if(b) setTimeout(renderWeekly, 450); });
 // new week: forget which ticks were already shown
 { const wk = weekKey(new Date()); if(STORE.get('hunterWkSeenWeek', 0) !== wk){ WK_DONE_SEEN = new Set(); STORE.set('hunterWkSeen', []); STORE.set('hunterWkSeenWeek', wk); } }
+
+/* ---------- in-game overlay window (#overlay) ---------- */
+const IS_OVL = location.hash === '#overlay';
+let OVL = { interact: false, cfg: { corner: 'tr', scale: 1, opacity: .92 } };
+function renderOverlay(){
+  if(!IS_OVL) return; let root = document.getElementById('ovl'); if(!root){ root = document.createElement('div'); root.id = 'ovl'; document.body.prepend(root); }
+  const fit = ACTIVITY && ACTIVITY.kind !== 'none' ? RES.find(r => r.ready && actsOf(r.b).includes(ACTIVITY.kind)) : null;
+  const r = wornBuild(); const T = TASKS && TASKS.tasks ? TASKS.tasks : []; const open = T.filter(t => !t.done), done = T.length - open.length;
+  const pins = PINS.map(id => RES.find(x => x.b.id === id && x.ready)).filter(Boolean);
+  const c = r && r.combos && r.combos[0];
+  root.className = OVL.interact ? 'interact' : '';
+  root.innerHTML = `<div class="ovh"><b>Hunter Builds</b><span class="perk">${OVL.interact ? 'settings' : 'Ctrl+Alt+I to click'}</span></div>
+    ${OVL.interact ? `<div class="ovset"><div class="ovrow">${[['tl','↖'],['tr','↗'],['bl','↙'],['br','↘']].map(([k, a]) => `<button type="button" class="btn sm ${OVL.cfg.corner === k ? 'primary' : ''}" data-ovc="${k}" aria-label="Corner">${a}</button>`).join('')}
+      <button type="button" class="btn sm" data-ovs="-" aria-label="Smaller">A−</button><button type="button" class="btn sm" data-ovs="+" aria-label="Bigger">A+</button></div>
+      <label class="ovrow">Opacity <input type="range" id="ov-op" min="30" max="100" step="5" value="${Math.round(OVL.cfg.opacity * 100)}"></label>
+      <div class="ovrow"><button type="button" class="btn sm primary" id="ov-done">Done</button><button type="button" class="btn sm" id="ov-hide">Hide overlay</button></div></div>` : ''}
+    ${r ? `<div class="ovc"><div class="ovt">${ico(exoItem(r.b.exotic),'sm')}<div><b>${esc(r.b.name)}</b><span class="perk">${esc(r.b.sub)} · ${r.total}</span></div></div>
+      ${c ? `<div class="ovst">${c.st.map((v, i) => `<div class="${v >= 100 ? 'hi' : ''}"><span>${SBG[i].slice(0,3)}</span><b>${v}</b></div>`).join('')}</div>` : ''}
+      <div class="perk ovk">${esc(Object.entries(r.b.kit || {}).filter(([k]) => k !== 'Fragments').map(([, v]) => v.split('/')[0].trim()).join(' · '))}</div></div>` : ''}
+    ${fit && (!r || fit.b.id !== r.b.id) ? `<div class="ovc ovact"><span class="perk">In ${ACTIVITY.kind} · better fit</span><div class="ovt">${ico(exoItem(fit.b.exotic),'sm')}<div><b>${esc(fit.b.name)}</b><span class="perk">${fit.total}${PINS.includes(fit.b.id) ? ' · Ctrl+Alt+' + (PINS.indexOf(fit.b.id) + 1) : ''}</span></div></div></div>` : ''}
+    ${T.length ? `<div class="ovc"><div class="ovwh"><b>Weekly</b><span class="${open.length ? 'perk' : 'ovok'}">${open.length ? `${done}/${T.length} done` : '✓ all done'}</span></div><div class="wkbar"><i style="width:${T.length ? Math.round(100 * done / T.length) : 0}%"></i></div>
+      ${[...open.slice(0, 5), ...T.filter(t => t.done).slice(0, Math.max(0, 6 - Math.min(5, open.length)))].map(t => { const p = t.prog[0] || { have: 0, need: 1 }; const pr = t.done ? 100 : Math.round(100 * t.prog.reduce((s, x) => s + Math.min(1, x.have / (x.need || 1)), 0) / (t.prog.length || 1));
+        return `<div class="ovw ${t.done ? 'done' : ''}"><span class="ovwn">${t.done ? '<span class="ovtick">✓</span>' : ''}${esc(t.n)}</span><span class="perk">${t.done ? '' : pr + '%'}</span><div class="cbar"><i style="width:${pr}%"></i></div></div>`; }).join('')}</div>` : ''}
+    ${pins.length ? `<div class="ovc"><b>Quick equip</b> <span class="perk">(in orbit)</span>${pins.map((p, i) => `<div class="ovp"><kbd>Ctrl+Alt+${i+1}</kbd><span>${esc(p.b.name)}</span></div>`).join('')}</div>` : ''}
+    <div class="perk ovf">Ctrl+Alt+O hide · Ctrl+Alt+I ${OVL.interact ? 'back to click-through' : 'click / settings'}</div>`;
+  if(OVL.interact){
+    root.querySelectorAll('[data-ovc]').forEach(b => b.onclick = () => window.hunterApp.overlayCfg({ corner: b.dataset.ovc }));
+    root.querySelectorAll('[data-ovs]').forEach(b => b.onclick = () => window.hunterApp.overlayCfg({ scale: Math.max(.7, Math.min(1.5, +(OVL.cfg.scale + (b.dataset.ovs === '+' ? .1 : -.1)).toFixed(2))) }));
+    root.querySelector('#ov-op').onchange = e => window.hunterApp.overlayCfg({ opacity: +e.target.value / 100 });
+    root.querySelector('#ov-done').onclick = () => window.hunterApp.overlayInteract(false);
+    root.querySelector('#ov-hide').onclick = () => { window.hunterApp.overlayInteract(false); window.hunterApp.overlayToggle(); };
+  }
+}
+if(IS_OVL){
+  document.documentElement.classList.add('ovlmode'); document.body.classList.add('overlay');
+  if(window.hunterApp && window.hunterApp.onOverlayMode) window.hunterApp.onOverlayMode(m => { OVL = m; renderOverlay(); });
+  const _rw = renderWeekly; renderWeekly = function(){ _rw(); renderOverlay(); };
+  const _ra = renderActivity; renderActivity = function(){ _ra(); renderOverlay(); };
+  const _rA = renderAll; renderAll = function(){ _rA(); renderOverlay(); };
+  setInterval(renderOverlay, 60 * 1000);
+}
+if(IS_APP && window.hunterApp.overlayToggle){ const card = document.getElementById('app-compact'); if(card) card.insertAdjacentHTML('afterend', ' <button class="btn sm" id="app-overlay">In-game overlay</button>');
+  const ob = document.getElementById('app-overlay'); if(ob) ob.onclick = () => window.hunterApp.overlayToggle();
+  const note = document.querySelector('#app-compact') && document.querySelector('#app-compact').closest('.card'); if(note) note.insertAdjacentHTML('beforeend', '<p class="note">Overlay: set Destiny 2 to <b>Windowed Fullscreen</b> so it can show on top. Ctrl+Alt+O shows or hides it, Ctrl+Alt+I lets you click it (settings, corner, size, opacity). It is a separate window and never touches the game.</p>'); }
 
 renderAll();
 
