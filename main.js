@@ -150,7 +150,8 @@ function renderPage() {
     .replace('/*__DATA__*/', JSON.stringify(data).replace(/<\//g, '<\\/'))
     .replace('/*__SPR_ITEMS__*/', fs.readFileSync(file('items.url'), 'utf8'))
     .replace('/*__SPR_PLUGS__*/', fs.readFileSync(file('plugs.url'), 'utf8'))
-    .replace('/*__HISTORY__*/null', history ? JSON.stringify(history) : 'null');
+    .replace('/*__HISTORY__*/null', history ? JSON.stringify(history) : 'null')
+    .split('/*__THREE__*/').join(fs.readFileSync(path.join(__dirname, 'app', 'vendor', 'three.min.js'), 'utf8').replace(/<\/script/gi, '<\\/script'));
   fs.writeFileSync(file('page.html'), html);
   mainWin.loadFile(file('page.html'));
   if (compactWin && !compactWin.isDestroyed()) compactWin.loadFile(file('page.html'), { hash: 'compact' });
@@ -462,6 +463,25 @@ ipcMain.on('week-status', (_e, s) => { weekStatus = s; });
 setInterval(() => { const n = new Date(); if (n.getDay() !== 1 || n.getHours() < 19 || !weekStatus) return; const wk = weekKey(n); const st = readJson('settings.json', {});
   if (st.remindWeek === wk || weekStatus.done >= weekStatus.total) return; saveSettings({ remindWeek: wk });
   notify('Weekly reset tomorrow', `${weekStatus.total - weekStatus.done} of ${weekStatus.total} weekly activities are still open: ${(weekStatus.open || []).slice(0, 3).join(', ')}.`); }, 15 * 60 * 1000);
+/* ---------- Guardian tab: look, shader colours, apply shaders ---------- */
+function dimSrc() { return fs.readFileSync(path.join(__dirname, 'app', 'dimexport.js'), 'utf8'); }
+ipcMain.handle('look-get', () => queue(async () => {
+  try { if (!/\/d2\//.test(dimWin.webContents.getURL())) await dimGo('inventory');
+    const look = await dimWin.webContents.executeJavaScript(`(() => { ${dimSrc()}\n return dimLook(); })()`, true);
+    if (look) fs.writeFileSync(file('look.json'), JSON.stringify(look)); return look || readJson('look.json', null);
+  } catch (e) { log('look-get: ' + e.message); return readJson('look.json', null); } }));
+let shaderBusy = null;
+ipcMain.handle('shader-colors', async (_e, list) => {
+  const cache = readJson('shadercolors.json', {}); const missing = (list || []).filter(s => s && s.ic && !cache[s.h]).slice(0, 400);
+  if (missing.length) {
+    if (shaderBusy) await shaderBusy;
+    shaderBusy = queue(async () => { try { const got = await dimWin.webContents.executeJavaScript(`(async () => { ${dimSrc()}\n return await dimShaderColors(${JSON.stringify(missing)}); })()`, true);
+      Object.assign(cache, got || {}); fs.writeFileSync(file('shadercolors.json'), JSON.stringify(cache)); } catch (e) { log('shader-colors: ' + e.message); } });
+    await shaderBusy; shaderBusy = null;
+  }
+  const out = {}; (list || []).forEach(s => { if (cache[s.h]) out[s.h] = cache[s.h]; }); return out;
+});
+ipcMain.handle('look-apply', (_e, p) => equip({ name: 'Guardian look', notes: 'Shaders chosen in the Guardian tab', items: p.items, look: p.look }));
 ipcMain.handle('undo', () => { const u = readJson('undo.json', null); if (!u || !u.items) return { ok: false, msg: 'Nothing to undo yet.' }; return equip({ name: 'Previous gear', notes: `Gear before "${u.from}"`, items: u.items, undo: true }); });
 ipcMain.handle('diagnostics', () => { const t = diagnostics(); clipboard.writeText(t); return t; });
 ipcMain.on('notify', (_e, t, b) => notify(t, b));

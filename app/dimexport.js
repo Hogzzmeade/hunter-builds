@@ -307,3 +307,40 @@ async function dimTasks() {
   }
   return { at: new Date().toISOString(), tasks };
 }
+
+// what the Hunter wears (armor + shader + ornament) and every shader you own
+function dimLook() {
+  let fiber = null;
+  for (const e of document.querySelectorAll('*')) { const k = Object.keys(e).find(k => k.startsWith('__reactFiber$')); if (k) { fiber = e[k]; break; } }
+  let root = fiber; while (root && root.return) root = root.return;
+  let store = null; const q = [root]; let c = 0;
+  while (q.length && c < 20000) { const x = q.shift(); c++; const p = x && x.memoizedProps; if (p && p.store && p.store.getState) { store = p.store; break; } if (x && x.child) q.push(x.child); if (x && x.sibling) q.push(x.sibling); }
+  if (!store) return null;
+  const hunter = store.getState().inventory.stores.find(s => s.classType === 1 && !s.isVault); if (!hunter) return null;
+  const pl = p => p ? { h: p.plugDef.hash, n: p.plugDef.displayProperties.name, ic: p.plugDef.displayProperties.icon || '' } : null;
+  const armor = [], shaders = new Map();
+  for (const i of hunter.items.filter(i => i.equipped && i.bucket.sort === 'Armor')) {
+    const cat = (i.sockets?.categories || []).find(cc => /COSMETIC/i.test(cc.category?.displayProperties?.name || '')); if (!cat) continue;
+    const sks = cat.socketIndexes.map(ix => i.sockets.allSockets.find(z => z.socketIndex === ix)).filter(Boolean);
+    const sh = sks.find(sk => sk.plugged?.plugDef.plug?.plugCategoryIdentifier === 'shader'), orn = sks.find(sk => sk !== sh);
+    if (sh) for (const p of (sh.plugSet?.plugs || [])) { const n = p.plugDef.displayProperties.name; if (n && !shaders.has(n)) shaders.set(n, pl(p)); }
+    armor.push({ slot: i.bucket.name, bh: i.bucket.hash, id: i.id, h: i.hash, n: i.name, ic: i.icon, ss: i.screenshot || '', shader: pl(sh && sh.plugged), orn: pl(orn && orn.plugged) });
+  }
+  return { at: new Date().toISOString(), armor, shaders: [...shaders.values()].sort((a, b) => a.n.localeCompare(b.n)) };
+}
+// the 3 main colours of each shader, read from its icon
+async function dimShaderColors(list) {
+  const out = {}; const cv = new OffscreenCanvas(32, 32); const g = cv.getContext('2d', { willReadFrequently: true });
+  const hex = v => '#' + v.map(x => Math.round(x).toString(16).padStart(2, '0')).join('');
+  const one = async s => { try {
+    const bm = await createImageBitmap(await (await fetch('https://www.bungie.net' + s.ic)).blob()); g.clearRect(0, 0, 32, 32); g.drawImage(bm, 0, 0, 32, 32);
+    const d = g.getImageData(3, 3, 26, 26).data; const B = new Map();
+    for (let k = 0; k < d.length; k += 4) { if (d[k + 3] < 200) continue; const key = (d[k] >> 4) + ',' + (d[k + 1] >> 4) + ',' + (d[k + 2] >> 4); const b = B.get(key) || [0, 0, 0, 0]; b[0] += d[k]; b[1] += d[k + 1]; b[2] += d[k + 2]; b[3]++; B.set(key, b); }
+    const cols = [...B.values()].sort((a, b) => b[3] - a[3]).map(b => [b[0] / b[3], b[1] / b[3], b[2] / b[3], b[3]]); const pick = [];
+    for (const cc of cols) { if (pick.every(p => Math.hypot(p[0] - cc[0], p[1] - cc[1], p[2] - cc[2]) > 48)) pick.push(cc); if (pick.length === 3) break; }
+    while (pick.length < 3) pick.push(pick[pick.length - 1] || [128, 128, 128]);
+    out[s.h] = pick.map(p => hex(p.slice(0, 3)));
+  } catch (e) {} };
+  for (let i = 0; i < list.length; i += 12) await Promise.all(list.slice(i, i + 12).map(one));
+  return out;
+}
