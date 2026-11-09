@@ -821,6 +821,92 @@ html{--pop:#171c33;--pop2:#0f1428;--popline:#343d63}
 [data-theme=light] #overlay .pop .clar b{color:#2a5ea8}
 [data-theme=light] #overlay .pop .pst .up,[data-theme=light] #overlay .pop .sv.up{color:#a8650f}
 .bigside{background:var(--pop)}
+/* ===== palette panel ===== */
+#theme-btn{display:inline-flex;align-items:center;gap:7px}.pdot{width:14px;height:14px;border-radius:50%;display:inline-block;box-shadow:0 0 0 1px rgba(255,255,255,.35),0 0 10px var(--acc,#7cc4f2)}
+.thmenu{min-width:0;padding:0;border-radius:12px;overflow:hidden}
+.palp{width:340px;max-height:min(78vh,720px);overflow:auto;padding:12px 14px;display:flex;flex-direction:column;gap:10px;background:var(--pop,var(--panel))}
+.ptop{display:flex;justify-content:space-between;align-items:center}.ptop b{font-family:Oswald,Arial,sans-serif;font-size:18px;font-weight:500;letter-spacing:.04em}
+.pprev{display:flex;height:22px;border-radius:6px;overflow:hidden;box-shadow:0 0 0 1px var(--line)}.pprev span{flex:1;transition:background-color 300ms}
+.prow{display:flex;flex-direction:column;gap:6px}.plab{display:flex;flex-direction:row!important;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--ink);text-align:left}
+.pin{display:flex;gap:6px;align-items:center}.pin input[type=color]{width:34px;height:26px;border:1px solid var(--line);border-radius:6px;background:none;padding:1px;cursor:pointer}.pin input[type=color]:disabled{opacity:.4;cursor:default}
+.phex{width:78px;font:12.5px "IBM Plex Mono",monospace;padding:4px 6px;border-radius:6px;border:1px solid var(--line);background:var(--bg);color:var(--ink);text-transform:lowercase}
+.psw{display:grid;grid-template-columns:repeat(8,28px);justify-content:space-between;gap:6px 0}.swb{width:28px;height:28px;min-width:0;min-height:0;flex:none;border-radius:50%;border:2px solid transparent;box-shadow:inset 0 0 0 1px rgba(255,255,255,.18),0 0 0 1px rgba(0,0,0,.25);cursor:pointer;padding:0;transition:transform 220ms var(--ease-spring),border-color 160ms}
+.swb:hover{transform:scale(1.18)}.swb.on{border-color:var(--ink);transform:scale(1.12);box-shadow:0 0 0 2px var(--bg),0 0 12px currentColor}
+.pchk{flex-direction:row!important;align-items:center;gap:8px;font-size:13px;color:var(--ink);display:flex}
+.psec{font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--mute);border-top:1px solid var(--line);padding-top:10px;margin-top:2px}
+.pseg{display:flex;gap:4px}.plab select{max-width:170px}
+/* custom palette backgrounds */
+[data-theme=custom] body,[data-theme=light].xt body{background:radial-gradient(1100px 620px at 88% -12%,color-mix(in srgb,var(--acc) 16%,transparent),transparent 62%),radial-gradient(900px 620px at -10% 110%,color-mix(in srgb,var(--acc2) 12%,transparent),transparent 60%),var(--bg) fixed}
+#toast{background:var(--pop,#0f1428);color:var(--ink);border-color:color-mix(in srgb,var(--acc,#3a4470) 55%,var(--line))}
+html.xt .chip.act.on{background:var(--acc);color:var(--acc-ink)}
+
+/* =====================  MOTION 3  ===================== */
+#cglow{position:fixed;left:0;top:0;width:600px;height:600px;border-radius:50%;pointer-events:none;z-index:0;background:radial-gradient(circle,color-mix(in srgb,var(--acc,#7cc4f2) calc(9% * var(--fxk,1)),transparent) 0%,transparent 62%);transition:opacity 400ms;will-change:transform}
+html.palette-light #cglow{background:radial-gradient(circle,color-mix(in srgb,var(--acc) calc(10% * var(--fxk,1)),transparent) 0%,transparent 62%)}
+.wrap{position:relative;z-index:1}
+nav.tabs{position:relative}
+.tabpill{position:absolute;left:0;top:0;z-index:0;border-radius:8px;pointer-events:none;opacity:0;
+  background:linear-gradient(120deg,color-mix(in srgb,var(--acc,#7cc4f2) 34%,var(--panel2)),color-mix(in srgb,var(--acc2,#b68ce6) 26%,var(--panel2)));
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--acc,#7cc4f2) 70%,transparent),0 0 calc(22px * var(--fxk,1)) color-mix(in srgb,var(--acc,#7cc4f2) 45%,transparent),inset 0 0 14px color-mix(in srgb,var(--acc,#7cc4f2) 30%,transparent);
+  transition:transform 560ms var(--ease-spring),width 560ms var(--ease-spring),height 300ms var(--ease-out),opacity 300ms}
+nav.tabs > button{z-index:1}
+nav.tabs > button[aria-selected=true]{background:transparent!important;border-color:transparent!important;box-shadow:none!important;color:var(--ink)}
+nav.tabs > button::after{display:none}
+@property --ang{syntax:'<angle>';inherits:false;initial-value:0deg}
+@keyframes spinAng{to{--ang:360deg}}
+@keyframes riseIn{from{opacity:0;transform:translate3d(0,calc(28px * var(--fxk,1)),0) scale(.965)}to{opacity:1;transform:none}}
+@keyframes panelIn{from{opacity:0;transform:translate3d(calc(46px * var(--dir,1) * var(--fxk,1)),0,0) scale(.98);filter:blur(calc(5px * var(--fxk,1)))}to{opacity:1;transform:none;filter:none}}
+@keyframes titleWipe{from{clip-path:inset(0 100% 0 0);transform:translateX(-10px)}to{clip-path:inset(0 0 0 0);transform:none}}
+@keyframes sweepBar{from{transform:translateX(-120%);opacity:0}30%{opacity:1}to{transform:translateX(320%);opacity:0}}
+@keyframes growX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes scorePop{0%{transform:scale(1)}35%{transform:scale(1.35);text-shadow:0 0 18px var(--acc,#7cc4f2)}100%{transform:scale(1)}}
+@keyframes popZoom{from{opacity:0;transform:scale(.5);filter:blur(10px)}60%{opacity:1;filter:blur(0)}to{opacity:1;transform:none;filter:none}}
+@keyframes btnFlow{to{background-position:220% 0}}
+@keyframes titleShine{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+@keyframes toastIn{from{transform:translate(-50%,-160%) scale(.9)}60%{transform:translate(-50%,8%) scale(1.02)}to{transform:translate(-50%,0) scale(1)}}
+@media (prefers-reduced-motion: no-preference){
+  /* tabs: whole panel slides with a short blur, cards cascade */
+  [id^=tab-].fromR{animation:panelIn 600ms var(--ease-out) both;--dir:1}[id^=tab-].fromL{animation:panelIn 600ms var(--ease-out) both;--dir:-1}
+  .panel-enter .card,.panel-enter .miss .card,.panel-enter .wkc,.panel-enter .wr,.panel-enter .drow{animation:riseIn 700ms var(--ease-spring) both}
+  .panel-enter .card:nth-child(2),.panel-enter .wkc:nth-child(2){animation-delay:80ms}.panel-enter .card:nth-child(3),.panel-enter .wkc:nth-child(3){animation-delay:160ms}
+  .panel-enter .card:nth-child(4),.panel-enter .wkc:nth-child(4){animation-delay:240ms}.panel-enter .card:nth-child(5),.panel-enter .wkc:nth-child(5){animation-delay:320ms}.panel-enter .card:nth-child(n+6),.panel-enter .wkc:nth-child(n+6){animation-delay:400ms}
+  .panel-enter .bitem,.panel-enter .grp,.panel-enter .actchips{animation:riseIn 620ms var(--ease-spring) both;animation-delay:calc(var(--i,0) * 40ms)}
+  /* build detail: out with a slide + blur, in with a cascade */
+  .detail{transition:opacity 200ms var(--ease-in),transform 200ms var(--ease-in),filter 200ms}
+  .detail.swap{opacity:0;transform:translate3d(calc(-22px * var(--fxk,1)),0,0);filter:blur(calc(4px * var(--fxk,1)))}
+  .detail.in > *{animation:riseIn 700ms var(--ease-spring) both;animation-delay:calc(var(--bi,0) * 80ms)}
+  .detail.in > .dhead{animation-delay:0ms}
+  .detail.in .dhead{position:relative;overflow:hidden}
+  .detail.in .dhead h2{animation:titleWipe 760ms var(--ease-out) both}
+  .detail.in .dhead::after{content:"";position:absolute;left:0;top:0;height:3px;width:35%;background:linear-gradient(90deg,transparent,var(--el,var(--acc)),#fff,var(--el,var(--acc)),transparent);filter:drop-shadow(0 0 8px var(--el,var(--acc)));animation:sweepBar 1.3s var(--ease-out) 150ms both;pointer-events:none}
+  .detail.in .st{animation:riseIn 600ms var(--ease-spring) both;animation-delay:calc(220ms + var(--si,0) * 70ms)}
+  .detail.in .st .meter i{transform-origin:left;animation:growX 900ms var(--ease-out) both;animation-delay:calc(320ms + var(--si,0) * 90ms)}
+  .detail.in .pc{animation:riseIn 650ms var(--ease-spring) both;animation-delay:calc(420ms + var(--i,0) * 80ms)}
+  .detail.in .kit > *,.detail.in .ktile{animation:riseIn 520ms var(--ease-spring) both;animation-delay:calc(160ms + var(--k,0) * 40ms)}
+  /* selected build: rotating light border + score pop */
+  .bitem[aria-current=true]{position:relative}
+  .bitem[aria-current=true]::after{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:2px;pointer-events:none;
+    background:conic-gradient(from var(--ang),var(--acc,#7cc4f2),var(--acc2,#b68ce6),transparent 35%,transparent 60%,var(--acc,#7cc4f2));
+    -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask:linear-gradient(#000 0 0) content-box exclude,linear-gradient(#000 0 0);animation:spinAng calc(4s / var(--fxk,1)) linear infinite}
+  .bitem .score.spop{animation:scorePop 650ms var(--ease-spring)}
+  /* hover: lift, accent glow */
+  @media (hover:hover){
+    .bitem:hover,.card:hover,.pc:hover,.st:hover,.wkc:hover,.wr:hover,.drow:hover,.mat:hover,.seal:hover,.setc:hover,.role:hover,.catr:hover{transform:translateY(calc(-3px * var(--fxk,1)));
+      box-shadow:0 12px 28px rgba(0,0,0,.32),0 0 0 1px color-mix(in srgb,var(--acc,#7cc4f2) 55%,transparent),0 0 calc(22px * var(--fxk,1)) color-mix(in srgb,var(--acc,#7cc4f2) 28%,transparent)}
+    button.ico:hover{transform:scale(calc(1 + .07 * var(--fxk,1))) rotate(-3deg);box-shadow:0 0 0 2px var(--acc,#7cc4f2),0 0 16px color-mix(in srgb,var(--acc,#7cc4f2) 60%,transparent)}
+    .btn:hover{transform:translateY(-2px);box-shadow:0 8px 18px rgba(0,0,0,.3),0 0 16px color-mix(in srgb,var(--acc,#7cc4f2) 35%,transparent)}
+  }
+  .btn:active,.bsel:active{transform:scale(.93)!important;transition-duration:80ms}
+  .btn.primary{background-image:linear-gradient(110deg,var(--acc,#7cc4f2),var(--acc2,#b68ce6),var(--acc,#7cc4f2));background-size:220% 100%;animation:btnFlow calc(6s / var(--fxk,1)) linear infinite;color:var(--acc-ink,#10131f);border-color:transparent}
+  /* header title shimmer */
+  header.top h1{background:linear-gradient(100deg,var(--ink) 35%,var(--acc,#7cc4f2) 46%,var(--acc2,#b68ce6) 54%,var(--ink) 65%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:titleShine calc(9s / var(--fxk,1)) ease-in-out infinite}
+  /* item popup grows out of the clicked icon */
+  #overlay .pop.zoomin{animation:popZoom 560ms var(--ease-spring) both;transform-origin:var(--ox,50%) var(--oy,30%)}
+  #overlay{animation:fadeIn 260ms var(--ease-out)}
+  #toast.on{animation:toastIn 620ms var(--ease-spring) both,floatY 2.4s ease-in-out 700ms infinite}
+  .rv.in{animation:riseIn 760ms var(--ease-spring) both}
+  .ripple{background:radial-gradient(circle,color-mix(in srgb,var(--acc,#fff) 70%,#fff),transparent 70%)}
+}
 </style>
 </head>
 <body>
@@ -1631,11 +1717,7 @@ const THEMES = [
   ['hive','Hive','Moon dark, green wisps','linear-gradient(135deg,#070b08 50%,#8cff6a 50%)','#070b08'],
   ['ember','Ember','Forge red, rising embers','linear-gradient(135deg,#140907 50%,#ff7a2f 50%)','#140907'],
   ['nebula','Nebula','Deep space, shooting stars','linear-gradient(135deg,#05060f 50%,#b8a6ff 50%)','#05060f']];
-function applyTheme(t){ if(!THEMES.some(x => x[0] === t)) t = 'dark'; const d = document.documentElement; d.dataset.theme = t; d.classList.toggle('xt', !['dark','light'].includes(t)); STORE.set('hunterTheme', t);
-  const th = THEMES.find(x => x[0] === t); const mc = document.querySelector('meta[name=theme-color]'); if(mc) mc.content = th[4];
-  const b = document.getElementById('theme-btn'); if(b){ b.textContent = '◐ ' + th[1]; b.setAttribute('aria-label', 'Theme: ' + th[1] + '. Choose another theme'); }
-  if(window.fxTheme) window.fxTheme(t);
-  const m = document.getElementById('thmenu'); if(m) m.innerHTML = THEMES.map(([id,n,dsc,sw]) => `<button type="button" class="thopt" role="menuitemradio" aria-checked="${id===t}" data-theme-id="${id}"><span class="sw" style="background:${sw}"></span><span>${n}<small>${dsc}</small></span></button>`).join(''); }
+function applyTheme(t){ if(!['custom','light','dark'].includes(t) && !THEMES.some(x => x[0] === t)) t = 'dark'; const d = document.documentElement; d.dataset.theme = t; d.classList.toggle('xt', t !== 'dark'); }
 
 /* ---------- custom build ---------- */
 const IMP = [['Ignore',0],['Low',.8],['Medium',1.6],['High',3]];
@@ -2044,7 +2126,7 @@ function notifyBetter(){
   document.addEventListener('click', e => { if(!e.target.closest('.qwrap')) box.hidden = true; });
   inp.addEventListener('focus', () => { if(inp.value.trim().length >= 2) renderSearch(); }); }
 
-applyTheme(STORE.get('hunterTheme','dark'));
+applyTheme('dark');
 { const tb = document.getElementById('theme-btn'), tm = document.getElementById('thmenu');
   const close = () => { tm.hidden = true; tb.setAttribute('aria-expanded','false'); };
   tb.onclick = e => { e.stopPropagation(); tm.hidden = !tm.hidden; tb.setAttribute('aria-expanded', String(!tm.hidden)); if(!tm.hidden){ const on = tm.querySelector('[aria-checked=true]'); if(on) on.focus(); } };
@@ -2113,6 +2195,7 @@ const BG = {
  'Neomuna':'Неомуна','Europa':'Европа','Hive':'Кошер','Ember':'Жарава','Nebula':'Мъглявина','Neon city, moving grid':'Неонов град, движеща се мрежа','Ice blue, falling snow':'Леденосиньо, падащ сняг','Moon dark, green wisps':'Тъмна луна, зелени духчета','Forge red, rising embers':'Червено като ковачница, искри','Deep space, shooting stars':'Дълбок космос, падащи звезди','Background':'Фон','Theme animation':'Анимация на темата','By element':'По елемент','Off':'Изключен',
  'In-game overlay':'Overlay в играта','Quick equip':'Бързо екипиране','Hide overlay':'Скрий overlay',
  'Mark as seen':'Маркирай като видяни','Exotic':'Екзотика','Keep':'Пази','Good roll':'Добър рол','Trash roll':'Лош рол','Junk':'Боклук','Probably junk':'Вероятно боклук','Decent':'Става','Set piece':'Част от сет','Good stats':'Добри статове',
+ 'Colors':'Цветове','Accent':'Акцент','Second accent':'Втори акцент','Background':'Фон','Panels':'Панели','Text':'Текст','Animations':'Анимации','Strength':'Сила','Subtle':'Слаба','Normal':'Нормална','Strong':'Силна','Layout':'Изглед','Reset':'Нулирай','🎲 Shuffle':'🎲 Случайни','Drifting lights':'Носещи се светлини','Bubbles':'Мехурчета','Golden motes':'Златни прашинки','Rotating triangles':'Въртящи се триъгълници','Code rain':'Падащ код','Falling petals':'Падащи листенца','Neon grid':'Неонова мрежа','Snowfall':'Снеговалеж','Wisps':'Духчета','Embers':'Искри','Starfield':'Звезди','By build element':'По елемента на билда','Holiday touches':'Празнична украса','auto':'авто',"Accent follows the selected build's element":'Акцентът следва елемента на билда',
  'Lock':'Заключи','Close':'Затвори','Perks':'Перкове','Stats':'Статове','Mods':'Модове','Intrinsic':'Вградено','Masterwork':'Мастъруърк'
 };
 const BG_RE = [
@@ -2532,39 +2615,40 @@ let BG_ON = STORE.get('hunterFx', true), FX_MODE = STORE.get('hunterFxMode', 'th
   let W = 0, H = 0, P = [], key = '', raf = 0, last = 0, T = 0, el = 'Arc', theme = 'dark';
   const size = () => { W = cv.width = innerWidth; H = cv.height = innerHeight; if(key) spawn(); }; addEventListener('resize', size);
   const R = (a, b) => a + Math.random() * (b - a);
+  let A1 = '124,196,242', A2 = '79,214,255', IK = '236,231,220', FXK = 1;
   const ELC = { Arc:'124,196,242', Solar:'242,128,58', Void:'182,140,230', Stasis:'93,143,255', Strand:'63,220,120' };
   const COUNT = { tower:40, light:26, traveler:45, pyramid:9, terminal:0, dreaming:34, neomuna:0, europa:90, hive:30, ember:70, nebula:160, Arc:28, Solar:46, Void:46, Stasis:46, Strand:46 };
   const CHARS = 'アイウエオカキクケコ0123456789ABCDEF<>/{}=+*';
   let cols = [];
-  function spawn(){ P = Array.from({ length: COUNT[key] || 40 }, () => ({ x: R(0, W), y: R(0, H), v: R(.2, .8), a: R(0, 6.28), r: R(1, 2.8), t: R(0, 200), s: R(.4, 1), z: R(.2, 1) }));
+  function spawn(){ P = Array.from({ length: Math.round((COUNT[key] || 40) * (FXK > 1 ? 1.5 : FXK < 1 ? .6 : 1)) }, () => ({ x: R(0, W), y: R(0, H), v: R(.2, .8), a: R(0, 6.28), r: R(1, 2.8), t: R(0, 200), s: R(.4, 1), z: R(.2, 1) }));
     if(key === 'terminal'){ const n = Math.ceil(W / 16); cols = Array.from({ length: n }, () => ({ y: R(-H, 0), v: R(2, 5), on: Math.random() < .55 })); }
     if(key === 'pyramid') P.forEach(p => { p.r = R(40, 140); p.v = R(.0008, .003) * (Math.random() < .5 ? -1 : 1); });
-    if(key === 'dreaming') P.forEach(p => { p.c = Math.random() < .5 ? '255,143,207' : '127,227,234'; }); }
+    if(key === 'dreaming') P.forEach(p => { p.c = Math.random() < .5 ? 1 : 2; }); }
   const dot = (x, y, r, c) => { g.fillStyle = c; g.beginPath(); g.arc(x, y, r, 0, 6.28); g.fill(); };
   const glow = (x, y, r, c, a) => { const gr = g.createRadialGradient(x, y, 0, x, y, r); gr.addColorStop(0, `rgba(${c},${a})`); gr.addColorStop(1, `rgba(${c},0)`); g.fillStyle = gr; g.fillRect(x - r, y - r, r * 2, r * 2); };
   const DRAW = {
-    tower(){ for(const p of P){ p.t++; p.y -= p.v * .15; p.x += Math.sin(p.t / 90) * .15; if(p.y < -20){ p.y = H + 20; p.x = R(0, W); } glow(p.x, p.y, p.r * 9, '124,196,242', .05 + .05 * Math.sin(p.t / 40) ** 2); } },
-    light(){ for(const p of P){ p.t++; p.y -= p.v * .35; p.x += Math.sin(p.t / 70) * .3; if(p.y < -40){ p.y = H + 40; p.x = R(0, W); } g.strokeStyle = 'rgba(45,59,120,.12)'; g.lineWidth = 1.2; g.beginPath(); g.arc(p.x, p.y, p.r * 8, 0, 6.28); g.stroke(); glow(p.x - p.r * 2, p.y - p.r * 2, p.r * 4, '255,255,255', .5); } },
-    traveler(){ glow(W * .78, -H * .05, Math.min(W, H) * .55, '224,176,74', .07 + .03 * Math.sin(T / 120)); for(const p of P){ p.t++; p.y -= p.v * .5; p.x += Math.sin(p.t / 60) * .3; if(p.y < -10){ p.y = H + 10; p.x = R(0, W); } dot(p.x, p.y, p.r * .7, `rgba(240,200,110,${.25 + .35 * Math.sin(p.t / 25) ** 2})`); } },
-    pyramid(){ for(const p of P){ p.a += p.v; p.y += .05; if(p.y - p.r > H) p.y = -p.r; g.strokeStyle = `rgba(143,108,255,${.06 + .05 * p.s})`; g.lineWidth = 1; g.beginPath();
+    tower(){ for(const p of P){ p.t++; p.y -= p.v * .15; p.x += Math.sin(p.t / 90) * .15; if(p.y < -20){ p.y = H + 20; p.x = R(0, W); } glow(p.x, p.y, p.r * 9, A1, .05 + .05 * Math.sin(p.t / 40) ** 2); } },
+    light(){ for(const p of P){ p.t++; p.y -= p.v * .35; p.x += Math.sin(p.t / 70) * .3; if(p.y < -40){ p.y = H + 40; p.x = R(0, W); } g.strokeStyle = `rgba(${IK},.14)`; g.lineWidth = 1.2; g.beginPath(); g.arc(p.x, p.y, p.r * 8, 0, 6.28); g.stroke(); glow(p.x - p.r * 2, p.y - p.r * 2, p.r * 4, '255,255,255', .5); } },
+    traveler(){ glow(W * .78, -H * .05, Math.min(W, H) * .55, A1, .07 + .03 * Math.sin(T / 120)); for(const p of P){ p.t++; p.y -= p.v * .5; p.x += Math.sin(p.t / 60) * .3; if(p.y < -10){ p.y = H + 10; p.x = R(0, W); } dot(p.x, p.y, p.r * .7, `rgba(${A1},${.25 + .35 * Math.sin(p.t / 25) ** 2})`); } },
+    pyramid(){ for(const p of P){ p.a += p.v; p.y += .05; if(p.y - p.r > H) p.y = -p.r; g.strokeStyle = `rgba(${A1},${.08 + .07 * p.s})`; g.lineWidth = 1; g.beginPath();
         for(let k = 0; k < 3; k++){ const an = p.a + k * 2.094; const x = p.x + Math.cos(an) * p.r, y = p.y + Math.sin(an) * p.r; k ? g.lineTo(x, y) : g.moveTo(x, y); } g.closePath(); g.stroke(); } },
     terminal(){ g.font = '14px "IBM Plex Mono", monospace'; cols.forEach((c, i) => { if(!c.on) return; c.y += c.v; if(c.y > H + 200){ c.y = R(-300, 0); c.v = R(2, 5); }
-        for(let k = 0; k < 12; k++){ const y = c.y - k * 16; if(y < 0 || y > H) continue; g.fillStyle = k ? `rgba(63,224,197,${.22 - k * .017})` : 'rgba(190,255,240,.5)'; g.fillText(CHARS[(i * 7 + k * 3 + Math.floor(T / 8)) % CHARS.length], i * 16, y); } }); },
+        for(let k = 0; k < 12; k++){ const y = c.y - k * 16; if(y < 0 || y > H) continue; g.fillStyle = k ? `rgba(${A1},${.26 - k * .02})` : `rgba(${A2},.65)`; g.fillText(CHARS[(i * 7 + k * 3 + Math.floor(T / 8)) % CHARS.length], i * 16, y); } }); },
     dreaming(){ for(const p of P){ p.t++; p.y += p.v * .45; p.x += Math.sin(p.t / 50) * .7; p.a += .01; if(p.y > H + 20){ p.y = -20; p.x = R(0, W); }
-        g.save(); g.translate(p.x, p.y); g.rotate(p.a); g.fillStyle = `rgba(${p.c},${.18 + .12 * p.s})`; g.beginPath(); g.ellipse(0, 0, p.r * 2.6, p.r * 1.2, 0, 0, 6.28); g.fill(); g.restore();
+        g.save(); g.translate(p.x, p.y); g.rotate(p.a); g.fillStyle = `rgba(${p.c === 1 ? A1 : A2},${.22 + .14 * p.s})`; g.beginPath(); g.ellipse(0, 0, p.r * 2.6, p.r * 1.2, 0, 0, 6.28); g.fill(); g.restore();
         if(p.t % 140 < 20) glow(p.x, p.y, 10, '255,255,255', .25); } },
     neomuna(){ const hz = H * .62, sp = (T * 1.2) % 40; g.lineWidth = 1;
-      for(let i = 0; i < 18; i++){ const y = hz + Math.pow((i * 40 + sp) / 720, 2) * (H - hz) * 1.6; if(y > H) continue; g.strokeStyle = `rgba(255,79,216,${.05 + (y - hz) / (H - hz) * .18})`; g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
-      for(let i = -20; i <= 20; i++){ g.strokeStyle = 'rgba(79,214,255,.10)'; g.beginPath(); g.moveTo(W / 2 + i * 12, hz); g.lineTo(W / 2 + i * 140, H); g.stroke(); }
-      glow(W / 2, hz, W * .35, '255,79,216', .06); },
-    europa(){ for(const p of P){ p.t++; p.y += p.v * p.z * 1.4; p.x += Math.sin(p.t / 60 + p.a) * .5 * p.z - .25; if(p.y > H + 5){ p.y = -5; p.x = R(0, W + 100); } dot(p.x, p.y, p.r * p.z, `rgba(220,240,255,${.25 + .45 * p.z})`); } },
+      for(let i = 0; i < 18; i++){ const y = hz + Math.pow((i * 40 + sp) / 720, 2) * (H - hz) * 1.6; if(y > H) continue; g.strokeStyle = `rgba(${A1},${.06 + (y - hz) / (H - hz) * .22})`; g.beginPath(); g.moveTo(0, y); g.lineTo(W, y); g.stroke(); }
+      for(let i = -20; i <= 20; i++){ g.strokeStyle = `rgba(${A2},.13)`; g.beginPath(); g.moveTo(W / 2 + i * 12, hz); g.lineTo(W / 2 + i * 140, H); g.stroke(); }
+      glow(W / 2, hz, W * .35, A1, .08); },
+    europa(){ for(const p of P){ p.t++; p.y += p.v * p.z * 1.4; p.x += Math.sin(p.t / 60 + p.a) * .5 * p.z - .25; if(p.y > H + 5){ p.y = -5; p.x = R(0, W + 100); } dot(p.x, p.y, p.r * p.z, `rgba(${IK},${.25 + .5 * p.z})`); } },
     hive(){ for(const p of P){ p.t++; p.y -= p.v * .6; p.x += Math.sin(p.t / 30 + p.a) * .6; if(p.y < -30){ p.y = H + 30; p.x = R(0, W); }
-        const fl = .5 + .5 * Math.sin(p.t / 6 + p.a) * Math.sin(p.t / 17); glow(p.x, p.y, p.r * 10, '140,255,106', .05 + .08 * fl); dot(p.x, p.y, p.r * .6, `rgba(190,255,170,${.3 + .4 * fl})`); } },
+        const fl = .5 + .5 * Math.sin(p.t / 6 + p.a) * Math.sin(p.t / 17); glow(p.x, p.y, p.r * 10, A1, .06 + .1 * fl); dot(p.x, p.y, p.r * .6, `rgba(${A2},${.3 + .4 * fl})`); } },
     ember(){ for(const p of P){ p.t++; p.y -= p.v * 1.6; p.x += Math.sin(p.t / 18 + p.a) * .9; if(p.y < -10){ p.y = H + 10; p.x = R(0, W); }
-        const life = Math.max(0, p.y / H); dot(p.x, p.y, p.r * .8, `rgba(255,${120 + 80 * life | 0},40,${.15 + .55 * life})`); if(p.r > 2.2) glow(p.x, p.y, 14, '255,122,47', .08 * life); }
-      const gr = g.createLinearGradient(0, H, 0, H * .6); gr.addColorStop(0, 'rgba(255,90,30,.10)'); gr.addColorStop(1, 'rgba(255,90,30,0)'); g.fillStyle = gr; g.fillRect(0, H * .6, W, H * .4); },
-    nebula(){ glow(W * .2, H * .3, W * .4, '120,90,255', .06); glow(W * .85, H * .75, W * .35, '255,120,200', .05);
-      for(const p of P){ p.t++; p.x -= p.z * .15; if(p.x < 0) p.x = W; dot(p.x, p.y, p.r * .5 * p.z, `rgba(230,230,255,${.2 + .6 * p.z * (.6 + .4 * Math.sin(p.t / (10 + p.z * 30)))})`); }
+        const life = Math.max(0, p.y / H); dot(p.x, p.y, p.r * .8, `rgba(${life > .5 ? A2 : A1},${.18 + .6 * life})`); if(p.r > 2.2) glow(p.x, p.y, 14, A1, .1 * life); }
+      const gr = g.createLinearGradient(0, H, 0, H * .6); gr.addColorStop(0, `rgba(${A1},.12)`); gr.addColorStop(1, `rgba(${A1},0)`); g.fillStyle = gr; g.fillRect(0, H * .6, W, H * .4); },
+    nebula(){ glow(W * .2, H * .3, W * .4, A1, .08); glow(W * .85, H * .75, W * .35, A2, .07);
+      for(const p of P){ p.t++; p.x -= p.z * .15; if(p.x < 0) p.x = W; dot(p.x, p.y, p.r * .5 * p.z, `rgba(${IK},${.2 + .6 * p.z * (.6 + .4 * Math.sin(p.t / (10 + p.z * 30)))})`); }
       if(!DRAW.star && Math.random() < .006) DRAW.star = { x: R(W * .3, W), y: R(0, H * .4), l: 0 };
       if(DRAW.star){ const s = DRAW.star; s.l += 14; const x = s.x - s.l, y = s.y + s.l * .45; const gr = g.createLinearGradient(x, y, x + 120, y - 54); gr.addColorStop(0, 'rgba(255,255,255,.8)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
         g.strokeStyle = gr; g.lineWidth = 1.6; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 120, y - 54); g.stroke(); if(s.l > 500) DRAW.star = null; } },
@@ -2580,6 +2664,7 @@ let BG_ON = STORE.get('hunterFx', true), FX_MODE = STORE.get('hunterFxMode', 'th
   const run = () => { const want = BG_ON && !REDUCED && FX_MODE !== 'off'; cv.style.display = want ? '' : 'none'; if(want && !raf) raf = requestAnimationFrame(frame); if(!want && raf){ cancelAnimationFrame(raf); raf = 0; } };
   const choose = () => { const k = FX_MODE === 'element' ? el : (DRAW[theme] ? theme : 'tower'); const nk = FX_MODE === 'element' ? 'element:' + el : k; if(nk !== key){ key = FX_MODE === 'element' ? el : k; spawn(); } run(); };
   size();
+  window.fxColors = (a1, a2, ik, k) => { A1 = a1; A2 = a2; IK = ik; FXK = k; cv.style.opacity = k > 1 ? 1 : k < 1 ? .55 : .85; if(key) spawn(); };
   window.fxSet = e => { el = e || 'Arc'; if(FX_MODE === 'element') choose(); else if(!key) choose(); };
   window.fxTheme = t => { theme = t === 'dark' ? 'tower' : t; choose(); };
   window.fxMode = m => { FX_MODE = m; STORE.set('hunterFxMode', m); BG_ON = m !== 'off'; STORE.set('hunterFx', BG_ON); key = ''; choose(); };
@@ -2592,12 +2677,6 @@ let BG_ON = STORE.get('hunterFx', true), FX_MODE = STORE.get('hunterFxMode', 'th
 let ACCENT = STORE.get('hunterAccent', '');
 const _setTint2 = setTint;
 setTint = function(el){ _setTint2(el); if(ACCENT) document.body.style.setProperty('--tint', ACCENT); if(window.fxSet) window.fxSet(el || 'Arc'); };
-{ const m = document.getElementById('thmenu'); const add = () => { if(m.querySelector('.accrow')) return; m.insertAdjacentHTML('beforeend', `<div class="accrow"><label>Accent <input type="color" id="acc-in" value="${ACCENT || '#7cc4f2'}"></label><button type="button" class="btn sm" id="acc-reset">Use element colors</button></div>
-    <label class="accrow">Background <select id="fx-in">${[['theme','Theme animation'],['element','By element'],['off','Off']].map(([k,l]) => `<option value="${k}" ${FX_MODE === k ? 'selected' : ''}>${l}</option>`).join('')}</select></label>`);
-    m.querySelector('#acc-in').oninput = e => { ACCENT = e.target.value; STORE.set('hunterAccent', ACCENT); document.body.style.setProperty('--tint', ACCENT); };
-    m.querySelector('#acc-reset').onclick = () => { ACCENT = ''; STORE.set('hunterAccent', ''); const r = RES.find(x => x.b.id === current); setTint(r ? r.b.el : 'Arc'); };
-    m.querySelector('#fx-in').onchange = e => window.fxMode(e.target.value); };
-  new MutationObserver(add).observe(m, { childList: true }); add(); m.addEventListener('click', e => { if(e.target.closest('.accrow')) e.stopPropagation(); }, true); }
 
 /* ---------- Home tab: widgets you can drag around ---------- */
 const WIDGETS = {
@@ -2764,14 +2843,6 @@ let HOLI = STORE.get('hunterHoliday', true), ZOOM = STORE.get('hunterZoom', 100)
 function applyLook(){ const d = document.documentElement; d.style.setProperty('--zoom', ZOOM / 100); d.classList.toggle('dense', DENSE);
   if(HOLIDAY && HOLI){ d.dataset.holiday = HOLIDAY[0]; } else delete d.dataset.holiday; }
 applyLook();
-{ const m = document.getElementById('thmenu'); const add = () => { if(m.querySelector('.lookrow')) return;
-    m.insertAdjacentHTML('beforeend', `<div class="lookrow"><label>Text size <input type="range" id="zoom-in" min="85" max="125" step="5" value="${ZOOM}"> <span id="zoom-v">${ZOOM}%</span></label></div>
-      <label class="lookrow"><input type="checkbox" id="dense-in" ${DENSE ? 'checked' : ''}> Compact layout</label>
-      <label class="lookrow"><input type="checkbox" id="holi-in" ${HOLI ? 'checked' : ''}> Holiday themes${HOLIDAY ? ` (${HOLIDAY[1]} now)` : ' (Festival of the Lost, The Dawning)'}</label>`);
-    m.querySelector('#zoom-in').oninput = e => { ZOOM = +e.target.value; m.querySelector('#zoom-v').textContent = ZOOM + '%'; STORE.set('hunterZoom', ZOOM); applyLook(); };
-    m.querySelector('#dense-in').onchange = e => { DENSE = e.target.checked; STORE.set('hunterDense', DENSE); applyLook(); };
-    m.querySelector('#holi-in').onchange = e => { HOLI = e.target.checked; STORE.set('hunterHoliday', HOLI); applyLook(); }; };
-  new MutationObserver(add).observe(m, { childList: true }); add(); m.addEventListener('click', e => { if(e.target.closest('.lookrow')) e.stopPropagation(); }, true); }
 
 /* ---------- Ctrl+K command palette ---------- */
 {
@@ -2780,7 +2851,6 @@ applyLook();
     document.querySelectorAll('nav.tabs > button[role=tab]').forEach(b => L.push({ t: 'Go to ' + b.textContent.trim(), k: 'tab', run: () => b.click() }));
     RES.forEach(r => { L.push({ t: r.b.name, k: 'build', sub: r.ready ? 'score ' + r.total : 'missing something', run: () => { current = r.b.id; openTab('builds'); renderList(); swapDetail(); } });
       if(r.ready && IS_APP) L.push({ t: 'Equip ' + r.b.name, k: 'equip', run: async () => { appToast(`Equipping ${r.b.name}…`, 'busy'); const res = await window.hunterApp.equip(buildPayload(r)); appToast(res.ok ? `Equipped ${r.b.name}.` : 'Could not equip: ' + res.msg, res.ok ? 'ok' : 'err'); } }); });
-    THEMES.forEach(([id, n]) => L.push({ t: 'Theme: ' + n, k: 'theme', run: () => applyTheme(id) }));
     if(IS_APP){ L.push({ t: 'Refresh from DIM', k: 'action', run: () => window.hunterApp.refresh() }); if(window.hunterApp.compact) L.push({ t: 'Open compact window', k: 'action', run: () => window.hunterApp.compact() }); }
     DATA.items.forEach(i => L.push({ t: i.n, k: i.w ? 'weapon' : 'armor', sub: (i.t || '') + (i.pw ? ' · ' + i.pw : ''), it: i, run: () => openItem(i.id) }));
     return L; };
@@ -2826,7 +2896,7 @@ function renderWeekly(){
 const _renderExtras6 = renderExtras; renderExtras = function(){ _renderExtras6(); renderWeekly(); };
 if(IS_APP && window.hunterApp.onTasks) window.hunterApp.onTasks(t => { const before = TASKS ? new Set(TASKS.tasks.filter(x => x.done).map(x => x.n)) : null; TASKS = t; renderWeekly();
   if(before && location.hash !== '#overlay' && t.tasks.some(x => x.done && !before.has(x.n))) playSound('chime'); });
-document.addEventListener('click', e => { const b = e.target.closest('nav.tabs > button[data-tab=weekly]'); if(b) setTimeout(renderWeekly, 450); });
+document.addEventListener('click', e => { const b = e.target.closest('nav.tabs > button[data-tab=weekly]'); if(b && TASKS) setTimeout(() => { TASKS.tasks.filter(t => t.done).forEach(t => WK_DONE_SEEN.add(t.n)); STORE.set('hunterWkSeen', [...WK_DONE_SEEN].slice(-100)); }, 2500); });
 // new week: forget which ticks were already shown
 { const wk = weekKey(new Date()); if(STORE.get('hunterWkSeenWeek', 0) !== wk){ WK_DONE_SEEN = new Set(); STORE.set('hunterWkSeen', []); STORE.set('hunterWkSeenWeek', wk); } }
 
@@ -2938,6 +3008,106 @@ const _openItem3 = openItem;
 openItem = function(id, opener){ _openItem3(id, opener); const it = itemById(id); if(!it || !(it.w || ARMS[it.s]) || !RES.length) return; const v = verdict(it); const ph = document.querySelector('#overlay .pop .ph');
   if(ph && !document.querySelector('#overlay .pop .pverd')) ph.insertAdjacentHTML('afterend', `<div class="pverd v-${v.k}"><span class="vb ${v.k}">${v.l}</span><span>${v.why.map(esc).join(' · ')}</span></div>`); };
 
+/* =====================  COLOR PALETTE (replaces themes)  ===================== */
+const hx = h => { h = (h || '#000').replace('#', ''); if(h.length === 3) h = h.split('').map(c => c + c).join(''); const n = parseInt(h, 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; };
+const toHex = a => '#' + a.map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2, '0')).join('');
+const mixC = (a, b, t) => { const A = hx(a), B = hx(b); return toHex(A.map((v, i) => v + (B[i] - v) * t)); };
+const lumC = h => { const [r, g, b] = hx(h).map(v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4); }); return .2126 * r + .7152 * g + .0722 * b; };
+const rgbS = h => hx(h).join(',');
+const hsl2hex = (h, s, l) => { s /= 100; l /= 100; const k = n => (n + h / 30) % 12, a = s * Math.min(l, 1 - l), f = n => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1))); return toHex([f(0) * 255, f(8) * 255, f(4) * 255]); };
+const OLD_THEMES = { dark:['#7cc4f2','#b68ce6','#141a2e','#1d2440','#ece7dc','tower'], light:['#2d3b78','#7a5cc2','#eef0f6','#ffffff','#1b2033','light'], traveler:['#e0b04a','#9c7a3a','#15120e','#211b14','#f3e9d2','traveler'],
+  pyramid:['#8f6cff','#5b45b0','#060609','#0e0e15','#e6e3f2','pyramid'], terminal:['#3fe0c5','#bfffee','#030b0b','#071514','#c9f7ee','terminal'], dreaming:['#ff8fcf','#7fe3ea','#140c26','#22163a','#f6eefe','dreaming'],
+  neomuna:['#ff4fd8','#4fd6ff','#070816','#0f1230','#f1edff','neomuna'], europa:['#9fd6ff','#5aa7d8','#0b1520','#12202e','#eaf5ff','europa'], hive:['#8cff6a','#c8ffb5','#070b08','#0f1611','#e3f2e3','hive'],
+  ember:['#ff7a2f','#ffcf5a','#140907','#1f100c','#fbe9df','ember'], nebula:['#b8a6ff','#ff8fd0','#05060f','#0d0f22','#ecebff','nebula'] };
+let PAL = STORE.get('hunterPalette', null);
+if(!PAL){ const o = OLD_THEMES[STORE.get('hunterTheme', 'dark')] || OLD_THEMES.dark; const oldAcc = STORE.get('hunterAccent', ''); const fm = STORE.get('hunterFxMode', 'theme');
+  PAL = { acc: oldAcc || o[0], acc2: o[1], bg: o[2], panel: o[3], ink: o[4], anim: STORE.get('hunterFx', true) === false || fm === 'off' ? 'off' : fm === 'element' ? 'element' : o[5], elTint: false, autoPanel: true, k: 'strong' }; }
+const PAL_DEF = { acc:'#7cc4f2', acc2:'#b68ce6', bg:'#141a2e', panel:'#1d2440', ink:'#ece7dc', anim:'tower', elTint:false, autoPanel:true, k:'strong' };
+const ANIMS = [['tower','Drifting lights'],['light','Bubbles'],['traveler','Golden motes'],['pyramid','Rotating triangles'],['terminal','Code rain'],['dreaming','Falling petals'],['neomuna','Neon grid'],['europa','Snowfall'],['hive','Wisps'],['ember','Embers'],['nebula','Starfield'],['element','By build element'],['off','Off']];
+const SW = { acc: ['#7cc4f2','#4fd6ff','#3fe0c5','#3fdc78','#8cff6a','#d9e65a','#e0b04a','#f2803a','#ff5a4f','#ff4fd8','#ff8fcf','#b68ce6','#8f6cff','#5d8fff','#ffffff','#2d3b78'],
+  bg: ['#05060f','#0b0f1c','#141a2e','#101018','#0b1520','#070b08','#140907','#1d1036','#18181b','#232323','#eef0f6','#f6f1e7'], ink: ['#ece7dc','#ffffff','#e6eef8','#e8e2ff','#d9f2e6','#fbe9df','#1b2033','#2a2117'] };
+const FXK = { subtle: .6, normal: 1, strong: 1.6 };
+function applyPalette(save){
+  const P = PAL, d = document.documentElement, light = lumC(P.bg) > .45;
+  if(P.autoPanel) P.panel = light ? mixC(P.bg, '#ffffff', .75) : mixC(P.bg, P.ink, .06);
+  applyTheme(light ? 'light' : 'custom');
+  const v = { '--bg': P.bg, '--panel': P.panel, '--panel2': mixC(P.panel, P.ink, .06), '--line': mixC(P.panel, P.ink, .17), '--ink': P.ink, '--mute': mixC(P.ink, P.bg, .42),
+    '--track': mixC(P.panel, P.ink, .1), '--acc': P.acc, '--acc2': P.acc2, '--acc-ink': lumC(P.acc) > .45 ? '#10131f' : '#ffffff',
+    '--pop': mixC(P.panel, P.bg, .2), '--pop2': mixC(P.bg, P.panel, .35), '--popline': mixC(P.panel, P.ink, .18), '--fxk': FXK[P.k] || 1 };
+  for(const k in v) d.style.setProperty(k, v[k]);
+  d.classList.toggle('palette-light', light);
+  const mc = document.querySelector('meta[name=theme-color]'); if(mc) mc.content = P.bg;
+  ACCENT = P.elTint ? '' : P.acc; if(!P.elTint) document.body.style.setProperty('--tint', P.acc); else if(typeof RES !== 'undefined' && RES.length){ const r = RES.find(x => x.b.id === current); setTint(r ? r.b.el : 'Arc'); }
+  if(window.fxColors) window.fxColors(rgbS(P.acc), rgbS(P.acc2), rgbS(light ? P.ink : mixC(P.ink, '#ffffff', .3)), FXK[P.k] || 1);
+  if(window.fxMode){ if(P.anim === 'off') window.fxMode('off'); else if(P.anim === 'element') window.fxMode('element'); else { if(FX_MODE !== 'theme') window.fxMode('theme'); window.fxTheme(P.anim); } }
+  if(save !== false) STORE.set('hunterPalette', P);
+  const b = document.getElementById('theme-btn'); if(b){ b.innerHTML = `<span class="pdot" style="background:linear-gradient(135deg,${P.acc},${P.acc2})"></span> Colors`; b.setAttribute('aria-label', 'Colors and animations'); }
+}
+function renderPalette(){
+  const m = document.getElementById('thmenu'); if(!m) return; const P = PAL;
+  const row = (key, label, sw) => `<div class="prow"><div class="plab"><span>${label}</span><span class="pin"><input type="color" data-pk="${key}" value="${P[key]}" aria-label="${label}"><input type="text" class="phex" data-ph="${key}" value="${P[key]}" maxlength="7" aria-label="${label} hex"></span></div>
+    ${sw ? `<div class="psw">${sw.map(c => `<button type="button" class="swb ${c.toLowerCase() === P[key].toLowerCase() ? 'on' : ''}" data-sk="${key}" data-c="${c}" style="background:${c}" aria-label="${c}"></button>`).join('')}</div>` : ''}</div>`;
+  m.innerHTML = `<div class="palp" role="dialog" aria-label="Colors">
+    <div class="ptop"><b>Colors</b><span><button type="button" class="btn sm" id="pal-shuffle" title="Random matching colors">🎲 Shuffle</button> <button type="button" class="btn sm" id="pal-reset">Reset</button></span></div>
+    <div class="pprev" aria-hidden="true"><span style="background:${P.bg}"></span><span style="background:${P.panel}"></span><span style="background:${P.acc}"></span><span style="background:${P.acc2}"></span><span style="background:${P.ink}"></span></div>
+    ${row('acc', 'Accent', SW.acc)}${row('acc2', 'Second accent', SW.acc)}${row('bg', 'Background', SW.bg)}
+    <div class="prow"><div class="plab"><span>Panels</span><span class="pin"><label class="pchk"><input type="checkbox" id="pal-auto" ${P.autoPanel ? 'checked' : ''}> auto</label><input type="color" data-pk="panel" value="${P.panel}" ${P.autoPanel ? 'disabled' : ''} aria-label="Panels"></span></div></div>
+    ${row('ink', 'Text', SW.ink)}
+    <label class="pchk prow"><input type="checkbox" id="pal-el" ${P.elTint ? 'checked' : ''}> Accent follows the selected build's element</label>
+    <div class="psec">Animations</div>
+    <label class="prow plab">Background <select id="pal-anim">${ANIMS.map(([k, l]) => `<option value="${k}" ${P.anim === k ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
+    <div class="prow plab"><span>Strength</span><span class="pseg">${[['subtle','Subtle'],['normal','Normal'],['strong','Strong']].map(([k, l]) => `<button type="button" class="btn sm ${P.k === k ? 'primary' : ''}" data-fk="${k}">${l}</button>`).join('')}</span></div>
+    <div class="psec">Layout</div>
+    <label class="prow plab">Text size <span><input type="range" id="zoom-in" min="85" max="125" step="5" value="${ZOOM}"> <span id="zoom-v">${ZOOM}%</span></span></label>
+    <label class="pchk prow"><input type="checkbox" id="dense-in" ${DENSE ? 'checked' : ''}> Compact layout</label>
+    <label class="pchk prow"><input type="checkbox" id="holi-in" ${HOLI ? 'checked' : ''}> Holiday touches${HOLIDAY ? ` (${HOLIDAY[1]} now)` : ''}</label></div>`;
+  const set = (k, c) => { if(!/^#[0-9a-f]{6}$/i.test(c)) return; PAL[k] = c.toLowerCase(); if(k === 'panel') PAL.autoPanel = false; applyPalette(); syncInputs(); };
+  const syncInputs = () => { m.querySelectorAll('[data-pk]').forEach(x => { x.value = PAL[x.dataset.pk]; if(x.dataset.pk === 'panel') x.disabled = PAL.autoPanel; }); m.querySelectorAll('[data-ph]').forEach(x => { if(document.activeElement !== x) x.value = PAL[x.dataset.ph]; });
+    m.querySelectorAll('[data-sk]').forEach(x => x.classList.toggle('on', x.dataset.c.toLowerCase() === PAL[x.dataset.sk])); const pv = m.querySelectorAll('.pprev span'); [PAL.bg, PAL.panel, PAL.acc, PAL.acc2, PAL.ink].forEach((c, i) => pv[i] && (pv[i].style.background = c)); };
+  m.querySelectorAll('[data-pk]').forEach(x => x.oninput = () => set(x.dataset.pk, x.value));
+  m.querySelectorAll('[data-ph]').forEach(x => x.oninput = () => { let v = x.value.trim(); if(!v.startsWith('#')) v = '#' + v; if(/^#[0-9a-f]{6}$/i.test(v)) set(x.dataset.ph, v); });
+  m.querySelectorAll('[data-sk]').forEach(x => x.onclick = () => { set(x.dataset.sk, x.dataset.c); playSound('tick'); });
+  m.querySelector('#pal-auto').onchange = e => { PAL.autoPanel = e.target.checked; applyPalette(); syncInputs(); };
+  m.querySelector('#pal-el').onchange = e => { PAL.elTint = e.target.checked; applyPalette(); };
+  m.querySelector('#pal-anim').onchange = e => { PAL.anim = e.target.value; applyPalette(); };
+  m.querySelectorAll('[data-fk]').forEach(x => x.onclick = () => { PAL.k = x.dataset.fk; applyPalette(); m.querySelectorAll('[data-fk]').forEach(y => y.classList.toggle('primary', y === x)); });
+  m.querySelector('#pal-reset').onclick = () => { PAL = { ...PAL_DEF }; applyPalette(); renderPalette(); };
+  m.querySelector('#pal-shuffle').onclick = () => { const h = Math.floor(Math.random() * 360), h2 = (h + 40 + Math.floor(Math.random() * 140)) % 360;
+    Object.assign(PAL, { acc: hsl2hex(h, 85, 66), acc2: hsl2hex(h2, 80, 66), bg: hsl2hex(h, 38, 7), ink: hsl2hex(h, 30, 93), autoPanel: true }); applyPalette(); renderPalette(); playSound('chime'); };
+  m.querySelector('#zoom-in').oninput = e => { ZOOM = +e.target.value; m.querySelector('#zoom-v').textContent = ZOOM + '%'; STORE.set('hunterZoom', ZOOM); applyLook(); };
+  m.querySelector('#dense-in').onchange = e => { DENSE = e.target.checked; STORE.set('hunterDense', DENSE); applyLook(); };
+  m.querySelector('#holi-in').onchange = e => { HOLI = e.target.checked; STORE.set('hunterHoliday', HOLI); applyLook(); };
+}
+document.getElementById('theme-btn').addEventListener('click', () => { if(!document.getElementById('thmenu').hidden) renderPalette(); });
+applyPalette(false); renderPalette();
+
+/* =====================  MOTION 3: clearer, bolder animations  ===================== */
+{
+  const anim = () => !REDUCED;
+  // sliding glow pill behind the selected tab
+  const nav = document.querySelector('nav.tabs'); const pill = document.createElement('span'); pill.className = 'tabpill'; pill.setAttribute('aria-hidden', 'true'); nav && nav.prepend(pill);
+  const movePill = (instant) => { const b = nav && nav.querySelector('button[role=tab][aria-selected=true]'); if(!b){ pill.style.opacity = 0; return; }
+    if(instant) pill.style.transition = 'none'; pill.style.opacity = 1; pill.style.width = b.offsetWidth + 'px'; pill.style.height = b.offsetHeight + 'px'; pill.style.transform = `translate(${b.offsetLeft}px, ${b.offsetTop}px)`;
+    if(instant){ void pill.offsetWidth; pill.style.transition = ''; } };
+  if(nav){ new MutationObserver(() => movePill()).observe(nav, { attributes: true, subtree: true, attributeFilter: ['aria-selected'] }); addEventListener('resize', () => movePill(true)); setTimeout(() => movePill(true), 50); setTimeout(() => movePill(true), 900); }
+  // cursor light
+  const cg = document.createElement('div'); cg.id = 'cglow'; cg.setAttribute('aria-hidden', 'true'); document.body.appendChild(cg); let cx = 0, cy = 0, craf = 0;
+  addEventListener('pointermove', e => { cx = e.clientX; cy = e.clientY; if(!craf && anim()) craf = requestAnimationFrame(() => { cg.style.transform = `translate(${cx - 300}px, ${cy - 300}px)`; cg.style.opacity = ''; craf = 0; }); }, { passive: true });
+  document.addEventListener('pointerleave', () => { cg.style.opacity = 0; });
+  // popup grows out of the icon you clicked
+  let lastX = innerWidth / 2, lastY = innerHeight / 3; addEventListener('pointerdown', e => { lastX = e.clientX; lastY = e.clientY; }, true);
+  const _oi = openItem; openItem = function(id, opener){ _oi(id, opener); const pop = document.querySelector('#overlay .pop'); if(!pop || !anim()) return; const r = pop.getBoundingClientRect();
+    pop.style.setProperty('--ox', Math.max(0, Math.min(r.width, lastX - r.left)) + 'px'); pop.style.setProperty('--oy', Math.max(0, Math.min(r.height, lastY - r.top)) + 'px'); pop.classList.remove('zoomin'); void pop.offsetWidth; pop.classList.add('zoomin'); };
+  // stat numbers count up and bars fill one after another when a build opens
+  const countVal = el => { const n = el.firstChild; if(!n || n.nodeType !== 3) return; const target = parseInt(n.nodeValue, 10); if(!target) return; const t0 = performance.now(), dur = 700 + 200 * (FXK[PAL.k] || 1);
+    const step = now => { const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 3); n.nodeValue = String(Math.round(target * e)); if(k < 1) requestAnimationFrame(step); else n.nodeValue = String(target); }; requestAnimationFrame(step); };
+  const _rd = renderDetail; renderDetail = function(){ _rd(); if(!anim() || !document.body.classList.contains('booted')) return; const det = document.getElementById('detail');
+    det.querySelectorAll('.st').forEach((st, i) => { st.style.setProperty('--si', i); const v = st.querySelector('.val'); if(v) countVal(v); });
+    det.querySelectorAll('section.blk').forEach((s, i) => s.style.setProperty('--bi', i)); };
+  // build list rises in when the Builds tab opens; score pops on select
+  document.addEventListener('click', e => { const b = e.target.closest('.bsel'); if(!b || !anim()) return; setTimeout(() => { const sc = document.querySelector('.bitem[aria-current=true] .score'); if(sc){ sc.classList.remove('spop'); void sc.offsetWidth; sc.classList.add('spop'); } }, 30); });
+}
+
 renderAll();
 
 /* ---------- motion layer 2: ripple, cursor spotlight, tilt, scroll reveal, theme crossfade ---------- */
@@ -2967,8 +3137,7 @@ renderAll();
   const mo = new MutationObserver(ms => { for(const m of ms) m.addedNodes.forEach(n => { if(n.nodeType === 1){ stagger(n); reveal(n); } }); });
   mo.observe(document.body, { childList: true, subtree: true }); stagger(document.body); reveal(document.body);
   // smooth crossfade when the theme changes
-  const _apply = applyTheme;
-  applyTheme = function(t){ if(document.startViewTransition && !REDUCED && document.body.classList.contains('booted')) document.startViewTransition(() => _apply(t)); else _apply(t); };
+  // theme crossfade removed: colors now change live from the palette
 }
 
 /* ---------- micro-interactions ---------- */
