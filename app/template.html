@@ -699,6 +699,19 @@ body.overlay #ovl{display:flex;flex-direction:column;gap:8px;padding:10px;height
 #ovl .ovp{display:flex;gap:8px;align-items:center;margin-top:4px;font-size:12px}#ovl kbd{font-family:"IBM Plex Mono",monospace;font-size:10.5px;background:var(--bg);border:1px solid var(--line);border-radius:4px;padding:1px 5px;color:var(--tint)}
 #ovl .ovf{text-align:center;font-size:10.5px;background:transparent!important;border:0!important;box-shadow:none!important;padding:2px!important;text-shadow:0 1px 3px #000}
 #ovl .ovset{display:flex;flex-direction:column;gap:6px}#ovl .ovrow{display:flex;gap:5px;align-items:center;flex-wrap:wrap;font-size:12px}#ovl .ovrow input[type=range]{flex:1}
+/* ===== new drops verdicts ===== */
+.newbar.drops{display:block;padding:12px 14px}
+.dhd{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center}.dhd > b{font-size:15px}.dsum,.dact{display:flex;flex-wrap:wrap;gap:6px;align-items:center}.dact{margin-left:auto}
+.dlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:6px;margin-top:10px;max-height:340px;overflow:auto}
+.drow{display:flex;gap:9px;align-items:center;padding:6px 8px;border-radius:7px;background:color-mix(in srgb,var(--bg) 70%,transparent);border-left:3px solid var(--line)}.drow .dtx{flex:1;min-width:0}.drow .dtx .perk{font-size:11.5px;line-height:1.3}
+.vb{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.04em;padding:2px 8px;border-radius:10px;white-space:nowrap;border:1px solid transparent}
+.vb.god{background:linear-gradient(90deg,#f6d36b,#e0a92c);color:#2a1d02;box-shadow:0 0 12px rgba(240,200,80,.45);animation:godPulse 2.4s ease-in-out infinite}
+.vb.up{background:#2f8f5b;color:#eafff2}.vb.keep{background:color-mix(in srgb,var(--good) 25%,transparent);color:var(--good);border-color:color-mix(in srgb,var(--good) 55%,transparent)}
+.vb.ok{background:transparent;color:var(--mute);border-color:var(--line)}.vb.junk{background:color-mix(in srgb,#c0545a 22%,transparent);color:#ef9a9f;border-color:color-mix(in srgb,#c0545a 55%,transparent)}
+.drow.v-god{border-left-color:#e6c14a;background:linear-gradient(90deg,rgba(230,193,74,.16),transparent 70%)}.drow.v-up{border-left-color:#3fb877}.drow.v-keep{border-left-color:var(--good)}.drow.v-junk{border-left-color:#c0545a;opacity:.85}
+@keyframes godPulse{0%,100%{box-shadow:0 0 6px rgba(240,200,80,.35)}50%{box-shadow:0 0 16px rgba(240,200,80,.75)}}
+.pverd{display:flex;gap:10px;align-items:center;padding:8px 16px;font-size:12.5px;border-bottom:1px solid var(--popline,var(--line))}.pverd.v-god{background:linear-gradient(90deg,rgba(230,193,74,.18),transparent)}.pverd.v-junk{background:linear-gradient(90deg,rgba(192,84,90,.15),transparent)}.pverd.v-up,.pverd.v-keep{background:linear-gradient(90deg,color-mix(in srgb,var(--good) 15%,transparent),transparent)}
+@media (prefers-reduced-motion:reduce){.vb.god{animation:none}}
 /* ===== extra themes ===== */
 .thwrap{position:relative;align-self:center}
 .thmenu{position:absolute;right:0;top:calc(100% + 6px);z-index:60;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px;min-width:230px;box-shadow:0 14px 40px rgba(0,0,0,.45)}
@@ -2099,6 +2112,7 @@ const BG = {
  'Weekly':'Седмични','Left to do':'Остават','Done':'Готови','Weekly milestones':'Седмични задачи','Raids':'Рейдове','Dungeons':'Подземия','Orders':'Поръчки','Bounties':'Задачи с награда',
  'Neomuna':'Неомуна','Europa':'Европа','Hive':'Кошер','Ember':'Жарава','Nebula':'Мъглявина','Neon city, moving grid':'Неонов град, движеща се мрежа','Ice blue, falling snow':'Леденосиньо, падащ сняг','Moon dark, green wisps':'Тъмна луна, зелени духчета','Forge red, rising embers':'Червено като ковачница, искри','Deep space, shooting stars':'Дълбок космос, падащи звезди','Background':'Фон','Theme animation':'Анимация на темата','By element':'По елемент','Off':'Изключен',
  'In-game overlay':'Overlay в играта','Quick equip':'Бързо екипиране','Hide overlay':'Скрий overlay',
+ 'Mark as seen':'Маркирай като видяни','Exotic':'Екзотика','Keep':'Пази','Good roll':'Добър рол','Trash roll':'Лош рол','Junk':'Боклук','Probably junk':'Вероятно боклук','Decent':'Става','Set piece':'Част от сет','Good stats':'Добри статове',
  'Lock':'Заключи','Close':'Затвори','Perks':'Перкове','Stats':'Статове','Mods':'Модове','Intrinsic':'Вградено','Masterwork':'Мастъруърк'
 };
 const BG_RE = [
@@ -2859,6 +2873,70 @@ if(IS_OVL){
 if(IS_APP && window.hunterApp.overlayToggle){ const card = document.getElementById('app-compact'); if(card) card.insertAdjacentHTML('afterend', ' <button class="btn sm" id="app-overlay">In-game overlay</button>');
   const ob = document.getElementById('app-overlay'); if(ob) ob.onclick = () => window.hunterApp.overlayToggle();
   const note = document.querySelector('#app-compact') && document.querySelector('#app-compact').closest('.card'); if(note) note.insertAdjacentHTML('beforeend', '<p class="note">Overlay: set Destiny 2 to <b>Windowed Fullscreen</b> so it can show on top. Ctrl+Alt+O shows or hides it, Ctrl+Alt+I lets you click it (settings, corner, size, opacity). It is a separate window and never touches the game.</p>'); }
+
+/* ---------- New drops: a verdict for every new item (god roll / keep / okay / junk) ---------- */
+const ARMS = { H: 'helmet', A: 'gauntlets', C: 'chest', L: 'legs', K: 'cloak' };
+const statTotal = i => (i.st || []).reduce((t, s) => t + (+s[1] || 0), 0);
+const statOf = (i, name) => +((i.st || []).find(s => s[0] === name) || [])[1] || 0;
+function verdict(i){
+  const ready = RES.filter(r => r.ready);
+  if(i.w){
+    const W = weapons().find(w => w.i === i.id); const g = i.wl ? i.wl[0] : null; let best = null;
+    if(W) ready.forEach(r => { const x = rateWeapon(W, r.b); if(!best || x.s > best.s) best = { s: x.s, b: r.b, hits: x.hits }; });
+    const inLo = ready.find(r => r.weap.loadout.some(x => x && x.w.i === i.id));
+    const fit = best && best.hits.length ? `Perks for ${best.b.name}: ${best.hits.join(', ')}` : '';
+    const twins = DATA.items.filter(x => x.w && x.n === i.n && x.id !== i.id); const better = twins.find(x => (x.wl ? x.wl[0] : 0) > (g || 0));
+    if(g === 2) return { k: 'god', l: '★ GOD ROLL', why: ['Matches the wish-list god roll', inLo ? `Already picked for ${inLo.b.name}` : fit].filter(Boolean) };
+    if(i.ex) return { k: 'keep', l: 'Exotic', why: [inLo ? `Used by ${inLo.b.name}` : 'Exotic weapon — keep at least one copy', fit].filter(Boolean) };
+    if(inLo) return { k: 'keep', l: 'Keep', why: [`Picked for your ${inLo.b.name} loadout`, fit].filter(Boolean) };
+    if(g === 1) return { k: 'keep', l: 'Good roll', why: ['On the wish list as a good roll', fit].filter(Boolean) };
+    if(g === -1) return { k: 'junk', l: 'Trash roll', why: ['The wish list marks these perks as bad', better ? `You have a better ${i.n}` : ''].filter(Boolean) };
+    if(better) return { k: 'junk', l: 'Junk', why: [`You already have a better ${i.n}`] };
+    if(best && best.hits.length >= 2) return { k: 'ok', l: 'Decent', why: [fit] };
+    return { k: 'junk', l: 'Probably junk', why: ['Not on the wish list and no perks your builds use'] };
+  }
+  if(!ARMS[i.s]) return { k: 'ok', l: 'New', why: [] };
+  const tot = statTotal(i), tier = i.tier || 0;
+  if(i.ex){ const dupe = DATA.items.some(x => x.id !== i.id && x.n === i.n); return { k: 'keep', l: 'Exotic', why: [dupe ? `Compare with your other ${i.n}` : 'New exotic for your collection', `Tier ${tier} · total ${tot}`] }; }
+  const inSet = ready.find(r => r.combos && r.combos[0].set.some(p => (p.item || p).id === i.id));
+  if(inSet) return { k: 'up', l: '▲ UPGRADE', why: [`Now in your best armor for ${inSet.b.name}`, `Tier ${tier} · total ${tot}`] };
+  // better than the piece a build uses in that slot, on that build's two main stats
+  let gain = null;
+  ready.slice(0, 8).forEach(r => { const c = r.combos && r.combos[0]; if(!c) return; const cur = c.set.find(p => (p.item || p).s === i.s); if(!cur || cur.ex) return;
+    const pri = [0,1,2,3,4,5].sort((x,y) => r.b.w[y] - r.b.w[x]).slice(0, 2).map(k => SBG[k]);
+    const d = pri.reduce((t, n) => t + statOf(i, n) - statOf(cur.item || cur, n), 0); if(d > 5 && (!gain || d > gain.d)) gain = { d, r, pri, cur: cur.item || cur }; });
+  if(gain) return { k: 'keep', l: 'Keep', why: [`+${gain.d} ${gain.pri.join(' + ')} over your ${gain.cur.n} for ${gain.r.b.name}`, `Tier ${tier} · total ${tot}`] };
+  if(i.set && ready.some(r => r.b.sets && r.b.sets[i.set[0]])) return { k: 'ok', l: 'Set piece', why: [`${i.set[0]} — a set one of your builds uses`, `Tier ${tier} · total ${tot}`] };
+  if(tier >= 5 || tot >= 75) return { k: 'ok', l: 'Good stats', why: [`Tier ${tier} · total ${tot} — worth keeping for later builds`] };
+  return { k: 'junk', l: 'Probably junk', why: [`Tier ${tier} · total ${tot}, lower than what your builds use in this slot`] };
+}
+const VK = { god: 0, up: 1, keep: 2, ok: 3, junk: 4 };
+let DROP_NOTIFIED = new Set(STORE.get('hunterDropNotified', []));
+renderNewBanner = function(){
+  const el = document.getElementById('newbar'); const nw = DATA.items.filter(i => isNew(i.id));
+  if(!nw.length){ el.hidden = true; return; }
+  const L = nw.map(i => ({ i, v: verdict(i) })).sort((a,b) => VK[a.v.k] - VK[b.v.k]);
+  const cnt = k => L.filter(x => x.v.k === k).length;
+  const keepIds = L.filter(x => ['god','up','keep'].includes(x.v.k) && !x.i.lk).map(x => x.i.id), junkIds = L.filter(x => x.v.k === 'junk' && !x.i.lk).map(x => x.i.id);
+  el.hidden = false; el.classList.add('drops');
+  el.innerHTML = `<div class="dhd"><b>${nw.length} new item${nw.length > 1 ? 's' : ''}</b><span class="dsum">${cnt('god') ? `<span class="vb god">${cnt('god')} god roll${cnt('god') > 1 ? 's' : ''}</span>` : ''}${cnt('up') ? `<span class="vb up">${cnt('up')} upgrade${cnt('up') > 1 ? 's' : ''}</span>` : ''}${cnt('keep') ? `<span class="vb keep">${cnt('keep')} keep</span>` : ''}${cnt('ok') ? `<span class="vb ok">${cnt('ok')} okay</span>` : ''}${cnt('junk') ? `<span class="vb junk">${cnt('junk')} junk</span>` : ''}</span>
+      <span class="dact">${IS_APP && keepIds.length ? `<button type="button" class="btn sm" data-bulk="lock" data-ids="${keepIds.join(',')}">Lock ${keepIds.length} keeper${keepIds.length > 1 ? 's' : ''}</button>` : ''}${IS_APP && junkIds.length ? `<button type="button" class="btn sm" data-bulk="junk" data-ids="${junkIds.join(',')}">Tag ${junkIds.length} as Junk</button>` : ''}<button type="button" class="btn sm" id="seen-btn">Mark as seen</button></span></div>
+    <div class="dlist">${L.slice(0, 24).map(({ i, v }) => `<div class="drow v-${v.k}">${ico(i,'sm')}<div class="dtx"><div><span class="${i.ex ? 'exn' : ''}">${esc(i.n)}</span> <span class="perk">${esc(i.t || '')}${i.pw ? ' · ' + i.pw : ''}</span></div>${v.why.length ? `<div class="perk">${v.why.map(esc).join(' · ')}</div>` : ''}</div><span class="vb ${v.k}">${v.l}</span></div>`).join('')}
+      ${L.length > 24 ? `<div class="perk">+${L.length - 24} more</div>` : ''}</div>`;
+  el.querySelector('#seen-btn').onclick = markAllSeen;
+  // sound + one desktop notification per new batch
+  const fresh = L.filter(x => !DROP_NOTIFIED.has(x.i.id));
+  if(fresh.length && document.body.classList.contains('booted') && location.hash === ''){
+    playSound(fresh.some(x => x.v.k === 'god') ? 'drop' : 'chime');
+    const up = fresh.filter(x => x.v.k === 'up' || (x.v.k === 'keep' && !x.i.w));
+    if(up.length && IS_APP && window.hunterApp.notify) window.hunterApp.notify('Armor upgrade', up.slice(0, 3).map(x => `${x.i.n}: ${x.v.why[0]}`).join('\n'));
+  }
+  fresh.forEach(x => DROP_NOTIFIED.add(x.i.id)); STORE.set('hunterDropNotified', [...DROP_NOTIFIED].slice(-400));
+};
+// verdict in the item popup too
+const _openItem3 = openItem;
+openItem = function(id, opener){ _openItem3(id, opener); const it = itemById(id); if(!it || !(it.w || ARMS[it.s]) || !RES.length) return; const v = verdict(it); const ph = document.querySelector('#overlay .pop .ph');
+  if(ph && !document.querySelector('#overlay .pop .pverd')) ph.insertAdjacentHTML('afterend', `<div class="pverd v-${v.k}"><span class="vb ${v.k}">${v.l}</span><span>${v.why.map(esc).join(' · ')}</span></div>`); };
 
 renderAll();
 
