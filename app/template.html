@@ -927,6 +927,29 @@ nav.tabs > button::after{display:none}
 .rt-tab td{padding:8px;border-top:1px solid color-mix(in srgb,var(--ink,#fff) 8%,transparent)}.rt-tab tr:hover td{background:color-mix(in srgb,var(--acc) 8%,transparent)}
 .rt-tag{padding:2px 8px;border-radius:999px;background:#4fb0e6;color:#06121c;font-size:11px;font-weight:700}
 @media (prefers-reduced-motion:no-preference){#tab-rotation:not([hidden]) .rt-act{animation:riseIn 620ms var(--ease-spring,ease-out) both;animation-delay:calc(var(--ri,0) * 45ms)}}
+/* ===== loot / worth farming ===== */
+.lt-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.lt-head h3{margin:0}
+.seg{display:inline-flex;border:1px solid color-mix(in srgb,var(--ink,#fff) 14%,transparent);border-radius:999px;overflow:hidden}
+.seg button{background:none;border:0;color:inherit;padding:5px 12px;font:inherit;font-size:12px;cursor:pointer}.seg button.on{background:var(--acc);color:#0b0d12;font-weight:700}
+.lt-list{display:grid;gap:8px;margin-top:8px}
+.lt-row{border-radius:10px;border:1px solid color-mix(in srgb,var(--ink,#fff) 10%,transparent);background:color-mix(in srgb,var(--panel,#1b1f27) 70%,transparent);overflow:hidden;transition:border-color .2s}
+.lt-row:hover,.lt-row.open{border-color:color-mix(in srgb,var(--acc) 60%,transparent)}
+.lt-sum{all:unset;box-sizing:border-box;width:100%;display:grid;grid-template-columns:150px minmax(200px,280px) 1fr 18px;gap:12px;align-items:center;padding:10px 12px;cursor:pointer}
+.lt-sum:focus-visible{outline:2px solid var(--acc)}
+.lt-n{font-weight:700}.lt-why{font-size:12px;color:var(--mut,#9aa);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lt-car{transition:transform .25s}.lt-row.open .lt-car{transform:rotate(180deg)}
+.lt-v{display:inline-block;white-space:nowrap;text-align:center;padding:3px 8px;border-radius:999px;font-size:11px;font-weight:800;letter-spacing:.03em}
+.lt-farm{background:#3fbf6f;color:#06140b}.lt-run{background:#e0b341;color:#1a1303}.lt-skip{background:color-mix(in srgb,var(--ink,#fff) 14%,transparent);color:var(--mut,#bbb)}
+.lt-nx{background:#8a7cf0;color:#0d0a22}.lt-n .rt-tag{white-space:nowrap;display:inline-block}
+.lt-body{padding:0 12px 12px;animation:riseIn 420ms var(--ease-spring,ease-out) both}
+.lt-reasons{margin:0 0 8px;padding-left:18px;font-size:13px}.lt-reasons li{margin:2px 0}
+.lt-tab td{vertical-align:middle}.lt-ex td{background:color-mix(in srgb,#c9a227 10%,transparent)}
+.chip.lt-new{background:color-mix(in srgb,var(--acc) 25%,transparent)}
+.lt-arm{font-size:12px;color:var(--mut,#9aa);margin:10px 0 6px}.lt-arm b{color:var(--ink,#fff);margin-right:6px}
+.lt-src{font-size:12px;color:var(--acc)}
+.rt-click{cursor:pointer}.rt-badge{position:absolute;top:9px;right:10px}
+@media (max-width:900px){.lt-sum{grid-template-columns:1fr 18px}.lt-sum .lt-v,.lt-sum .lt-why{grid-column:1}}
+@media (prefers-reduced-motion:no-preference){#tab-rotation:not([hidden]) .lt-row{animation:riseIn 560ms var(--ease-spring,ease-out) both;animation-delay:calc(var(--ri,0) * 35ms)}}
 </style>
 </head>
 <body>
@@ -2219,9 +2242,14 @@ const BG = {
  'Mark as seen':'Маркирай като видяни','Exotic':'Екзотика','Keep':'Пази','Good roll':'Добър рол','Trash roll':'Лош рол','Junk':'Боклук','Probably junk':'Вероятно боклук','Decent':'Става','Set piece':'Част от сет','Good stats':'Добри статове',
  'Colors':'Цветове','Accent':'Акцент','Second accent':'Втори акцент','Background':'Фон','Panels':'Панели','Text':'Текст','Animations':'Анимации','Strength':'Сила','Subtle':'Слаба','Normal':'Нормална','Strong':'Силна','Layout':'Изглед','Reset':'Нулирай','🎲 Shuffle':'🎲 Случайни','Drifting lights':'Носещи се светлини','Bubbles':'Мехурчета','Golden motes':'Златни прашинки','Rotating triangles':'Въртящи се триъгълници','Code rain':'Падащ код','Falling petals':'Падащи листенца','Neon grid':'Неонова мрежа','Snowfall':'Снеговалеж','Wisps':'Духчета','Embers':'Искри','Starfield':'Звезди','By build element':'По елемента на билда','Holiday touches':'Празнична украса','auto':'авто',"Accent follows the selected build's element":'Акцентът следва елемента на билда',
  'Next week':'Следваща седмица','This week':'Тази седмица','Coming up':'Предстоящи','Reset in':'Ресет след','Vanguard Ops':'Vanguard операции','Exotic':'Екзотик','Week':'Седмица','Grandmaster / Vanguard Alert':'Grandmaster / Vanguard тревога','Bungie reveals the strike at reset. It shows here as soon as DIM has it.':'Bungie показва мисията при ресета. Ще се появи тук веднага щом DIM я има.','All week. Trials of Osiris is paused.':'Цяла седмица. Trials of Osiris е на пауза.','Friday to reset':'От петък до ресета','Live from DIM':'На живо от DIM','Not in the DIM data yet.':'Още няма в данните от DIM.','From the published rotation calendar. Bungie can change it, so double-check in game before a big run.':'От публикувания календар на ротациите. Bungie може да го промени, затова провери в играта преди голямо влизане.','Grandmaster':'Grandmaster','Adept':'Adept','Weekly reset is Tuesday 17:00 UTC.':'Седмичният ресет е във вторник 17:00 UTC.','Legends':'Legends',
+ "What's worth farming":'Какво си струва да се фарми','Farm it':'Фарми го','Worth a run':'Струва си едно влизане','Skip for now':'Пропусни засега','Raids':'Рейдове','Dungeons':'Подземия','Raid':'Рейд','Dungeon':'Подземие','Weapon':'Оръжие','Type':'Тип','Drops from':'Пада от','For your build':'За твоя билд','Your element':'Твоят елемент','Popular':'Популярно','New for you':'Ново за теб','You have a god roll':'Имаш god roll','You have a good roll':'Имаш добър рол','You have it':'Имаш го','Full loot on d2rad.com ↗':'Цялата плячка в d2rad.com ↗','Nothing new for you here':'Нищо ново за теб тук','Any encounter':'Всеки енкаунтър','Armor':'Броня',
  'Lock':'Заключи','Close':'Затвори','Perks':'Перкове','Stats':'Статове','Mods':'Модове','Intrinsic':'Вградено','Masterwork':'Мастъруърк'
 };
 const BG_RE = [
+ [/^For your build: (.+)$/, 'За твоя билд: $1'], [/^Exotic you don’t have: (.+)$/, 'Екзотик, който нямаш: $1'], [/^Exotic quest: (.+)$/, 'Екзотик от мисия: $1'],
+ [/^Best drops for you: (.+)$/, 'Най-добрите за теб: $1'], [/^(\d+) of (\d+) weapons are new to you$/, '$1 от $2 оръжия са нови за теб'], [/^Already have a god roll of (\d+)$/, 'Вече имаш god roll на $1'],
+ [/^Featured this week: no lockout, farm every encounter as often as you like$/, 'Активно тази седмица: без заключване, фарми всеки енкаунтър колкото искаш'],
+ [/^Enc ([\d, ]+)$/, 'Енк. $1'], [/^Rated for$/, 'Оценено за'], [/^and what is in your inventory and vault right now\. Loot lists from d2rad\.com\.$/, 'и това, което имаш в инвентара и трезора сега. Списъците с плячка са от d2rad.com.'],
  [/^◐ (.+)$/, (_, n) => '◐ ' + (BG[n] || n)], [/^target (\d+)$/, 'цел $1'], [/^Postmaster (\d+)\/(\d+)$/, 'Пощальон $1/$2'], [/^Version (.+)$/, 'Версия $1'],
  [/^Updated (.+) · (\d+) items$/, 'Обновено $1 · $2 предмета'], [/^Refreshing from DIM…$/, 'Обновяване от DIM…'],
  [/^Equipping (.+)…$/, 'Екипиране на $1…'], [/^Equipped (.+)\.$/, 'Екипирано: $1.'], [/^Previous gear equipped\.$/, 'Предишната екипировка е върната.'],
@@ -3201,6 +3229,86 @@ function renderRotation(){
 setInterval(() => { const el = document.getElementById('rt-cd'); if(!el) return; const cur = rotWeek(Date.now()); if(el.dataset.w && +el.dataset.w !== cur){ renderRotation(); return; } el.dataset.w = cur; el.textContent = rotLeft(rotStart(cur + 1).getTime()); }, 30000);
 const _renderExtras7 = renderExtras; renderExtras = function(){ _renderExtras7(); renderRotation(); };
 document.addEventListener('click', e => { if(e.target.closest('nav.tabs > button[data-tab=rotation]')) setTimeout(renderRotation, 0); });
+
+const LOOT = {"Vault of Glass":{"k":"raid","slug":"raids/vault-of-glass","w":[["Found Verdict","Shotgun","Arc",[1,2,4]],["Vision of Confluence","Scout Rifle","Solar",[1,2,3]],["Corrective Measure","Machine Gun","Void",[1,3,5]],["Praedyth's Revenge","Sniper Rifle","Kinetic",[2,5]],["Fatebringer","Hand Cannon","Kinetic",[3,4]],["Hezen Vengeance","Rocket Launcher","Solar",[4,5]]],"x":["Vex Mythoclast","Fusion Rifle","Solar","Atheon, random drop"],"a":["Confluxes: Gauntlets, Class Item","Oracles: Gauntlets, Legs","Templar: Gauntlets, Chest","Gatekeepers: Helmet, Legs","Atheon: Helmet, Chest"]},"Crota's End":{"k":"raid","slug":"raids/crotas-end","w":[["Song of Ir Yût","Machine Gun","Arc",[1,3]],["Abyss Defiant","Auto Rifle","Solar",[1,4]],["Fang of Ir Yût","Scout Rifle","Strand",[1,2]],["Swordbreaker","Shotgun","Strand",[2,4]],["Oversoul Edict","Pulse Rifle","Arc",[2,3]],["Word of Crota","Hand Cannon","Void",[3,4]]],"x":["Necrochasm","Auto Rifle","Kinetic","Bottomless Pit quest"],"a":["Abyss: Helmet, Gauntlets, Chest","Bridge: Gauntlets, Chest, Legs","Ir Yût: Chest, Legs, Class Item","Crota: Helmet, Legs, Class Item"]},"Vow of the Disciple":{"k":"raid","slug":"raids/vow-of-the-disciple","w":[["Submission","Submachine Gun","Kinetic",[1,2,3]],["Deliverance","Fusion Rifle","Stasis",[1,3]],["Cataclysmic","Linear Fusion Rifle","Solar",[1,2]],["Insidious","Pulse Rifle","Arc",[2,4]],["Forbearance","Grenade Launcher","Arc",[2,4]],["Lubrae's Ruin","Glaive","Solar",[4]]],"x":["Collective Obligation","Pulse Rifle","Void","Rhulk, random drop"],"a":["Acquisition: Helmet, Chest, Legs","Caretaker: Helmet, Gauntlets, Class Item","Exhibition: Helmet, Chest, Legs","Rhulk: Helmet, Gauntlets, Class Item"]},"Salvation's Edge":{"k":"raid","slug":"raids/salvations-edge","w":[["Imminence","Submachine Gun","Strand",[1,2,4]],["Non-Denouement","Combat Bow","Arc",[1,2,4]],["Nullify","Pulse Rifle","Solar",[1,3,5]],["Forthcoming Deviance","Glaive","Void",[2,3]],["Critical Anomaly","Sniper Rifle","Stasis",[3,5]],["Summum Bonum","Sword","Arc",[4,5]]],"x":["Euphony","Linear Fusion Rifle","Strand","The Witness, random drop"],"a":["Enc 1: Gauntlets, Chest","Enc 2: Helmet, Class Item","Enc 3: Gauntlets, Class Item","Enc 4: Chest, Legs","Witness: Helmet, Legs"]},"King's Fall":{"k":"raid","slug":"raids/kings-fall","w":[["Doom of Chelchis","Scout Rifle","Void",[1,2,4,5,6]],["Qullim's Terminus","Machine Gun","Stasis",[1,2,3,4,6]],["Smite of Merain","Pulse Rifle","Kinetic",[3,5,6]],["Defiance of Yasmin","Sniper Rifle","Kinetic",[3,5,6]],["Zaouli's Bane","Hand Cannon","Solar",[4,5,6]],["Midha's Reckoning","Fusion Rifle","Arc",[4]]],"x":["Touch of Malice","Scout Rifle","Kinetic","Oryx, random drop"],"a":["Gate: Class Item","Basilica: Chest, Legs","Warpriest: Gauntlets, Chest","Golgoroth: Helmet, Legs","Daughters: Gauntlets, Chest"]},"Last Wish":{"k":"raid","slug":"raids/last-wish","w":[["Nation of Beasts","Hand Cannon","Arc",["any"]],["The Supremacy","Sniper Rifle","",["any"]],["Apex Predator","Rocket Launcher","",["any"]],["Chattering Bone","Pulse Rifle","Kinetic",["any"]],["Transfiguration","Scout Rifle","",["any"]],["Tyranny of Heaven","Combat Bow","",["any"]],["Age-Old Bond","Auto Rifle","Void",["any"]],["Techeun Force","Fusion Rifle","",["any"]]],"x":["One Thousand Voices","Fusion Rifle","Solar","Riven chest, random drop"],"a":["Any encounter: Great Hunt set"]},"Garden of Salvation":{"k":"raid","slug":"raids/garden-of-salvation","w":[["Zealot's Reward","Fusion Rifle","Void",[1]],["Accrued Redemption","Combat Bow","Kinetic",[1]],["Prophet of Doom","Shotgun","Arc",[2]],["Reckless Oracle","Auto Rifle","Void",[2]],["Ancient Gospel","Hand Cannon","Void",[3]],["Sacred Provenance","Pulse Rifle","Kinetic",[3]],["Omniscient Eye","Sniper Rifle","Solar",[4]]],"x":["Divinity","Trace Rifle","Arc","Divine Fragmentation quest"],"a":["Enc 1: Legs","Enc 2: Gauntlets","Enc 3: Chest","Sanctified Mind: Helmet, Class Item"]},"Root of Nightmares":{"k":"raid","slug":"raids/root-of-nightmares","w":[["Nessa's Oblation","Shotgun","Void",[1,2,4]],["Briar's Contempt","Linear Fusion Rifle","Solar",[1,4]],["Koraxis's Distress","Grenade Launcher","Strand",[1,2,3,4]],["Acasia's Dejection","Trace Rifle","Solar",[2,3,4]],["Mykel's Reverence","Sidearm","Strand",[2,3,4]],["Rufus's Fury","Auto Rifle","Strand",[3]]],"x":["Conditional Finality","Shotgun","Stasis","Nezarec, random drop"],"a":["Cataclysm: Helmet, Gauntlets, Chest","Scission: Gauntlets, Chest, Legs","Macrocosm: Chest, Legs, Class Item"]},"Deep Stone Crypt":{"k":"raid","slug":"raids/deep-stone-crypt","w":[["Trustee","Scout Rifle","Solar",[1]],["Heritage","Shotgun","Kinetic",[2,3]],["Succession","Sniper Rifle","Kinetic",[2]],["Posterity","Hand Cannon","Arc",[3]],["Commemoration","Machine Gun","Void",[4]],["Bequest","Sword","Arc",[4]]],"x":["Eyes of Tomorrow","Rocket Launcher","Solar","Taniks, random drop"],"a":["Security: Gauntlets, Legs, Class Item","Atraks-1: Gauntlets, Legs, Class Item","Descent: Gauntlets, Chest, Class Item","Taniks: Helmet, Chest, Legs"]},"Prophecy":{"k":"dungeon","slug":"dungeons/prophecy","w":[["Relentless","Pulse Rifle","Strand",[1]],["Prosecutor","Auto Rifle","Arc",[1,3]],["A Sudden Death","Shotgun","Void",[2]],["Adjudicator","Submachine Gun","Kinetic",[2]],["Darkest Before","Pulse Rifle","Solar",[3]],["Judgment","Hand Cannon","Stasis",[3]]],"x":null,"a":["Phalanx Echo: Legs, Class Item","Hexahedron: Gauntlets","Kell Echo: all slots"]},"Pit of Heresy":{"k":"dungeon","slug":"dungeons/pit-of-heresy","w":[["Psychopomp","Grenade Launcher","",["any"]],["Adamantite","Auto Rifle","Strand",["any"]],["Refusal of the Call","Glaive","Strand",["any"]],["Eyes Unveiled","Linear Fusion Rifle","",["any"]]],"x":["Xenophage","Machine Gun","Solar","The Journey quest"],"a":["Any encounter: Apostate's Blade set"]},"Spire of the Watcher":{"k":"dungeon","slug":"dungeons/spire-of-the-watcher","w":[["Long Arm","Scout Rifle","Arc",[1,3]],["Terminus Horizon","Machine Gun","Arc",[1,2,3]],["Liminal Vigil","Sidearm","Stasis",[3]],["Wilderflight","Grenade Launcher","Void",[3]]],"x":["Hierarchy of Needs","Combat Bow","Solar","Persys, random drop"],"a":["Akelous: Helmet, Gauntlets, Legs","Enc 2: Gauntlets, Chest, Class Item","Persys: all slots"]},"Ghosts of the Deep":{"k":"dungeon","slug":"dungeons/ghosts-of-the-deep","w":[["New Pacific Epitaph","Grenade Launcher","Stasis",[1,3]],["Cold Comfort","Rocket Launcher","Stasis",[1,2,3]],["No Survivors","Submachine Gun","Solar",[1,2,3]],["Greasy Luck","Glaive","Solar",[2,3]]],"x":["The Navigator","Trace Rifle","Strand","Simmumah, random drop"],"a":["Ritual: Helmet, Gauntlets, Legs","Ecthar: Gauntlets, Chest, Class Item","Simmumah: all slots"]},"Grasp of Avarice":{"k":"dungeon","slug":"dungeons/grasp-of-avarice","w":[["Matador 64","Shotgun","Arc",[1,3]],["Hero of Ages","Sword","Arc",[2,3]],["Eyasluna","Hand Cannon","Stasis",[3]],["1000 Yard Stare","Sniper Rifle","Void",[3]]],"x":["Gjallarhorn","Rocket Launcher","Solar","And Out Fly the Wolves quest"],"a":["Phry'zhia: Legs, Class Item","Fallen Shield: Gauntlets, Chest","Avarokk: all slots"]},"Warlord's Ruin":{"k":"dungeon","slug":"dungeons/warlords-ruin","w":[["Indebted Kindness","Sidearm","Arc",[1,2,3]],["Vengeful Whisper","Combat Bow","Strand",[1,2,3]],["Dragoncult Sickle","Sword","Strand",[1,3]],["Naeem's Lance","Sniper Rifle","Strand",[2,3]]],"x":["Buried Bloodline","Sidearm","Void","Hefnd's Vengeance, random drop"],"a":["Rathil: Helmet, Gauntlets, Legs","Locus: Gauntlets, Chest, Class Item","Hefnd: all slots"]},"Duality":{"k":"dungeon","slug":"dungeons/duality","w":[["Lingering Dread","Grenade Launcher","Stasis",[1]],["The Epicurean","Fusion Rifle","Void",[1]],["Stormchaser","Linear Fusion Rifle","Arc",[2]],["Unforgiven","Submachine Gun","Void",[2]],["New Purpose","Pulse Rifle","Stasis",[3]],["Fixed Odds","Machine Gun","Solar",[3]]],"x":["Heartshadow","Sword","Void","Caiatl, random drop"],"a":["Gahlran: Helmet, Gauntlets, Legs","Vault: Gauntlets, Chest, Class Item","Caiatl: all slots"]},"Vesper's Host":{"k":"dungeon","slug":"dungeons/vespers-host","w":[["VS Chill Inhibitor","Grenade Launcher","Stasis",[1,2,3]],["VS Gravitic Arrest","Fusion Rifle","Void",[1,2,3]],["VS Velocity Baton","Grenade Launcher","Void",[1,3]],["VS Pyroelectric Propellant","Auto Rifle","Arc",[2,3]]],"x":["Ice Breaker","Sniper Rifle","Solar","final boss, random drop"],"a":["Enc 1: Gauntlets, Chest, Legs","Enc 2: Helmet, Gauntlets, Legs","Enc 3: Helmet, Chest, Legs"]},"Sundered Doctrine":{"k":"dungeon","slug":"dungeons/sundered-doctrine","w":[["Unloved","Hand Cannon","Strand",[1,2,3]],["Unsworn","Trace Rifle","Strand",[1,2,3]],["Unworthy","Scout Rifle","Arc",[1,3]],["Unvoiced","Shotgun","Void",[2,3]]],"x":["Finality's Auger","Linear Fusion Rifle","Solar","final boss, random drop"],"a":["Enc 1: Helmet, Gauntlets, Legs","Enc 2: Helmet, Gauntlets, Legs","Enc 3: all slots"]},"Shattered Throne":{"k":"dungeon","slug":"dungeons/shattered-throne","w":[["Vulpecula","Hand Cannon","",["any"]],["Chrysura Melo","Auto Rifle","Arc",["any"]],["Fractethyst","Shotgun","",["any"]],["Canis Major","Grenade Launcher","",["any"]]],"x":["Wish-Ender","Combat Bow","Kinetic","Wish-Ender quest"],"a":["Any encounter: Techeun's Regalia set"]}};
+
+/* ---------- loot per raid / dungeon (d2rad.com) and what is worth farming for you ---------- */
+// Community favourites: weapons most players chase from each activity (my own short list, not from d2rad)
+const LOOT_POP = new Set(['Fatebringer','Vision of Confluence','Hezen Vengeance','Song of Ir Yût','Swordbreaker','Word of Crota','Submission','Forbearance','Cataclysmic',
+  'Imminence','Critical Anomaly','Summum Bonum','Non-Denouement',"Zaouli's Bane","Qullim's Terminus",'Apex Predator','Chattering Bone',"Briar's Contempt","Koraxis's Distress",
+  "Mykel's Reverence",'Succession','Commemoration','Bequest','Terminus Horizon','Cold Comfort','New Pacific Epitaph','1000 Yard Stare','Eyasluna','Matador 64',
+  'Indebted Kindness','Vengeful Whisper','Lingering Dread','Unforgiven','VS Chill Inhibitor','VS Velocity Baton','Judgment','Relentless','Unloved']);
+const lootKey = n => n === 'Ghosts of the Deep' ? 'Ghosts of the Deep' : n;
+let LOOT_OPEN = STORE.get('hunterLootOpen', ''), LOOT_F = STORE.get('hunterLootF', 'all');
+function lootOwned(){ const m = {}; weapons().forEach(w => { const o = m[w.name] = m[w.name] || { n: 0, god: 0, wish: 0 }; o.n++; const g = w.item.wl; if(g && g[0] === 2) o.god = 1; else if(g && g[0] === 1) o.wish = 1; }); return m; }
+function lootFeat(n){ const cur = rotWeek(Date.now()), now = rotAt(cur), nx = rotAt(cur + 1); return now.raids.includes(n) || now.dungeons.includes(n) ? 'now' : nx.raids.includes(n) || nx.dungeons.includes(n) ? 'next' : ''; }
+function lootBuild(){ try { return wornBuild().b; } catch(e){ return null; } }
+function lootRate(name, own, b, feat){
+  const A = LOOT[name]; if(!A) return null;
+  const rows = []; let s = 0;
+  for(const [n, t, e, enc] of A.w){
+    const o = own[n], tags = []; let v = 0;
+    if(b && b.weap.names[n]){ v += b.weap.names[n] * 3; tags.push('build'); }
+    if(b && e && b.weap.el[e]){ v += 2; tags.push('element'); }
+    if(LOOT_POP.has(n)){ v += 3; tags.push('popular'); }
+    if(!o){ v += (tags.includes('popular') || tags.includes('element') || tags.includes('build')) ? 1 : 0.3; tags.push('new'); } else if(o.god){ v -= 3; tags.push('god'); } else if(o.wish) { v -= 1; tags.push('wish'); }
+    rows.push({ n, t, e, enc, o, tags, v }); s += Math.max(0, v);
+  }
+  let ex = null;
+  if(A.x){ const [n, t, e, how] = A.x, o = own[n], quest = /quest/i.test(how), tags = []; let v = 0;
+    if(b && b.weap.names[n]){ v += b.weap.names[n] * 3; tags.push('build'); }
+    if(b && e && b.weap.el[e]){ v += 2; tags.push('element'); }
+    if(!o){ v += quest ? 2 : 4; tags.push('new'); } else tags.push('have');
+    ex = { n, t, e, how, o, tags, v, quest }; s += Math.max(0, v); }
+  const per = s / Math.max(3, A.w.length + (ex ? 1 : 0)) * 4; // normalise so 4-weapon dungeons and 8-weapon raids compare
+  let score = per + (feat === 'now' ? 5 : feat === 'next' ? 2 : 0);
+  const verdict = score >= 14 ? ['farm', 'Farm it'] : score >= 8 ? ['run', 'Worth a run'] : ['skip', 'Skip for now'];
+  const why = [];
+  const bw = rows.filter(r => r.tags.includes('build')).map(r => r.n); if(ex && ex.tags.includes('build')) bw.unshift(ex.n);
+  if(bw.length) why.push('For your build: ' + bw.join(', '));
+  const best = rows.filter(r => r.v >= 3 && !r.tags.includes('build')).sort((x, y) => y.v - x.v).slice(0, 3).map(r => r.n); if(best.length) why.push('Best drops for you: ' + best.join(', '));
+  if(ex && !ex.o) why.push((ex.quest ? 'Exotic quest: ' : 'Exotic you don’t have: ') + ex.n);
+  const nw = rows.filter(r => !r.o).length; if(nw) why.push(nw + ' of ' + rows.length + ' weapons are new to you');
+  const gd = rows.filter(r => r.o && r.o.god).length; if(gd) why.push('Already have a god roll of ' + gd);
+  if(feat === 'now') why.push('Featured this week: no lockout, farm every encounter as often as you like');
+  return { name, A, rows, ex, score, verdict, why, feat };
+}
+function lootDetail(R){
+  const enc = e => e.includes('any') ? 'Any encounter' : 'Enc ' + e.join(', ');
+  const chip = t => ({ build: '<span class="chip good">For your build</span>', element: '<span class="chip">Your element</span>', popular: '<span class="chip">Popular</span>',
+    new: '<span class="chip lt-new">New for you</span>', god: '<span class="chip good">You have a god roll</span>', wish: '<span class="chip">You have a good roll</span>', have: '<span class="chip">You have it</span>' }[t] || '');
+  const row = (r, x) => `<tr class="${x ? 'lt-ex' : ''}"><td><span class="${x ? 'exn' : ''}">${esc(r.n)}</span>${r.o ? ` <span class="perk">×${r.o.n}</span>` : ''}</td>
+    <td><span class="eldot" style="background:${EL[r.e] || 'var(--mute)'}"></span>${esc(r.t)}${r.e ? ' · ' + esc(r.e) : ''}</td><td class="perk">${x ? esc(r.how) : enc(r.enc)}</td><td>${r.tags.map(chip).join('')}</td></tr>`;
+  return `<div class="lt-det"><table class="rt-tab lt-tab"><thead><tr><th>Weapon</th><th>Type</th><th>Drops from</th><th></th></tr></thead><tbody>
+    ${R.ex ? row(R.ex, 1) : ''}${R.rows.slice().sort((a, b) => b.v - a.v).map(r => row(r)).join('')}</tbody></table>
+    <div class="lt-arm"><b>Armor</b> ${R.A.a.map(esc).join(' · ')}</div>
+    <a class="lt-src" href="https://d2rad.com/${R.A.slug}" target="_blank" rel="noopener">Full loot on d2rad.com ↗</a></div>`;
+}
+function renderLoot(){
+  const box = document.getElementById('rt-loot'); if(!box) return;
+  const own = lootOwned(), b = lootBuild(), cur = rotWeek(Date.now()), now = rotAt(cur), nx = rotAt(cur + 1);
+  const feat = lootFeat;
+  const all = Object.keys(LOOT).map(n => lootRate(n, own, b, feat(n))).filter(Boolean).filter(R => LOOT_F === 'all' || R.A.k === LOOT_F).sort((x, y) => y.score - x.score);
+  box.innerHTML = `<div class="lt-head"><h3>What's worth farming</h3><div class="seg">${[['all','All'],['raid','Raids'],['dungeon','Dungeons']].map(([k, l]) => `<button type="button" class="${LOOT_F === k ? 'on' : ''}" data-ltf="${k}">${l}</button>`).join('')}</div></div>
+    <p class="note">Rated for ${b ? `<b>${esc(b.name)}</b>` : 'your build'} and what is in your inventory and vault right now. Loot lists from d2rad.com.</p>
+    <div class="lt-list">${all.map((R, i) => `<div class="lt-row ${LOOT_OPEN === R.name ? 'open' : ''}" style="--ri:${i}">
+      <button type="button" class="lt-sum" data-lt="${esc(R.name)}"><span class="lt-v lt-${R.verdict[0]}">${R.verdict[1]}</span>
+        <span class="lt-n">${esc(R.name)} <span class="perk">${R.A.k === 'raid' ? 'Raid' : 'Dungeon'}</span>${R.feat === 'now' ? ' <span class="rt-tag">This week</span>' : R.feat === 'next' ? ' <span class="rt-tag lt-nx">Next week</span>' : ''}</span>
+        <span class="lt-why">${R.why.slice(0, 2).map(w => `<span>${esc(w)}</span>`).join('<i> · </i>') || 'Nothing new for you here'}</span><span class="lt-car">▾</span></button>
+      ${LOOT_OPEN === R.name ? `<div class="lt-body"><ul class="lt-reasons">${R.why.map(w => `<li>${esc(w)}</li>`).join('')}</ul>${lootDetail(R)}</div>` : ''}</div>`).join('')}</div>`;
+  box.querySelectorAll('[data-ltf]').forEach(x => x.onclick = () => { LOOT_F = x.dataset.ltf; STORE.set('hunterLootF', LOOT_F); renderLoot(); });
+  box.querySelectorAll('[data-lt]').forEach(x => x.onclick = () => { LOOT_OPEN = LOOT_OPEN === x.dataset.lt ? '' : x.dataset.lt; STORE.set('hunterLootOpen', LOOT_OPEN); renderLoot(); });
+}
+// verdict badges on the rotation cards, and clicking a card jumps to its loot
+const _renderRotation2 = renderRotation; renderRotation = function(){ _renderRotation2();
+  const root = document.getElementById('tab-rotation'); if(!root) return;
+  const box = document.createElement('div'); box.className = 'card'; box.id = 'rt-loot'; const up = root.querySelector('.rt > .card:last-child'); root.querySelector('.rt').insertBefore(box, up);
+  renderLoot();
+  const own = lootOwned(), b = lootBuild();
+  root.querySelectorAll('.rt-raid, .rt-dng').forEach(el => { const n = el.querySelector('.rt-n').textContent; const R = lootRate(n, own, b, lootFeat(n)); if(!R) return;
+    el.classList.add('rt-click'); el.insertAdjacentHTML('beforeend', `<span class="lt-v lt-${R.verdict[0]} rt-badge">${R.verdict[1]}</span>`);
+    el.onclick = () => { LOOT_OPEN = n; LOOT_F = 'all'; renderLoot(); const r = document.querySelector('#rt-loot .lt-row.open'); if(r) r.scrollIntoView({ behavior: 'smooth', block: 'center' }); }; });
+};
 
 renderAll();
 
